@@ -1,0 +1,231 @@
+/* ============================================
+   NEW RELEASES PAGE – MODERN GLASS UI/UX
+   ============================================ */
+
+:root {
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --accent-green: #10B981;
+}
+
+.new-releases-page {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 50% 0%, #0f071a 0%, #050510 100%);
+  padding: 40px 24px 80px;
+}
+
+.new-releases-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header */
+.new-releases-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.new-releases-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff, #a5b4fc, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.header-icon {
+  font-size: 2rem;
+  color: #fbbf24;
+  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.5));
+}
+
+.new-releases-header p {
+  font-size: 1.1rem;
+  color: #a0a0c0;
+}
+
+/* Timeframe Filters */
+.timeframe-filters {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 40px;
+  color: #c0c0d0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+}
+
+.filter-chip:hover {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: #8b5cf6;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.filter-chip.active {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.15));
+  border-color: #8b5cf6;
+  color: #a78bfa;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+}
+
+/* Releases Stats */
+.releases-stats {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.stat-badge {
+  padding: 6px 16px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 40px;
+  font-size: 0.85rem;
+  color: #34d399;
+  font-weight: 500;
+}
+
+/* Series Grid */
+.new-releases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: var(--glass-bg);
+  border-radius: 32px;
+  border: 1px dashed var(--glass-border);
+}
+
+.empty-state svg {
+  color: #fbbf24;
+  opacity: 0.5;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  color: #9ca3af;
+}
+
+/* Error State */
+.error-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--glass-bg);
+  border-radius: 32px;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.error-state svg {
+  color: #f87171;
+  margin-bottom: 16px;
+}
+
+.error-state p {
+  color: #f87171;
+  margin-bottom: 20px;
+}
+
+.retry-btn {
+  padding: 10px 24px;
+  background: rgba(248, 113, 113, 0.15);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: 40px;
+  color: #f87171;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.retry-btn:hover {
+  background: rgba(248, 113, 113, 0.25);
+  border-color: #f87171;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .new-releases-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .new-releases-page {
+    padding: 24px 16px 60px;
+  }
+
+  .new-releases-header h1 {
+    font-size: 2rem;
+  }
+
+  .header-icon {
+    font-size: 1.6rem;
+  }
+
+  .new-releases-header p {
+    font-size: 1rem;
+  }
+
+  .new-releases-grid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 16px;
+  }
+
+  .filter-chip {
+    padding: 8px 18px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .new-releases-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .timeframe-filters {
+    gap: 8px;
+  }
+
+  .filter-chip {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+
+  .releases-stats {
+    margin-bottom: 24px;
+  }
+}

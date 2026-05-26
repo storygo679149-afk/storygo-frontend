@@ -1,0 +1,296 @@
+/* ============================================
+   FOLLOWERS PAGE – PREMIUM UI/UX
+   ============================================ */
+
+.followers-page {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 42px 28px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ---------- HEADER ---------- */
+.followers-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 38px;
+}
+
+.followers-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #f5f5f7;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.followers-header h2 svg {
+  color: #3b82f6;
+  filter: drop-shadow(0 0 6px rgba(59,130,246,0.5));
+  transition: transform 0.3s ease;
+}
+
+.followers-header h2:hover svg {
+  transform: rotate(15deg);
+}
+
+.followers-count-pill {
+  background: rgba(59,130,246,0.14);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(59,130,246,0.25);
+  color: #60a5fa;
+  padding: 4px 18px;
+  border-radius: 48px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.25s;
+}
+
+.followers-count-pill:hover {
+  background: rgba(59,130,246,0.22);
+  border-color: #3b82f6;
+  box-shadow: 0 0 14px rgba(59,130,246,0.2);
+}
+
+/* ---------- LIST ---------- */
+.followers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: fadeSlideUp 0.4s ease-out;
+}
+
+/* ---------- CARD – glassy + dynamic glow ---------- */
+.follower-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+  padding: 18px 24px;
+  transition: all 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.follower-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 0% 0%, rgba(59,130,246,0.08), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.follower-card:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(59,130,246,0.35);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.5),
+              0 0 25px rgba(59,130,246,0.1);
+}
+
+.follower-card:hover::before {
+  opacity: 1;
+}
+
+/* ---------- AVATAR ---------- */
+.follower-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(59,130,246,0.2), rgba(168,85,247,0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  transition: transform 0.25s, box-shadow 0.25s;
+  position: relative;
+  z-index: 1;
+}
+
+.follower-card:hover .follower-avatar {
+  transform: scale(1.07) rotate(2deg);
+  box-shadow: 0 8px 22px rgba(59,130,246,0.35);
+}
+
+.follower-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ---------- INFO ---------- */
+.follower-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.follower-name {
+  font-weight: 650;
+  font-size: 1rem;
+  color: #f0f0f5;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.2px;
+}
+
+.follower-username {
+  font-size: 0.82rem;
+  color: #90909a;
+}
+
+/* ---------- STATS BADGE ---------- */
+.follower-stats-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #b9b9c5;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: rgba(59,130,246,0.07);
+  padding: 7px 18px;
+  border-radius: 24px;
+  white-space: nowrap;
+  transition: all 0.25s;
+  border: 1px solid transparent;
+}
+
+.follower-card:hover .follower-stats-badge {
+  background: rgba(59,130,246,0.16);
+  border-color: rgba(59,130,246,0.3);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.2);
+}
+
+.follower-stats-badge svg {
+  color: #3b82f6;
+  transition: transform 0.2s;
+}
+
+.follower-card:hover .follower-stats-badge svg {
+  transform: scale(1.15);
+}
+
+/* ---------- EMPTY STATE ---------- */
+.empty-followers {
+  text-align: center;
+  padding: 90px 30px;
+  color: #6b7280;
+  animation: fadeIn 0.5s ease;
+}
+
+.empty-followers svg {
+  color: #3b82f6;
+  opacity: 0.5;
+  transition: transform 0.3s;
+}
+
+.empty-followers:hover svg {
+  transform: translateY(-6px);
+}
+
+.empty-followers h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #d1d5db;
+  margin-top: 20px;
+}
+
+.empty-followers p {
+  font-size: 1rem;
+  margin-top: 10px;
+  color: #9ca3af;
+}
+
+/* ---------- ERROR STATE ---------- */
+.error-container {
+  text-align: center;
+  padding: 90px 30px;
+  color: #ff5c72;
+}
+
+.error-container svg {
+  margin-bottom: 18px;
+}
+
+.retry-btn {
+  margin-top: 24px;
+  padding: 11px 30px;
+  background: rgba(255,92,114,0.08);
+  border: 1px solid rgba(255,92,114,0.3);
+  border-radius: 10px;
+  color: #ff5c72;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.retry-btn:hover {
+  background: rgba(255,92,114,0.18);
+  border-color: #ff5c72;
+  box-shadow: 0 6px 18px rgba(255,92,114,0.15);
+}
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes fadeSlideUp {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---------- SKELETON ---------- */
+.skeleton-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 560px) {
+  .followers-page {
+    padding: 28px 18px;
+  }
+  .follower-card {
+    padding: 14px 16px;
+    gap: 14px;
+    border-radius: 16px;
+  }
+  .follower-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+  }
+  .follower-stats-badge {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+  .followers-header h2 {
+    font-size: 1.6rem;
+  }
+}

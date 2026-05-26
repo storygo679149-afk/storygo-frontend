@@ -1,0 +1,282 @@
+/* ========== CINEMATIC SERIES CARD ========== */
+:root {
+  --card-bg: rgba(12, 10, 25, 0.7);
+  --card-glass: rgba(40, 30, 60, 0.45);
+  --card-border: rgba(180, 130, 255, 0.2);
+  --card-glow: rgba(165, 130, 255, 0.25);
+  --card-now-playing-bg: rgba(165, 130, 255, 0.12);
+  --card-play-glow: #9B59B6;
+  --card-heart: #EC4899;
+  --text-primary: #fff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --transition: 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* ------------- CARD CONTAINER ------------- */
+.cinematic-card {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  background: transparent;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.cinematic-card:hover {
+  transform: translateY(-8px) scale(1.015);
+  box-shadow:
+    0 30px 50px rgba(0, 0, 0, 0.7),
+    0 0 30px rgba(165, 130, 255, 0.3),
+    0 0 10px rgba(165, 130, 255, 0.15);
+}
+
+/* ------------- BACKGROUND LAYER (gradient + glow) ------------- */
+.card-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(30, 20, 60, 0.8) 0%, rgba(10, 5, 25, 0.95) 100%);
+  border-radius: 28px;
+  z-index: 0;
+}
+
+/* Glass overlay on hover */
+.cinematic-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    145deg,
+    rgba(165, 130, 255, 0.15) 0%,
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity var(--transition);
+  border-radius: 28px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.cinematic-card:hover::after {
+  opacity: 1;
+}
+
+/* ------------- TOP AREA (thumbnail + badges) ------------- */
+.card-top {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* 1:1 square */
+  overflow: hidden;
+  border-radius: 28px 28px 0 0;
+  z-index: 1;
+}
+
+.card-thumb {
+  position: absolute;
+  inset: 0;
+}
+
+.card-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.cinematic-card:hover .card-thumb img {
+  transform: scale(1.06);
+}
+
+/* Placeholder */
+.card-thumb-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #1B1438, #0F0A20);
+  color: rgba(255,255,255,0.2);
+  font-size: 3rem;
+}
+
+/* ------- "Now Playing" badge (top left) ------- */
+.card-badge-now-playing {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--card-now-playing-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(180, 130, 255, 0.4);
+  border-radius: 30px;
+  padding: 6px 14px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #e9d5ff;
+  box-shadow: 0 0 12px rgba(165, 130, 255, 0.2);
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.wave-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* ------- Minimal 3‑dot menu (top right) ------- */
+.card-menu {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+}
+
+.card-menu:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ------------- BOTTOM GLASS PANEL ------------- */
+.card-glass-panel {
+  position: relative;
+  background: var(--card-glass);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--card-border);
+  border-top: none;
+  border-radius: 0 0 28px 28px;
+  padding: 18px 16px 16px;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 -8px 20px rgba(0,0,0,0.3);
+}
+
+/* Title + Author */
+.card-text {
+  flex: 1 1 calc(100% - 70px);
+  min-width: 0;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+  line-height: 1.2;
+  text-shadow: 0 0 8px rgba(165, 130, 255, 0.4);
+}
+
+.card-author {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Play button (right side) */
+.card-play-btn {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8B5CF6, #6366F1);
+  border: none;
+  color: white;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+  transition: transform 0.3s, box-shadow 0.3s;
+  flex-shrink: 0;
+  z-index: 3;
+}
+
+.card-play-btn:hover {
+  box-shadow: 0 0 40px rgba(139, 92, 246, 0.9);
+}
+
+/* Pulse animation behind play button */
+.play-pulse {
+  position: absolute;
+  bottom: 22px;
+  right: 22px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(139, 92, 246, 0.3);
+  animation: pulse-glow 2.5s infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes pulse-glow {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 0; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+/* ------------- BOTTOM INFO ROW (likes + genres) ------------- */
+.card-info-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.card-likes {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  color: var(--card-heart);
+  font-weight: 500;
+}
+
+.heart-icon {
+  font-size: 1rem;
+}
+
+.card-genres {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.65);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+/* ------------- RESPONSIVE ------------- */
+@media (max-width: 480px) {
+  .card-title { font-size: 1rem; }
+  .card-play-btn { width: 44px; height: 44px; font-size: 20px; }
+}

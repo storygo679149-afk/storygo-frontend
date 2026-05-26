@@ -1,0 +1,38 @@
+/* ---------- NEW RELEASES SECTION – LIQUID GLASS PREMIUM ---------- */
+.new-releases-section {
+  margin: 64px 0;
+}
+
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+}
+
+.new-releases-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 24px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .new-releases-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}

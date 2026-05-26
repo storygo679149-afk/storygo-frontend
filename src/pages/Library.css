@@ -1,0 +1,153 @@
+.library-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  min-height: 100vh;
+}
+
+.library-header {
+  margin-bottom: 24px;
+}
+
+.library-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.library-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 0;
+}
+
+.library-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #888888;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  margin-bottom: -1px;
+}
+
+.library-tab:hover {
+  color: #cccccc;
+}
+
+.library-tab.active {
+  color: #ff6b6b;
+  border-bottom-color: #ff6b6b;
+}
+
+.library-content {
+  min-height: 400px;
+}
+
+.library-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: #666666;
+  gap: 16px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  opacity: 0.3;
+}
+
+.library-empty h3 {
+  font-size: 18px;
+  color: #888888;
+}
+
+/* Following List */
+.following-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.following-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.following-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.following-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 107, 107, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff6b6b;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.following-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.following-info h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 3px;
+}
+
+.following-info p {
+  font-size: 13px;
+  color: #888888;
+}
+
+@media (max-width: 768px) {
+  .library-page {
+    padding: 20px 16px;
+  }
+  
+  .library-header h1 {
+    font-size: 26px;
+  }
+  
+  .library-tabs {
+    overflow-x: auto;
+  }
+  
+  .library-tab {
+    padding: 10px 14px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  
+  .following-list {
+    grid-template-columns: 1fr;
+  }
+}

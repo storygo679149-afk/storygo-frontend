@@ -1,0 +1,180 @@
+/* NovelsPage.css – Modern Glassmorphism */
+.novels-page {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 50% 0%, #0f071a 0%, #050510 100%);
+  padding: 40px 24px 80px;
+}
+
+.novels-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.novels-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.novels-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff, #c4b5fd, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.novels-header p {
+  font-size: 1.1rem;
+  color: #a0a0c0;
+}
+
+.novels-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.search-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 48px;
+  padding: 12px 20px;
+  color: #9ca3af;
+  transition: all 0.2s;
+}
+
+.search-bar:focus-within {
+  border-color: #8b5cf6;
+  background: rgba(139,92,246,0.05);
+}
+
+.search-bar input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  font-size: 1rem;
+}
+
+.filter-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 48px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-toggle:hover {
+  background: rgba(139,92,246,0.15);
+  border-color: #8b5cf6;
+}
+
+.filters-panel {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 24px;
+  padding: 20px;
+  margin-bottom: 32px;
+  backdrop-filter: blur(12px);
+}
+
+.filter-group {
+  margin-bottom: 16px;
+}
+
+.filter-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #a78bfa;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sort-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sort-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 40px;
+  color: #c0c0d0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sort-btn.active {
+  background: rgba(139,92,246,0.2);
+  border-color: #8b5cf6;
+  color: #a78bfa;
+}
+
+.sort-btn:hover {
+  background: rgba(139,92,246,0.1);
+}
+
+.novels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 32px;
+  border: 1px dashed rgba(255,255,255,0.1);
+}
+
+.empty-state svg {
+  color: #a78bfa;
+  opacity: 0.5;
+  margin-bottom: 16px;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+  .novels-page { padding: 24px 16px 60px; }
+  .novels-header h1 { font-size: 2rem; }
+  .novels-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}
+
+@media (max-width: 480px) {
+  .novels-grid { grid-template-columns: 1fr; }
+}

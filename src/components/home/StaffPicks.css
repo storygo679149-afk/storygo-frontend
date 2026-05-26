@@ -1,0 +1,11 @@
+.series-horizontal-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+
+.horizontal-card-wrapper {
+  flex-shrink: 0;
+  width: 200px;
+}

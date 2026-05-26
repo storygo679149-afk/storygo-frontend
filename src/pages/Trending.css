@@ -1,0 +1,123 @@
+.trending-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  min-height: 100vh;
+}
+
+.trending-header {
+  margin-bottom: 24px;
+}
+
+.trending-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.trending-header svg {
+  color: #ff6b6b;
+}
+
+.trending-header p {
+  font-size: 16px;
+  color: #888888;
+}
+
+.trending-periods {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.period-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: #888888;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.period-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cccccc;
+}
+
+.period-btn.active {
+  background: rgba(255, 107, 107, 0.15);
+  border-color: rgba(255, 107, 107, 0.3);
+  color: #ff6b6b;
+}
+
+.trending-content {
+  min-height: 400px;
+}
+
+.trending-error,
+.trending-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: #888888;
+  gap: 16px;
+}
+
+.trending-error h2,
+.trending-empty h2 {
+  color: #ffffff;
+  font-size: 20px;
+}
+
+.trending-empty p {
+  font-size: 14px;
+}
+
+.retry-btn {
+  padding: 10px 24px;
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 8px;
+  color: #ff6b6b;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.retry-btn:hover {
+  background: rgba(255, 107, 107, 0.25);
+}
+
+@media (max-width: 768px) {
+  .trending-page {
+    padding: 20px 16px;
+  }
+  
+  .trending-header h1 {
+    font-size: 26px;
+  }
+  
+  .trending-periods {
+    overflow-x: auto;
+  }
+  
+  .period-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}

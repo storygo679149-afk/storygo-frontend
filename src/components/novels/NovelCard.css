@@ -1,0 +1,138 @@
+.novel-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.novel-card:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(-4px);
+}
+
+.novel-card-cover {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a2e, #0a0a15);
+}
+
+.novel-card-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.novel-card:hover .novel-card-cover img {
+  transform: scale(1.05);
+}
+
+.cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 3rem;
+}
+
+.cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.novel-card:hover .cover-overlay {
+  opacity: 1;
+}
+
+.read-btn {
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  border: none;
+  border-radius: 40px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.read-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139,92,246,0.4);
+}
+
+.completed-badge,
+.premium-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+}
+
+.completed-badge {
+  background: #10b981;
+  color: white;
+}
+
+.premium-badge {
+  right: 12px;
+  left: auto;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #1a1a2e;
+}
+
+.novel-card-info {
+  padding: 16px;
+}
+
+.novel-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.novel-author {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-bottom: 12px;
+}
+
+.novel-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: #a78bfa;
+  margin-bottom: 8px;
+}
+
+.novel-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chapter-count {
+  font-size: 0.7rem;
+  color: #6b7280;
+}

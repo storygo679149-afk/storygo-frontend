@@ -1,0 +1,375 @@
+/* CreatorNovels.css – Glassmorphism + Modern UI */
+
+.creator-novels {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 50% 0%, #0f071a 0%, #050510 100%);
+  padding: 32px 24px;
+}
+
+.creator-novels-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.creator-novels-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff, #c4b5fd, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.create-novel-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  border: none;
+  border-radius: 40px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(139,92,246,0.3);
+}
+
+.create-novel-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139,92,246,0.4);
+}
+
+/* Novels Grid */
+.novels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* Novel Card – Glassmorphic */
+.novel-card-creator {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.novel-card-creator:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(-6px);
+}
+
+.novel-card-cover-creator {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a2e, #0a0a15);
+}
+
+.novel-card-cover-creator img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.novel-card-creator:hover .novel-card-cover-creator img {
+  transform: scale(1.05);
+}
+
+.cover-placeholder-creator {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 2rem;
+}
+
+.cover-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  color: #a78bfa;
+}
+
+.novel-card-info-creator {
+  padding: 20px;
+}
+
+.novel-title-creator {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.novel-stats-creator {
+  display: flex;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-bottom: 16px;
+}
+
+.novel-stats-creator span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.novel-actions-creator {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 15px;
+  color: #c0c0d0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2;
+  width:100px;
+  justify-content: center;
+}
+
+.action-btn:hover {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: #8b5cf6;
+  color: #a78bfa;
+}
+
+.action-btn.delete {
+  color: #f87171;
+}
+
+.action-btn.delete:hover {
+  background: rgba(248, 113, 113, 0.15);
+  border-color: #f87171;
+}
+
+.action-btn.add-chapter {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.2);
+}
+
+.action-btn.add-chapter:hover {
+  background: rgba(139, 92, 246, 0.2);
+  color: #c4b5fd;
+}
+
+/* Empty State */
+.empty-novels {
+  text-align: center;
+  padding: 80px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 32px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.empty-novels svg {
+  color: #a78bfa;
+  opacity: 0.5;
+  margin-bottom: 16px;
+}
+
+.empty-novels h3 {
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.empty-novels p {
+  color: #9ca3af;
+  margin-bottom: 24px;
+}
+
+.empty-novels button {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  border: none;
+  border-radius: 40px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.empty-novels button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+}
+
+/* Delete Modal */
+.delete-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: rgba(26, 26, 46, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 32px;
+  padding: 32px;
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-icon {
+  color: #f87171;
+  margin-bottom: 16px;
+}
+
+.modal-content h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.modal-content p {
+  color: #9ca3af;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modal-actions button {
+  padding: 10px 24px;
+  border-radius: 40px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.cancel-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.confirm-btn {
+  background: #f87171;
+  border: none;
+  color: white;
+}
+
+.confirm-btn:hover {
+  background: #ef4444;
+  transform: translateY(-2px);
+}
+
+.confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .creator-novels {
+    padding: 20px 16px;
+  }
+  
+  .creator-novels-header h2 {
+    font-size: 1.6rem;
+  }
+  
+  .novels-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-btn span {
+    display: inline;
+  }
+  
+  .action-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .novel-actions-creator {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    justify-content: center;
+  }
+  
+  .modal-content {
+    padding: 24px;
+  }
+  
+  .modal-content h3 {
+    font-size: 1.2rem;
+  }
+}
+
+/* Skeleton loader button */
+.skeleton-btn {
+  width: 150px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 40px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}

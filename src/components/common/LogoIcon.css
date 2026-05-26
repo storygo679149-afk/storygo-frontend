@@ -1,0 +1,58 @@
+/* Animation keyframes for logo */
+@keyframes wave {
+  0%, 100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleY(0.22);
+    opacity: 0.55;
+  }
+}
+
+@keyframes ring-breathe {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes play-beat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.logo-svg .bl,
+.logo-svg .br {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: wave 1.35s ease-in-out infinite;
+}
+
+.logo-svg .bl {
+  fill: #E040FB;
+}
+
+.logo-svg .br {
+  fill: #22D3EE;
+}
+
+.logo-svg .ring-out {
+  animation: ring-breathe 2.8s ease-in-out infinite;
+}
+
+.logo-svg .ring-in {
+  animation: ring-breathe 2.8s ease-in-out infinite 0.7s;
+}
+
+.logo-svg .play {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: play-beat 1.8s ease-in-out infinite;
+}

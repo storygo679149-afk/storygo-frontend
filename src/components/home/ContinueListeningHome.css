@@ -1,0 +1,39 @@
+.continue-cards {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+}
+
+.continue-card {
+  background: rgba(255,255,255,0.04);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 340px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.continue-card:hover { background: rgba(255,255,255,0.08); }
+
+.continue-thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.progress-bar {
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  margin: 6px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--color-primary-gradient);
+  border-radius: 2px;
+}

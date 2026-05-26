@@ -1,0 +1,405 @@
+/* ChapterReader.css – Full‑width fix + Dark Theme + Glassmorphism + Animations */
+
+:root {
+  --reader-bg: #0f071a;
+  --reader-surface: rgba(255, 255, 255, 0.05);
+  --reader-text: #f0f0f5;
+  --reader-text-secondary: #c0c0d0;
+  --reader-accent: #8b5cf6;
+  --reader-accent-light: #a78bfa;
+  --reader-paper: #1a1a2e;
+}
+
+/* --- FULL‑WIDTH OVERRIDE (prevents sidebar overlap) --- */
+.chapter-reader-fullwidth {
+  position: relative;
+  width: 100%;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* Main page container – dark theme matching website */
+.chapter-reader-page {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 50% 0%, #0f071a 0%, #050510 100%);
+  color: var(--reader-text);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  width: 100%;
+}
+
+/* --- Header (glassmorphism – dark) --- */
+.reader-header {
+  position: sticky;
+  top: 0;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(139,92,246,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  gap: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  padding: 16px 32px;
+  border-radius: 25px;
+  width: 800px;
+  margin-top: 40px;
+  margin-left: 480px;
+  color: black;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--reader-accent-light);
+  text-decoration: none;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.back-link:hover {
+  gap: 12px;
+  color: var(--reader-accent);
+}
+
+.reader-title {
+  font-weight: 700;
+  color: white;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  background: rgb(119, 68, 238);
+  padding: 6px 16px;
+  border-radius: 10px;
+  width: 80px;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.reader-nav {
+  display: flex;
+  gap: 12px;
+}
+
+.reader-nav button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 18px;
+  border-radius: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+  white-space: nowrap;
+  color: #000000;
+}
+
+.reader-nav button:hover:not(:disabled) {
+  background: var(--reader-accent);
+  border-color: var(--reader-accent);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.reader-nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- Translation bar (dark) --- */
+.translation-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 12px 24px;
+  background: rgba(10, 10, 15, 0.8);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+  flex-wrap: wrap;
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+  color: black;
+}
+
+.translation-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 16px;
+  border-radius: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.globe-icon {
+  color: var(--reader-accent-light);
+  font-size: 1.1rem;
+}
+
+.translation-selector select {
+  background: transparent;
+  border: none;
+  padding: 8px 0;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  color: rgb(0, 0, 0);
+}
+
+.translation-selector select option {
+  background: #1a1a2e;
+  color: white;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+  color: var(--reader-accent-light);
+}
+
+.show-original-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 20px;
+  border-radius: 40px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+  color: #e0e0e0;
+}
+
+.show-original-btn:hover {
+  background: var(--reader-accent);
+  border-color: var(--reader-accent);
+  color: white;
+}
+
+.show-original-btn.active {
+  background: var(--reader-accent);
+  color: white;
+  border-color: var(--reader-accent);
+}
+
+/* --- Reading content – paper card for readability --- */
+.reader-content {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 48px 40px;
+  line-height: 1.9;
+  font-size: 1.15rem;
+  background: var(--reader-paper);
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  width: calc(100% - 48px);
+  box-sizing: border-box;
+}
+
+.reader-content h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-align: center;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.3px;
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.reader-content h1::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--reader-accent), #ec4899);
+  border-radius: 3px;
+}
+
+.chapter-body {
+  white-space: pre-wrap;
+  font-family: 'Georgia', serif;
+  text-align: justify;
+  animation: fadeIn 0.4s ease;
+  word-wrap: break-word;
+  color: #e0e0e0;
+}
+
+/* --- Footer --- */
+.chapter-footer {
+  margin-top: 60px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.word-count {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  margin-bottom: 24px;
+  font-family: 'Inter', sans-serif;
+}
+
+.chapter-nav-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.chapter-nav-bottom button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 12px 28px;
+  border-radius: 48px;
+  cursor: pointer;
+  color: #e0e0e0;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+}
+
+.chapter-nav-bottom button:hover:not(:disabled) {
+  background: var(--reader-accent);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.chapter-nav-bottom button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- Loading state --- */
+.chapter-reader-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 0%, #0f071a 0%, #050510 100%);
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .reader-content {
+    max-width: 90%;
+    padding: 32px 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .reader-header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 12px 16px;
+  }
+
+  .translation-bar {
+    justify-content: center;
+    padding: 10px 16px;
+  }
+
+  .reader-content {
+    padding: 24px 20px;
+    font-size: 1rem;
+    margin: 20px auto;
+    width: calc(100% - 32px);
+  }
+
+  .reader-content h1 {
+    font-size: 1.6rem;
+  }
+
+  .chapter-nav-bottom {
+    flex-direction: column;
+  }
+
+  .chapter-nav-bottom button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .reader-nav {
+    justify-content: center;
+  }
+
+  .reader-title {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .translation-selector select {
+    font-size: 0.85rem;
+  }
+
+  .show-original-btn {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+}
+
+/* --- Print styles --- */
+@media print {
+  .reader-header,
+  .translation-bar,
+  .reader-nav,
+  .chapter-nav-bottom {
+    display: none;
+  }
+
+  .reader-content {
+    margin: 0;
+    padding: 20px;
+    box-shadow: none;
+    background: white;
+    color: black;
+  }
+
+  .chapter-body {
+    color: black;
+  }
+}

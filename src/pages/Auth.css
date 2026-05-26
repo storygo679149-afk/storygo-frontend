@@ -1,0 +1,136 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+  padding: 20px;
+}
+
+.auth-container {
+  display: flex;
+  max-width: 1000px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Brand Side */
+.auth-brand {
+  flex: 1;
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.08), rgba(238, 90, 36, 0.05));
+  padding: 60px 40px;
+  display: flex;
+  align-items: center;
+}
+
+.brand-content {
+  max-width: 400px;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  color: #ff6b6b;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.brand-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.brand-description {
+  font-size: 16px;
+  color: #999999;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.brand-features {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15px;
+  color: #cccccc;
+}
+
+.feature-item span:first-child {
+  font-size: 20px;
+}
+
+/* Form Side */
+.auth-form-side {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .auth-container {
+    flex-direction: column;
+    max-width: 500px;
+  }
+  
+  .auth-brand {
+    padding: 40px 30px;
+  }
+  
+  .brand-title {
+    font-size: 28px;
+  }
+  
+  .brand-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  
+  .auth-form-side {
+    padding: 30px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: 10px;
+  }
+  
+  .auth-container {
+    border-radius: 16px;
+  }
+  
+  .auth-brand {
+    padding: 30px 20px;
+  }
+  
+  .brand-title {
+    font-size: 24px;
+  }
+  
+  .brand-features {
+    grid-template-columns: 1fr;
+  }
+  
+  .auth-form-side {
+    padding: 20px 16px;
+  }
+}

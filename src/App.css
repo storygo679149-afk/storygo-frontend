@@ -1,0 +1,297 @@
+/* ============================================
+   APP STYLES
+   ============================================ */
+
+@import './styles/variables.css';
+
+/* App Container */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+/* Page Loader */
+.page-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 40px 24px;
+}
+
+.page-loader .skeleton-wrapper {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+/* Page Transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+/* Global Scrollbar for App */
+.app ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.app ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.app ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Selection */
+.app ::selection {
+  background: rgba(255, 107, 107, 0.3);
+  color: #ffffff;
+}
+
+/* Focus Styles */
+.app :focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.app :focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Global Link Styles */
+.app a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.app a:hover {
+  color: var(--color-primary-dark);
+}
+
+/* Image Styles */
+.app img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Button Reset */
+.app button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.app button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Input Reset */
+.app input,
+.app textarea,
+.app select {
+  font-family: inherit;
+  color: inherit;
+}
+
+/* ============================================
+   404 PAGE
+   ============================================ */
+
+.not-found-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+  padding: 40px 24px;
+}
+
+.not-found-content {
+  text-align: center;
+  max-width: 500px;
+}
+
+.not-found-content h1 {
+  font-size: 120px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.not-found-content h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.not-found-content p {
+  font-size: 16px;
+  color: #999999;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.home-link {
+  display: inline-block;
+  padding: 14px 36px;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  color: #ffffff !important;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.home-link:hover {
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+  transform: translateY(-2px);
+  color: #ffffff !important;
+}
+
+/* ============================================
+   TOAST OVERRIDES
+   ============================================ */
+
+/* Custom toast styles */
+.toast-custom {
+  background: #1a1a2e !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  padding: 14px 18px !important;
+  color: #ffffff !important;
+  font-size: 14px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ============================================
+   LAZY LOADING PLACEHOLDER
+   ============================================ */
+
+.lazy-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.lazy-loading .spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 107, 107, 0.15);
+  border-top-color: #ff6b6b;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  .not-found-content h1 {
+    font-size: 80px;
+  }
+  
+  .not-found-content h2 {
+    font-size: 22px;
+  }
+  
+  .page-loader .skeleton-wrapper {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .not-found-content h1 {
+    font-size: 60px;
+  }
+  
+  .page-loader .skeleton-wrapper {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+/* ============================================
+   ANIMATION KEYFRAMES
+   ============================================ */
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  .app {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .header,
+  .sidebar,
+  .audio-player,
+  .footer,
+  .scroll-to-top {
+    display: none !important;
+  }
+}

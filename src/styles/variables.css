@@ -1,0 +1,137 @@
+:root {
+  /* ============================================
+     BRAND & ACCENT (Electric Blue)
+     ============================================ */
+  --color-primary: #3B82F6;                    /* Medium electric blue */
+  --color-primary-dark: #2563EB;               /* darker blue */
+  --color-primary-light: #60A5FA;              /* lighter blue */
+  --color-primary-rgb: 59, 130, 246;
+  --color-primary-gradient: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+  --color-primary-gradient-hover: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
+
+  --color-secondary: #457B9D;                  /* Slate Gray – borders/secondary */
+  --color-secondary-dark: #356680;
+  --color-secondary-light: #5C94B5;
+  --color-secondary-rgb: 69, 123, 157;
+  --color-secondary-gradient: linear-gradient(135deg, #457B9D 0%, #5C94B5 100%);
+
+  /* State colors (unchanged) */
+  --color-success: #00D2A0;
+  --color-success-light: rgba(0, 210, 160, 0.15);
+  --color-warning: #FFC048;
+  --color-warning-light: rgba(255, 192, 72, 0.15);
+  --color-error: #FF5C72;
+  --color-error-light: rgba(255, 92, 114, 0.15);
+  --color-info: #48B0FF;
+
+  /* Surfaces */
+  --color-bg-primary: #1A1A1B;                 /* 60% – Matte Black */
+  --color-bg-secondary: #222225;
+  --color-bg-tertiary: #2A2A2D;
+  --color-bg-surface: rgba(69, 123, 157, 0.08);  /* slate tint */
+  --color-bg-surface-hover: rgba(69, 123, 157, 0.15);
+  --color-bg-glass: rgba(26, 26, 27, 0.8);
+  --color-bg-glass-border: rgba(69, 123, 157, 0.15);
+
+  /* Text */
+  --color-text-primary: #F0F0F5;
+  --color-text-secondary: #B0B0C0;
+  --color-text-tertiary: #7C7C8C;
+  --color-text-muted: #50505C;
+  --color-text-placeholder: #555562;
+
+  /* Borders */
+  --color-border-subtle: rgba(69, 123, 157, 0.12);
+  --color-border-default: rgba(69, 123, 157, 0.2);
+  --color-border-strong: rgba(69, 123, 157, 0.35);
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.7);
+  --shadow-xl: 0 24px 56px rgba(0, 0, 0, 0.8);
+  --shadow-primary: 0 4px 20px rgba(59, 130, 246, 0.4);
+  --shadow-primary-hover: 0 8px 30px rgba(59, 130, 246, 0.6);
+
+  /* Typography */
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-secondary: 'Poppins', sans-serif;
+  --font-family-mono: 'Fira Code', 'Consolas', monospace;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.8125rem;
+  --font-size-base: 0.9375rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.375rem;
+  --font-size-2xl: 1.75rem;
+  --font-size-3xl: 2.25rem;
+  --font-size-4xl: 3rem;
+  --font-size-hero: 3.5rem;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.6;
+  --line-height-relaxed: 1.7;
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.02em;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-base: 1rem;
+  --spacing-lg: 1.25rem;
+  --spacing-xl: 1.5rem;
+  --spacing-2xl: 2rem;
+  --spacing-3xl: 2.5rem;
+  --spacing-4xl: 3rem;
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Layout */
+  --header-height: 70px;
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 72px;
+  --player-minimized-height: 72px;
+  --player-expanded-height: 400px;
+}
+
+/* Optional light theme (if you ever need it) */
+[data-theme="light"] {
+  --color-bg-primary: #F0F0F5;
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-tertiary: #E0E0E5;
+  --color-bg-surface: rgba(69, 123, 157, 0.05);
+  --color-bg-surface-hover: rgba(69, 123, 157, 0.1);
+  --color-bg-glass: rgba(255, 255, 255, 0.8);
+
+  --color-text-primary: #1A1A1B;
+  --color-text-secondary: #3A3A3F;
+  --color-text-tertiary: #6C6C75;
+  --color-text-muted: #90909A;
+
+  --color-border-subtle: rgba(69, 123, 157, 0.08);
+  --color-border-default: rgba(69, 123, 157, 0.18);
+  --color-border-strong: rgba(69, 123, 157, 0.3);
+
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.15);
+}
