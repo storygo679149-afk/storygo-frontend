@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import novelService from '../services/novelService';
-import seriesService from '../services/seriesService'; // for categories
+import seriesService from '../services/seriesService'; // to fetch categories
 import NovelCard from '../components/novels/NovelCard';
 import SkeletonLoader from '../components/common/SkeletonLoader';
 import { FiBookOpen, FiSearch, FiFilter, FiTrendingUp, FiClock, FiStar } from 'react-icons/fi';
