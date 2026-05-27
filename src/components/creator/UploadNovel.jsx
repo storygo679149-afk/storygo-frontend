@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import novelService from '../../services/novelService';
-import seriesService from '../../services/seriesService';
-import { FiImage, FiX } from 'react-icons/fi';
+import novelService from '../services/novelService';
+import seriesService from '../services/seriesService'; // for categories
+import { FiImage, FiX, FiBookOpen } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import './UploadNovel.css';
 
@@ -17,22 +17,27 @@ const UploadNovel = () => {
     author_name: '',
     tags: ''
   });
+  const [categories, setCategories] = useState([]);
   const [coverImage, setCoverImage] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
-  const [categories, setCategories] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
   const fetchCategories = async () => {
+    setIsLoadingCategories(true);
     try {
       const res = await seriesService.getCategories();
       const cats = res?.data?.data?.categories || res?.data?.categories || [];
       setCategories(cats);
     } catch (error) {
-      console.error('Failed to fetch categories');
+      console.error('Failed to fetch categories:', error);
+      toast.error('Could not load categories');
+    } finally {
+      setIsLoadingCategories(false);
     }
   };
 
@@ -104,9 +109,11 @@ const UploadNovel = () => {
           <div className="form-row">
             <div className="form-group">
               <label>Category *</label>
-              <select name="category_id" value={formData.category_id} onChange={handleChange} required>
-                <option value="">Select Category</option>
-                {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+              <select name="category_id" value={formData.category_id} onChange={handleChange} required disabled={isLoadingCategories}>
+                <option value="">{isLoadingCategories ? 'Loading categories...' : 'Select Category'}</option>
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
               </select>
             </div>
             <div className="form-group">
@@ -114,6 +121,8 @@ const UploadNovel = () => {
               <select name="language" value={formData.language} onChange={handleChange}>
                 <option value="en">English</option>
                 <option value="hi">Hindi</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
               </select>
             </div>
           </div>
