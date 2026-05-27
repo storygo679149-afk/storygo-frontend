@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import novelService from '../services/novelService';
-import seriesService from '../services/seriesService'; // for categories
+import novelService from '../../services/novelService';
+import seriesService from '../../services/seriesService';
 import { FiImage, FiX, FiBookOpen } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import './UploadNovel.css';
