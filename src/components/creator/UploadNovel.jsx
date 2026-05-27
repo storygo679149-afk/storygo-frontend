@@ -7,6 +7,19 @@ import { FiImage, FiX, FiBookOpen } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import './UploadNovel.css';
 
+const FALLBACK_CATEGORIES = [
+  { id: 'action-adventure', name: 'Action & Adventure' },
+  { id: 'romance',          name: 'Romance' },
+  { id: 'horror',           name: 'Horror' },
+  { id: 'science-fiction',  name: 'Science Fiction' },
+  { id: 'fantasy',          name: 'Fantasy' },
+  { id: 'mystery-thriller', name: 'Mystery & Thriller' },
+  { id: 'comedy',           name: 'Comedy' },
+  { id: 'drama',            name: 'Drama' },
+  { id: 'historical-fiction', name: 'Historical Fiction' },
+  { id: 'self-help',        name: 'Self-Help' },
+];
+
 const UploadNovel = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -17,7 +30,7 @@ const UploadNovel = () => {
     author_name: '',
     tags: ''
   });
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(FALLBACK_CATEGORIES);
   const [coverImage, setCoverImage] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,10 +45,13 @@ const UploadNovel = () => {
     try {
       const res = await seriesService.getCategories();
       const cats = res?.data?.data?.categories || res?.data?.categories || [];
-      setCategories(cats);
+      if (cats.length > 0) {
+        setCategories(cats);
+      }
+      // if API returns empty, fallback categories already set as default state
     } catch (error) {
-      console.error('Failed to fetch categories:', error);
-      toast.error('Could not load categories');
+      console.error('Failed to fetch categories, using defaults:', error);
+      // fallback categories already set as default state — no toast needed
     } finally {
       setIsLoadingCategories(false);
     }
@@ -110,7 +126,7 @@ const UploadNovel = () => {
             <div className="form-group">
               <label>Category *</label>
               <select name="category_id" value={formData.category_id} onChange={handleChange} required disabled={isLoadingCategories}>
-                <option value="">{isLoadingCategories ? 'Loading categories...' : 'Select Category'}</option>
+                <option value="">{isLoadingCategories ? 'Loading...' : 'Select Category'}</option>
                 {categories.map(cat => (
                   <option key={cat.id} value={cat.id}>{cat.name}</option>
                 ))}
