@@ -56,11 +56,8 @@ api.interceptors.response.use(
         case 400:
           console.error(`Bad Request (400): ${message}`);
           break;
-        case 401:
-          if (window.location.pathname !== '/auth') {
-            window.location.href = '/auth?mode=login';
-          }
-          break;
+       case 401:
+  break;
         case 403:
           console.error('Access forbidden:', message);
           break;
