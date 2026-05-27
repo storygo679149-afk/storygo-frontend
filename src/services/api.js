@@ -1,15 +1,34 @@
 import axios from 'axios';
 
+// ---------- PERMANENT BASE URL DETECTION ----------
+const getBaseURL = () => {
+  // 1. If the environment variable is explicitly set (highest priority)
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL;
+  }
+
+  // 2. Running on localhost (development)
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:5001/api';
+  }
+
+  // 3. Production – your live backend URL (Netlify, Vercel, etc.)
+  //    Replace with your actual Render backend URL
+  return 'https://storygo-backend-79u9.onrender.com/api';
+};
+
+const baseURL = getBaseURL();
+console.log('🔌 API Base URL:', baseURL); // optional – helps debug
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5001/api',
+  baseURL: baseURL,
   timeout: 120000,
   withCredentials: true,
 });
 
-// Request interceptor
+// Request interceptor (unchanged)
 api.interceptors.request.use(
   (config) => {
-    // Clean up FormData
     if (config.data instanceof FormData) {
       delete config.headers['Content-Type'];
     } else if (!config.headers['Content-Type']) {
@@ -20,7 +39,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor – improved error logging
+// Response interceptor (unchanged)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
