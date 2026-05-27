@@ -2,23 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import novelService from '../../services/novelService';
-import seriesService from '../../services/seriesService';
-import { FiImage, FiX, FiBookOpen } from 'react-icons/fi';
+import api from '../../services/api';
+import { FiImage, FiX, FiRefreshCw } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import './UploadNovel.css';
-
-const FALLBACK_CATEGORIES = [
-  { id: 'action-adventure', name: 'Action & Adventure' },
-  { id: 'romance',          name: 'Romance' },
-  { id: 'horror',           name: 'Horror' },
-  { id: 'science-fiction',  name: 'Science Fiction' },
-  { id: 'fantasy',          name: 'Fantasy' },
-  { id: 'mystery-thriller', name: 'Mystery & Thriller' },
-  { id: 'comedy',           name: 'Comedy' },
-  { id: 'drama',            name: 'Drama' },
-  { id: 'historical-fiction', name: 'Historical Fiction' },
-  { id: 'self-help',        name: 'Self-Help' },
-];
 
 const UploadNovel = () => {
   const navigate = useNavigate();
@@ -30,11 +17,12 @@ const UploadNovel = () => {
     author_name: '',
     tags: ''
   });
-  const [categories, setCategories] = useState(FALLBACK_CATEGORIES);
+  const [categories, setCategories] = useState([]);
   const [coverImage, setCoverImage] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  const [categoriesError, setCategoriesError] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -42,16 +30,18 @@ const UploadNovel = () => {
 
   const fetchCategories = async () => {
     setIsLoadingCategories(true);
+    setCategoriesError(false);
     try {
-      const res = await seriesService.getCategories();
+      const res = await api.get('/categories');
       const cats = res?.data?.data?.categories || res?.data?.categories || [];
       if (cats.length > 0) {
         setCategories(cats);
+      } else {
+        setCategoriesError(true);
       }
-      // if API returns empty, fallback categories already set as default state
     } catch (error) {
-      console.error('Failed to fetch categories, using defaults:', error);
-      // fallback categories already set as default state — no toast needed
+      console.error('Failed to fetch categories:', error);
+      setCategoriesError(true);
     } finally {
       setIsLoadingCategories(false);
     }
@@ -79,16 +69,15 @@ const UploadNovel = () => {
       toast.error('Title is required');
       return;
     }
-    if (!formData.category_id) {
-      toast.error('Please select a category');
-      return;
-    }
 
     setIsSubmitting(true);
     const payload = new FormData();
     payload.append('title', formData.title.trim());
     payload.append('description', formData.description);
-    payload.append('category_id', formData.category_id);
+    // Only send category_id if user actually selected one
+    if (formData.category_id) {
+      payload.append('category_id', formData.category_id);
+    }
     payload.append('language', formData.language);
     if (formData.author_name) payload.append('author_name', formData.author_name);
     if (formData.tags) payload.append('tags', formData.tags.split(',').map(t => t.trim()));
@@ -114,24 +103,64 @@ const UploadNovel = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Title *</label>
-            <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Enter novel title" required />
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              placeholder="Enter novel title"
+              required
+            />
           </div>
 
           <div className="form-group">
             <label>Description</label>
-            <textarea name="description" rows="4" value={formData.description} onChange={handleChange} placeholder="Describe your novel..." />
+            <textarea
+              name="description"
+              rows="4"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Describe your novel..."
+            />
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Category *</label>
-              <select name="category_id" value={formData.category_id} onChange={handleChange} required disabled={isLoadingCategories}>
-                <option value="">{isLoadingCategories ? 'Loading...' : 'Select Category'}</option>
-                {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
-                ))}
-              </select>
+              <label>
+                Category
+                <span style={{ fontSize: '12px', opacity: 0.5, marginLeft: '6px' }}>(optional)</span>
+              </label>
+              {categoriesError ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <select name="category_id" disabled style={{ flex: 1 }}>
+                    <option value="">Failed to load categories</option>
+                  </select>
+                  <button
+                    type="button"
+                    onClick={fetchCategories}
+                    style={{ padding: '8px', cursor: 'pointer', background: 'none', border: '1px solid currentColor', borderRadius: '6px' }}
+                    title="Retry loading categories"
+                  >
+                    <FiRefreshCw size={16} />
+                  </button>
+                </div>
+              ) : (
+                <select
+                  name="category_id"
+                  value={formData.category_id}
+                  onChange={handleChange}
+                  disabled={isLoadingCategories}
+                >
+                  <option value="">
+                    {isLoadingCategories ? 'Loading categories...' : 'Select Category (optional)'}
+                  </option>
+                  {categories.map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
+              )}
             </div>
+
             <div className="form-group">
               <label>Language</label>
               <select name="language" value={formData.language} onChange={handleChange}>
@@ -146,11 +175,23 @@ const UploadNovel = () => {
           <div className="form-row">
             <div className="form-group">
               <label>Author Name</label>
-              <input type="text" name="author_name" value={formData.author_name} onChange={handleChange} placeholder="Your name as author" />
+              <input
+                type="text"
+                name="author_name"
+                value={formData.author_name}
+                onChange={handleChange}
+                placeholder="Your name as author"
+              />
             </div>
             <div className="form-group">
               <label>Tags (comma separated)</label>
-              <input type="text" name="tags" value={formData.tags} onChange={handleChange} placeholder="romance, fantasy, adventure" />
+              <input
+                type="text"
+                name="tags"
+                value={formData.tags}
+                onChange={handleChange}
+                placeholder="romance, fantasy, adventure"
+              />
             </div>
           </div>
 
@@ -160,7 +201,17 @@ const UploadNovel = () => {
               {coverPreview ? (
                 <div className="cover-preview">
                   <img src={coverPreview} alt="Cover preview" />
-                  <button type="button" className="remove-cover" onClick={(e) => { e.stopPropagation(); setCoverImage(null); setCoverPreview(null); }}><FiX /></button>
+                  <button
+                    type="button"
+                    className="remove-cover"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCoverImage(null);
+                      setCoverPreview(null);
+                    }}
+                  >
+                    <FiX />
+                  </button>
                 </div>
               ) : (
                 <div className="upload-placeholder">
@@ -168,7 +219,13 @@ const UploadNovel = () => {
                   <span>Click to upload cover image</span>
                 </div>
               )}
-              <input id="coverInput" type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} />
+              <input
+                id="coverInput"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                style={{ display: 'none' }}
+              />
             </div>
           </div>
 
