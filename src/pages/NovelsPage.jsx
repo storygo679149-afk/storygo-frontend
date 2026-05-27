@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import novelService from '../services/novelService';
+import seriesService from '../services/seriesService'; // for categories
 import NovelCard from '../components/novels/NovelCard';
 import SkeletonLoader from '../components/common/SkeletonLoader';
 import { FiBookOpen, FiSearch, FiFilter, FiTrendingUp, FiClock, FiStar } from 'react-icons/fi';
@@ -8,19 +9,33 @@ import './NovelsPage.css';
 
 const NovelsPage = () => {
   const [novels, setNovels] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('latest');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
+    fetchCategories();
     fetchNovels();
-  }, [sortBy]);
+  }, [sortBy, selectedCategory]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await seriesService.getCategories();
+      const cats = response?.data?.data?.categories || response?.data?.categories || [];
+      setCategories(cats);
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    }
+  };
 
   const fetchNovels = async () => {
     setIsLoading(true);
     try {
       const params = { sort: sortBy, limit: 30 };
+      if (selectedCategory) params.category = selectedCategory;
       const response = await novelService.getAllNovels(params);
       let novelsList = response?.data?.data?.novels || response?.data?.novels || [];
       if (searchTerm) {
@@ -67,6 +82,19 @@ const NovelsPage = () => {
 
         {showFilters && (
           <motion.div className="filters-panel" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}>
+            <div className="filter-group">
+              <label>Category</label>
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="filter-select"
+              >
+                <option value="">All Categories</option>
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+            </div>
             <div className="filter-group">
               <label>Sort By</label>
               <div className="sort-buttons">
