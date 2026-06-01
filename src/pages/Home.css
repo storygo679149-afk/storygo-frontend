@@ -1,23 +1,24 @@
 /* ============================================
    HOME PAGE – REDESIGN
    ============================================ */
-
+ 
 .home-page {
   min-height: 100vh;
 }
-
+ 
 .home-loading .hero-skeleton {
   height: 500px;
   background: rgba(255,255,255,0.03);
 }
-
+ 
 .home-loading .skeleton-row {
   height: 60px;
   margin: 24px;
   background: rgba(255,255,255,0.03);
   border-radius: 12px;
 }
-
+ 
+/* FIX: was hardcoded repeat(5,1fr) — collapses on mobile */
 .home-loading .skeleton-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -25,14 +26,67 @@
   margin: 24px;
   height: 200px;
 }
-
+ 
 .home-section {
   margin: 0 auto 48px;
   padding: 0 24px;
   max-width: 1400px;
 }
-
+ 
 /* Continue Listening, Mood, etc. can have their own containers */
 .home-section > * {
   margin-bottom: 0;
+}
+ 
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+ 
+/* Tablet (≤1024px) */
+@media (max-width: 1024px) {
+  .home-loading .skeleton-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+ 
+/* Large phone / small tablet (≤768px) */
+@media (max-width: 768px) {
+  .home-loading .hero-skeleton {
+    height: 320px;
+  }
+ 
+  .home-loading .skeleton-row {
+    margin: 16px;
+    height: 48px;
+  }
+ 
+  .home-loading .skeleton-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 16px;
+    height: 160px;
+  }
+ 
+  .home-section {
+    margin: 0 auto 32px;
+    padding: 0 16px;
+  }
+}
+ 
+/* Small phone (≤480px) */
+@media (max-width: 480px) {
+  .home-loading .hero-skeleton {
+    height: 240px;
+  }
+ 
+  .home-loading .skeleton-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    height: 140px;
+  }
+ 
+  .home-section {
+    margin: 0 auto 24px;
+    padding: 0 12px;
+  }
 }
