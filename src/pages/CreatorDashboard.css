@@ -1,3 +1,7 @@
+/* ============================================
+   CREATOR DASHBOARD PAGE
+   ============================================ */
+
 .creator-dashboard-page {
   max-width: 1400px;
   margin: 0 auto;
@@ -12,6 +16,12 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   padding-bottom: 16px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.creator-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .creator-nav-btn {
@@ -29,6 +39,7 @@
   transition: all 0.2s;
   font-family: inherit;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .creator-nav-btn:hover {
@@ -46,13 +57,48 @@
   min-height: 500px;
 }
 
+/* ============================================
+   RESPONSIVE
+   FIX: was only ≤768px — no small-phone breakpoint
+   ============================================ */
+
+/* Tablet (≤768px) — original, kept */
 @media (max-width: 768px) {
   .creator-dashboard-page {
     padding: 16px;
   }
-  
+
   .creator-nav-btn {
     padding: 8px 14px;
     font-size: 13px;
+  }
+
+  .creator-nav {
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+  }
+}
+
+/* Small phone (≤480px) — added */
+@media (max-width: 480px) {
+  .creator-dashboard-page {
+    padding: 12px;
+  }
+
+  .creator-nav {
+    gap: 6px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+  }
+
+  .creator-nav-btn {
+    padding: 7px 12px;
+    font-size: 12px;
+    gap: 5px;
+    border-radius: 8px;
+  }
+
+  .creator-content {
+    min-height: 300px;
   }
 }
