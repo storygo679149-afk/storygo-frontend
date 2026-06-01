@@ -1,11 +1,50 @@
+/* ============================================
+   STAFF PICKS – HORIZONTAL SCROLL
+   ============================================ */
+
 .series-horizontal-scroll {
   display: flex;
   gap: 16px;
   overflow-x: auto;
   padding-bottom: 12px;
+  /* smooth momentum scroll on iOS */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.series-horizontal-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .horizontal-card-wrapper {
   flex-shrink: 0;
+  /* FIX: was a hard 200px — no adjustment for smaller screens */
   width: 200px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Tablet (≤768px) */
+@media (max-width: 768px) {
+  .series-horizontal-scroll {
+    gap: 12px;
+  }
+
+  .horizontal-card-wrapper {
+    width: 175px;
+  }
+}
+
+/* Small phone (≤480px) */
+@media (max-width: 480px) {
+  .series-horizontal-scroll {
+    gap: 10px;
+  }
+
+  /* Let cards be ~42% of the viewport so 2.3 are visible at once */
+  .horizontal-card-wrapper {
+    width: clamp(140px, 42vw, 170px);
+  }
 }
