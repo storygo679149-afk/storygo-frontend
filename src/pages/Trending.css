@@ -1,3 +1,7 @@
+/* ============================================
+   TRENDING PAGE
+   ============================================ */
+
 .trending-page {
   max-width: 1400px;
   margin: 0 auto;
@@ -21,6 +25,7 @@
 
 .trending-header svg {
   color: #ff6b6b;
+  flex-shrink: 0;
 }
 
 .trending-header p {
@@ -32,6 +37,7 @@
   display: flex;
   gap: 8px;
   margin-bottom: 32px;
+  flex-wrap: wrap;
 }
 
 .period-btn {
@@ -102,22 +108,80 @@
   background: rgba(255, 107, 107, 0.25);
 }
 
+/* ============================================
+   RESPONSIVE
+   FIX: was only ≤768px — no small-phone breakpoint
+   ============================================ */
+
+/* Tablet (≤768px) — original, kept */
 @media (max-width: 768px) {
   .trending-page {
     padding: 20px 16px;
   }
-  
+
   .trending-header h1 {
     font-size: 26px;
   }
-  
+
   .trending-periods {
     overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
   }
-  
+
+  .trending-periods::-webkit-scrollbar {
+    display: none;
+  }
+
   .period-btn {
     padding: 8px 16px;
     font-size: 13px;
     white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
+/* Small phone (≤480px) — added */
+@media (max-width: 480px) {
+  .trending-page {
+    padding: 16px 12px;
+  }
+
+  .trending-header {
+    margin-bottom: 16px;
+  }
+
+  .trending-header h1 {
+    font-size: 22px;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .trending-header p {
+    font-size: 14px;
+  }
+
+  .trending-periods {
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .period-btn {
+    padding: 7px 12px;
+    font-size: 12px;
+    gap: 5px;
+    border-radius: 8px;
+  }
+
+  .trending-error,
+  .trending-empty {
+    padding: 48px 12px;
+  }
+
+  .trending-error h2,
+  .trending-empty h2 {
+    font-size: 18px;
   }
 }
