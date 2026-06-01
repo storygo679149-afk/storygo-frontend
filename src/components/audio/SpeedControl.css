@@ -1,3 +1,7 @@
+/* ============================================
+   SPEED CONTROL POPUP
+   ============================================ */
+
 .speed-control {
   position: absolute;
   bottom: 100%;
@@ -6,10 +10,14 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 16px;
+  /* FIX: added max-width so popup doesn't overflow viewport on narrow screens */
   min-width: 200px;
+  max-width: calc(100vw - 32px);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   z-index: 100;
   margin-bottom: 8px;
+  /* Prevent popup from going offscreen to the right */
+  right: 0;
 }
 
 .speed-control-header {
@@ -36,4 +44,30 @@
   align-items: center;
   border-radius: 4px;
   transition: all 0.2s;
+}
+
+.speed-close-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Small phone (≤480px) */
+@media (max-width: 480px) {
+  .speed-control {
+    /* On very small screens switch to bottom-anchored full-width popup */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 16px 32px;
+    /* Add safe area padding for notched phones */
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  }
 }
