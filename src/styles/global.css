@@ -103,7 +103,7 @@ textarea::placeholder {
   color: var(--color-text-placeholder);
 }
 
-/* Headings */
+/* Headings – desktop defaults */
 h1, h2, h3, h4, h5, h6 {
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
@@ -382,3 +382,34 @@ code {
 .animate-spin { animation: spin 1s linear infinite; }
 .animate-pulse { animation: pulse 2s ease-in-out infinite; }
 .animate-shimmer { animation: shimmer 1.5s ease-in-out infinite; }
+
+/* ============================================
+   RESPONSIVE – GLOBAL HEADING SCALE
+   FIX: headings were large fixed sizes with no
+   downscaling — overflow on small screens
+   ============================================ */
+
+/* Tablet (≤768px) */
+@media (max-width: 768px) {
+  html {
+    /* Slightly reduce root font-size so rem-based values scale down */
+    font-size: 15px;
+  }
+
+  h1 { font-size: var(--font-size-3xl); }
+  h2 { font-size: var(--font-size-2xl); }
+  h3 { font-size: var(--font-size-xl); }
+  h4 { font-size: var(--font-size-lg); }
+}
+
+/* Small phone (≤480px) */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  h1 { font-size: var(--font-size-2xl); }
+  h2 { font-size: var(--font-size-xl); }
+  h3 { font-size: var(--font-size-lg); }
+  h4 { font-size: var(--font-size-base); }
+}
