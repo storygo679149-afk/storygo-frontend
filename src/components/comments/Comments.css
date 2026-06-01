@@ -1,5 +1,16 @@
-.comments-section h3 { margin-bottom: 16px; color: #fff; }
-.comment-form { margin-bottom: 24px; }
+/* ============================================
+   COMMENTS SECTION
+   ============================================ */
+
+.comments-section h3 {
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.comment-form {
+  margin-bottom: 24px;
+}
+
 .comment-input {
   width: 100%;
   background: rgba(255,255,255,0.05);
@@ -10,6 +21,7 @@
   resize: vertical;
   font-family: inherit;
 }
+
 .comment-submit-btn {
   margin-top: 8px;
   display: flex;
@@ -21,7 +33,15 @@
   border-radius: 8px;
   color: #fff;
   cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: opacity 0.2s;
 }
+
+.comment-submit-btn:hover {
+  opacity: 0.85;
+}
+
 .replying-to {
   background: rgba(255,255,255,0.05);
   padding: 6px 10px;
@@ -33,8 +53,82 @@
   font-size: 0.85rem;
   color: #aaa;
 }
-.cancel-reply { background: none; border: none; color: #aaa; cursor: pointer; }
-.login-to-comment { color: #888; margin-bottom: 16px; }
-.comments-list { display: flex; flex-direction: column; gap: 16px; }
-.no-comments { color: #888; text-align: center; padding: 20px; }
-.comments-loading { color: #888; }
+
+.cancel-reply {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.login-to-comment {
+  color: #888;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.no-comments {
+  color: #888;
+  text-align: center;
+  padding: 20px;
+  font-size: 0.9rem;
+}
+
+.comments-loading {
+  color: #888;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Tablet (≤768px) */
+@media (max-width: 768px) {
+  .comments-section h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  .comment-form {
+    margin-bottom: 20px;
+  }
+
+  .comment-input {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Small phone (≤480px) */
+@media (max-width: 480px) {
+  .comments-section h3 {
+    font-size: 0.95rem;
+  }
+
+  .comment-input {
+    padding: 8px;
+    border-radius: 6px;
+  }
+
+  .comment-submit-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 16px;
+    margin-top: 8px;
+  }
+
+  .replying-to {
+    font-size: 0.8rem;
+  }
+
+  .comments-list {
+    gap: 12px;
+  }
+}
