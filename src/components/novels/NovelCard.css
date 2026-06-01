@@ -1,3 +1,7 @@
+/* ============================================
+   NOVEL CARD – SITEWIDE COMPONENT
+   ============================================ */
+
 .novel-card {
   background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(12px);
@@ -135,4 +139,96 @@
 .chapter-count {
   font-size: 0.7rem;
   color: #6b7280;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Tablet (≤768px) */
+@media (max-width: 768px) {
+  .novel-card {
+    border-radius: 16px;
+  }
+
+  .novel-card:hover {
+    /* Reduce lift on touch devices — hover is unreliable */
+    transform: translateY(-2px);
+  }
+
+  .novel-card-info {
+    padding: 12px;
+  }
+
+  .novel-title {
+    font-size: 0.9rem;
+  }
+
+  .novel-author {
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+  }
+
+  .novel-meta {
+    font-size: 0.7rem;
+    gap: 8px;
+  }
+
+  .cover-placeholder {
+    font-size: 2.2rem;
+  }
+}
+
+/* Small phone (≤480px) */
+@media (max-width: 480px) {
+  .novel-card {
+    border-radius: 12px;
+  }
+
+  .novel-card-info {
+    padding: 10px;
+  }
+
+  .novel-title {
+    font-size: 0.85rem;
+  }
+
+  .novel-author {
+    font-size: 0.7rem;
+    margin-bottom: 6px;
+  }
+
+  .novel-meta {
+    font-size: 0.65rem;
+    gap: 6px;
+  }
+
+  .chapter-count {
+    font-size: 0.65rem;
+  }
+
+  .completed-badge,
+  .premium-badge {
+    font-size: 0.6rem;
+    padding: 3px 8px;
+    top: 8px;
+    left: 8px;
+  }
+
+  .premium-badge {
+    right: 8px;
+    left: auto;
+  }
+
+  /* On small screens show the read button always (no reliable hover) */
+  .cover-overlay {
+    opacity: 1;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    padding: 12px;
+  }
+
+  .read-btn {
+    padding: 6px 14px;
+    font-size: 0.75rem;
+  }
 }
