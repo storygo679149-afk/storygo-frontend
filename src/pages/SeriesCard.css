@@ -17,11 +17,12 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
   transform: translateY(-4px);
 }
+
 /* Custom badge (e.g., Staff Pick) */
 .card-custom-badge {
   position: absolute;
   top: 14px;
-  right: 52px;           /* leaves space for the menu button */
+  right: 52px; /* leaves space for the menu button */
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.65rem;
@@ -33,6 +34,7 @@
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
   z-index: 10;
 }
+
 /* Thumbnail */
 .series-card-thumbnail {
   position: relative;
@@ -150,4 +152,91 @@
 .card-meta svg {
   font-size: 0.85rem;
   color: var(--color-primary);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Tablet (≤768px) */
+@media (max-width: 768px) {
+  .series-card {
+    border-radius: 12px;
+  }
+
+  .series-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .series-card-content {
+    padding: 12px;
+  }
+
+  .card-title {
+    font-size: 0.9rem;
+  }
+
+  .card-author {
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+  }
+
+  .card-meta span {
+    font-size: 0.75rem;
+  }
+
+  .card-meta {
+    gap: 8px;
+  }
+
+  .play-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .card-custom-badge {
+    top: 10px;
+    right: 44px;
+    font-size: 0.6rem;
+    padding: 3px 10px;
+  }
+}
+
+/* Small phone (≤480px) */
+@media (max-width: 480px) {
+  .series-card-content {
+    padding: 10px;
+  }
+
+  .card-title {
+    font-size: 0.82rem;
+  }
+
+  .card-author {
+    font-size: 0.72rem;
+  }
+
+  .card-meta span {
+    font-size: 0.68rem;
+  }
+
+  .series-badge {
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    top: 8px;
+    left: 8px;
+  }
+
+  /* Show overlay permanently on touch screens */
+  .card-overlay {
+    opacity: 1;
+    background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+  }
+
+  .play-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
 }
