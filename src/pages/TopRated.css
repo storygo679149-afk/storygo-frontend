@@ -1,3 +1,7 @@
+/* ============================================
+   TOP RATED PAGE
+   ============================================ */
+
 .top-rated-page {
   max-width: 1400px;
   margin: 0 auto;
@@ -14,9 +18,47 @@
 
 .top-rated-page h1 svg {
   color: var(--color-warning);
+  flex-shrink: 0;
 }
 
 .top-rated-page p {
   color: var(--color-text-secondary);
   margin-bottom: 24px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Tablet (≤768px) */
+@media (max-width: 768px) {
+  .top-rated-page {
+    padding: 24px 16px;
+  }
+
+  .top-rated-page h1 {
+    font-size: 1.6rem;
+    gap: 10px;
+  }
+
+  .top-rated-page p {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+}
+
+/* Small phone (≤480px) */
+@media (max-width: 480px) {
+  .top-rated-page {
+    padding: 20px 12px;
+  }
+
+  .top-rated-page h1 {
+    font-size: 1.35rem;
+    gap: 8px;
+  }
+
+  .top-rated-page h1 svg {
+    font-size: 1.2rem;
+  }
 }
