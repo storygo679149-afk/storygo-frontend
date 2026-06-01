@@ -1,3 +1,7 @@
+/* ============================================
+   LIBRARY PAGE
+   ============================================ */
+
 .library-page {
   max-width: 1400px;
   margin: 0 auto;
@@ -128,26 +132,98 @@
   color: #888888;
 }
 
+/* ============================================
+   RESPONSIVE
+   FIX: was only ≤768px — no small-phone breakpoint
+   ============================================ */
+
+/* Tablet (≤768px) — original, kept */
 @media (max-width: 768px) {
   .library-page {
     padding: 20px 16px;
   }
-  
+
   .library-header h1 {
     font-size: 26px;
   }
-  
+
   .library-tabs {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
-  
+
+  .library-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
   .library-tab {
     padding: 10px 14px;
     font-size: 13px;
     white-space: nowrap;
   }
-  
+
   .following-list {
     grid-template-columns: 1fr;
+  }
+
+  .library-empty {
+    padding: 60px 16px;
+  }
+}
+
+/* Small phone (≤480px) — added */
+@media (max-width: 480px) {
+  .library-page {
+    padding: 16px 12px;
+  }
+
+  .library-header {
+    margin-bottom: 16px;
+  }
+
+  .library-header h1 {
+    font-size: 22px;
+  }
+
+  .library-tab {
+    padding: 8px 12px;
+    font-size: 12px;
+    gap: 5px;
+  }
+
+  .library-tabs {
+    margin-bottom: 20px;
+  }
+
+  .following-item {
+    padding: 14px;
+    gap: 12px;
+    border-radius: 12px;
+  }
+
+  .following-avatar {
+    width: 44px;
+    height: 44px;
+  }
+
+  .following-info h3 {
+    font-size: 14px;
+  }
+
+  .following-info p {
+    font-size: 12px;
+  }
+
+  .library-empty {
+    padding: 48px 12px;
+  }
+
+  .empty-icon {
+    font-size: 36px;
+  }
+
+  .library-empty h3 {
+    font-size: 16px;
   }
 }
