@@ -1,7 +1,20 @@
+/* ============================================
+   CONTINUE LISTENING – HOME
+   ============================================ */
+
 .continue-cards {
   display: flex;
   gap: 16px;
   overflow-x: auto;
+  /* smooth momentum scroll on iOS */
+  -webkit-overflow-scrolling: touch;
+  /* hide scrollbar but keep scrollable */
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+
+.continue-cards::-webkit-scrollbar {
+  display: none;
 }
 
 .continue-card {
@@ -11,7 +24,10 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  min-width: 340px;
+  /* FIX: was fixed 340px — overflows 360px phones */
+  min-width: 300px;
+  max-width: 360px;
+  flex-shrink: 0;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -23,6 +39,12 @@
   height: 64px;
   border-radius: 12px;
   object-fit: cover;
+  flex-shrink: 0;
+}
+
+.continue-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .progress-bar {
@@ -36,4 +58,43 @@
   height: 100%;
   background: var(--color-primary-gradient);
   border-radius: 2px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+/* Large phone / tablet (≤768px) */
+@media (max-width: 768px) {
+  .continue-card {
+    min-width: 260px;
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .continue-thumb {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+/* Small phone (≤480px) */
+@media (max-width: 480px) {
+  .continue-cards {
+    gap: 12px;
+  }
+
+  .continue-card {
+    /* On very small screens allow the card to shrink to ~85vw */
+    min-width: min(260px, 82vw);
+    padding: 12px;
+    gap: 10px;
+    border-radius: 12px;
+  }
+
+  .continue-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+  }
 }
