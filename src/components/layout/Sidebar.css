@@ -1,6 +1,8 @@
-/* Sidebar.css - Smooth animations & transitions */
+/* ============================================
+   Sidebar – Full responsive, mobile toggle,
+   smooth animations & glassmorphism
+   ============================================ */
 
-/* CSS Variables for dynamic theming */
 :root {
   --sidebar-bg: rgba(8, 8, 12, 0.96);
   --sidebar-border: rgba(255, 255, 255, 0.06);
@@ -16,22 +18,19 @@
   --transition-smooth: cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
-/* Overlay */
+/* ── Overlay for mobile ── */
 .sidebar-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(6px);
   z-index: 90;
   animation: fadeIn 0.2s ease;
 }
 
-/* Mobile toggle button */
+/* ── Mobile toggle button (hamburger) ── */
 .sidebar-mobile-toggle {
-  display: none;
+  display: none;         /* hidden on desktop */
   position: fixed;
   left: 0;
   top: 50%;
@@ -59,7 +58,7 @@
   width: 42px;
 }
 
-/* Main sidebar */
+/* ── Main sidebar ── */
 .sidebar {
   position: fixed;
   left: 0;
@@ -86,7 +85,7 @@
   width: 80px;
 }
 
-/* Custom scroll */
+/* Scrollbar */
 .sidebar::-webkit-scrollbar {
   width: 4px;
 }
@@ -102,7 +101,7 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* Collapse button */
+/* Desktop collapse button */
 .sidebar-collapse-btn {
   position: absolute;
   top: 20px;
@@ -130,7 +129,7 @@
   transform: scale(1.05);
 }
 
-/* User profile */
+/* ── User profile ── */
 .sidebar-user-section {
   padding: 24px 16px 20px;
   border-bottom: 1px solid var(--sidebar-border);
@@ -152,7 +151,8 @@
   flex-shrink: 0;
 }
 
-.user-avatar, .user-avatar-placeholder {
+.user-avatar,
+.user-avatar-placeholder {
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -192,6 +192,7 @@
   transition: opacity 0.2s, transform 0.2s;
 }
 
+/* Hide user info when fully collapsed on desktop */
 .sidebar.desktop-collapsed .user-info {
   display: none;
 }
@@ -214,7 +215,7 @@
   margin-top: 2px;
 }
 
-/* Navigation */
+/* ── Navigation ── */
 .sidebar-nav {
   flex: 1;
   padding: 8px 12px;
@@ -223,7 +224,6 @@
   gap: 20px;
 }
 
-/* Section headers */
 .nav-section {
   display: flex;
   flex-direction: column;
@@ -254,12 +254,7 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
-.section-toggle-icon {
-  display: flex;
-  transition: transform 0.2s;
-}
-
-/* Nav items */
+/* Nav item */
 .nav-item {
   position: relative;
   display: flex;
@@ -305,20 +300,7 @@
   flex: 1;
 }
 
-/* Active indicator animation (handled by Framer Motion layoutId, but fallback) */
-.nav-active-indicator {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 24px;
-  background: var(--accent);
-  border-radius: 0 4px 4px 0;
-  box-shadow: 0 0 8px var(--accent-glow);
-}
-
-/* Tooltip */
+/* ── Tooltip (collapsed desktop) ── */
 .nav-tooltip {
   position: fixed;
   background: #1f1f2b;
@@ -347,7 +329,7 @@
   }
 }
 
-/* Bottom section */
+/* ── Bottom section ── */
 .sidebar-bottom {
   padding: 20px 16px;
   border-top: 1px solid var(--sidebar-border);
@@ -380,6 +362,7 @@
   transform: translateY(-1px);
 }
 
+/* Collapsed logout button */
 .sidebar.desktop-collapsed .sidebar-logout-btn {
   justify-content: center;
   padding: 12px;
@@ -389,7 +372,7 @@
   display: none;
 }
 
-/* Loading animation for logout */
+/* Loading pulse */
 .sidebar-logout-btn.loading {
   pointer-events: none;
   opacity: 0.7;
@@ -434,7 +417,7 @@
   box-shadow: 0 6px 16px rgba(255, 107, 107, 0.4);
 }
 
-/* Mobile & tablet overrides */
+/* ── Mobile responsive ── */
 @media (max-width: 1199px) {
   .sidebar {
     transform: translateX(-100%);
@@ -450,27 +433,24 @@
     box-shadow: 4px 0 28px rgba(0, 0, 0, 0.4);
   }
 
-  .sidebar.desktop-expanded,
-  .sidebar.desktop-collapsed {
-    width: 300px;
-    max-width: 85vw;
-  }
-
-  .sidebar .nav-label,
-  .sidebar .user-info,
-  .sidebar .nav-section-title {
+  /* Force full content display when open on mobile */
+  .sidebar.mobile-open .nav-label,
+  .sidebar.mobile-open .user-info,
+  .sidebar.mobile-open .nav-section-title {
     display: block !important;
   }
 
-  .sidebar .nav-item {
+  .sidebar.mobile-open .nav-item {
     justify-content: flex-start;
     padding: 12px 16px;
   }
 
+  /* Hide desktop collapse button */
   .sidebar-collapse-btn {
     display: none;
   }
 
+  /* Show hamburger */
   .sidebar-mobile-toggle {
     display: flex;
   }
@@ -486,46 +466,17 @@
   }
 }
 
-/* Focus states */
+/* ── Keyframes ── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Focus styles for accessibility */
 .nav-item:focus-visible,
 .sidebar-logout-btn:focus-visible,
 .sidebar-signin-btn:focus-visible,
 .sidebar-collapse-btn:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-}
-
-/* Keyframe for overlay */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* Collapsed state overrides */
-.sidebar.desktop-collapsed {
-  width: 80px;
-}
-
-.sidebar.desktop-collapsed .nav-label,
-.sidebar.desktop-collapsed .nav-section-title,
-.sidebar.desktop-collapsed .user-info {
-  display: none;
-}
-
-.sidebar.desktop-collapsed .nav-item {
-  justify-content: center;
-  padding: 12px;
-}
-
-.sidebar.desktop-collapsed .nav-icon {
-  margin: 0;
-  font-size: 1.3rem;
-}
-
-.sidebar.desktop-collapsed .sidebar-logout-btn {
-  justify-content: center;
-}
-
-.sidebar.desktop-collapsed .sidebar-logout-btn span {
-  display: none;
 }
