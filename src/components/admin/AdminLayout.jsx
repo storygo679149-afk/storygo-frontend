@@ -1,12 +1,11 @@
-```jsx
 import React, { useEffect, useState } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
-import { FiMenu } from 'react-icons/fi';
 import useAuth from '../../hooks/useAuth';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
 import './Admin.css';
 
+// Preload all admin pages (called once after mount)
 const preloadAdminPages = () => {
   import('../../pages/admin/AdminDashboard');
   import('../../pages/admin/Users');
@@ -34,48 +33,32 @@ const AdminLayout = () => {
     preloadAdminPages();
   }, []);
 
-  const closeSidebar = () => {
+  // Close sidebar on route change (if desired)
+  useEffect(() => {
     setSidebarOpen(false);
-  };
+  }, [location.pathname]);
 
   if (!isAuthenticated || !user?.is_admin) {
     return <Navigate to="/admin/login" replace />;
   }
 
+  const toggleSidebar = () => setSidebarOpen(prev => !prev);
+  const closeSidebar = () => setSidebarOpen(false);
+
   return (
     <div className="admin-layout">
+      {/* Overlay for mobile */}
+      {sidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar} />}
 
-      <button
-        className="mobile-menu-btn"
-        onClick={() => setSidebarOpen(true)}
-        aria-label="Open Menu"
-      >
-        <FiMenu />
-      </button>
-
-      {sidebarOpen && (
-        <div
-          className="sidebar-overlay"
-          onClick={closeSidebar}
-        />
-      )}
-
-      <AdminSidebar
-        isOpen={sidebarOpen}
-        closeSidebar={closeSidebar}
-      />
-
+      <AdminSidebar isOpen={sidebarOpen} onClose={closeSidebar} />
       <div className="admin-main">
-        <AdminHeader />
-
-        <main className="admin-content">
+        <AdminHeader onMenuToggle={toggleSidebar} />
+        <div className="admin-content">
           <Outlet />
-        </main>
+        </div>
       </div>
-
     </div>
   );
 };
 
 export default AdminLayout;
-```
