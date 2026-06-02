@@ -25,44 +25,6 @@ export const AudioProvider = ({ children }) => {
   const [queueIndex, setQueueIndex] = useState(-1);
   const [playlist, setPlaylist] = useState(null); // { seriesId, episodes[] }
 
-  // Refs
-  const audioRef = useRef(null);
-  const saveIntervalRef = useRef(null);
-
-  // Save volume to localStorage
-  useEffect(() => {
-    localStorage.setItem('audioVolume', volume.toString());
-  }, [volume]);
-
-  // Auto-save progress
-  useEffect(() => {
-    if (isPlaying && currentEpisode && isAuthenticated) {
-      saveIntervalRef.current = setInterval(() => {
-        saveProgress();
-      }, 5000);
-    }
-
-    return () => {
-      if (saveIntervalRef.current) {
-        clearInterval(saveIntervalRef.current);
-      }
-    };
-  }, [isPlaying, currentEpisode, isAuthenticated]);
-
-  // Save listening progress to backend
-  const saveProgress = useCallback(async () => {
-    if (!currentEpisode || !isAuthenticated || !audioRef.current) return;
-
-    try {
-      await episodeService.updateProgress(
-        currentEpisode.id,
-        Math.floor(audioRef.current.currentTime),
-        playbackSpeed
-      );
-    } catch (error) {
-      console.error('Error saving progress:', error);
-    }
-  }, [currentEpisode, isAuthenticated, playbackSpeed]);
 
   // Play an episode
   const playEpisode = useCallback((episode, playlistData = null) => {
