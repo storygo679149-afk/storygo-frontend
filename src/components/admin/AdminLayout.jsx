@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+```jsx
+import React, { useEffect, useState } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
+import { FiMenu } from 'react-icons/fi';
 import useAuth from '../../hooks/useAuth';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
 import './Admin.css';
 
-// Preload all admin pages (called once after mount)
 const preloadAdminPages = () => {
-  // These are the same lazy imports used in App.jsx – we just trigger the import
   import('../../pages/admin/AdminDashboard');
   import('../../pages/admin/Users');
   import('../../pages/admin/SeriesManager');
@@ -28,11 +28,15 @@ const preloadAdminPages = () => {
 
 const AdminLayout = () => {
   const { user, isAuthenticated } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    // Start preloading all admin pages in the background
     preloadAdminPages();
   }, []);
+
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
 
   if (!isAuthenticated || !user?.is_admin) {
     return <Navigate to="/admin/login" replace />;
@@ -40,15 +44,38 @@ const AdminLayout = () => {
 
   return (
     <div className="admin-layout">
-      <AdminSidebar />
+
+      <button
+        className="mobile-menu-btn"
+        onClick={() => setSidebarOpen(true)}
+        aria-label="Open Menu"
+      >
+        <FiMenu />
+      </button>
+
+      {sidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={closeSidebar}
+        />
+      )}
+
+      <AdminSidebar
+        isOpen={sidebarOpen}
+        closeSidebar={closeSidebar}
+      />
+
       <div className="admin-main">
         <AdminHeader />
-        <div className="admin-content">
+
+        <main className="admin-content">
           <Outlet />
-        </div>
+        </main>
       </div>
+
     </div>
   );
 };
 
 export default AdminLayout;
+```
