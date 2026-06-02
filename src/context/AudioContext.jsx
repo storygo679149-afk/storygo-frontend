@@ -25,6 +25,21 @@ export const AudioProvider = ({ children }) => {
   const [queueIndex, setQueueIndex] = useState(-1);
   const [playlist, setPlaylist] = useState(null); // { seriesId, episodes[] }
 
+ const audioRef = useRef(null);
+ const saveIntervalRef = useRef(null);
+ 
+ useEffect(() => {
+   if (isPlaying && currentEpisode && isAuthenticated) {
+     saveIntervalRef.current = setInterval(() => { saveProgress(); }, 5000);
+   }
+   return () => clearInterval(saveIntervalRef.current);
+ }, [isPlaying, currentEpisode, isAuthenticated]);
+ 
+ const saveProgress = useCallback(async () => {
+   if (!currentEpisode || !isAuthenticated || !audioRef.current) return;
+   ...
+ }, [currentEpisode, isAuthenticated, playbackSpeed]);
+
 
   // Play an episode
   const playEpisode = useCallback((episode, playlistData = null) => {
