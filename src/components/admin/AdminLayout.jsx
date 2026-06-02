@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
@@ -27,13 +27,14 @@ const preloadAdminPages = () => {
 
 const AdminLayout = () => {
   const { user, isAuthenticated } = useAuth();
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     preloadAdminPages();
   }, []);
 
-  // Close sidebar on route change (if desired)
+  // Close sidebar on route change (mobile)
   useEffect(() => {
     setSidebarOpen(false);
   }, [location.pathname]);
@@ -47,7 +48,7 @@ const AdminLayout = () => {
 
   return (
     <div className="admin-layout">
-      {/* Overlay for mobile */}
+      {/* Overlay visible only on mobile when sidebar is open */}
       {sidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar} />}
 
       <AdminSidebar isOpen={sidebarOpen} onClose={closeSidebar} />
