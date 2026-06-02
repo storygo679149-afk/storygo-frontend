@@ -74,7 +74,7 @@ useEffect(() => {
   if (episode && !isLocked) {
     playEpisode(episode);
   }
-}, [episode, isLocked, playEpisode]); // ✅ add playEpisode
+}, [episode, isLocked, playEpisode, showAds]); // ✅ add playEpisode
 
   if (loading) return <SkeletonLoader type="banner" />;
   if (!episode) return <p>Episode not found</p>;
