@@ -18,44 +18,63 @@ const EpisodePlayer = () => {
   const [showAds, setShowAds] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let cancelled = false;
-    const fetch = async () => {
-      try {
-        const ep = await episodeService.getEpisodeById(id);
-        if (cancelled) return;
-        setEpisode(ep);
-        // Check premium status
-        if (ep.episode_number > 20 && isAuthenticated) {
-          const { data: status } = await apiService.get('/payments/subscription/status');
-          if (!status.is_premium) setIsLocked(true);
-          else setShowAds(false);
-        } else if (ep.episode_number > 20 && !isAuthenticated) {
-          setIsLocked(true);
-        } else {
-          // Free users always see ads for any free episode
-          setShowAds(!isAuthenticated || true); // will be updated after fetching premium
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-    fetch();
-    return () => { cancelled = true; };
-  }, [id, isAuthenticated]);
+useEffect(() => {
+  let cancelled = false;
 
-  useEffect(() => {
-    if (episode && !isLocked) {
-      playEpisode(episode);
-      // If free user, show ad before playing
-      if (showAds) {
-        // Play a mock ad audio (or insert ad logic)
-        // e.g., setAudioUrl('/ads/ad_audio.mp3');
+  const fetchEpisode = async () => {
+    try {
+      const ep = await episodeService.getEpisodeById(id);
+      if (cancelled) return;
+
+      setEpisode(ep);
+
+      // Episodes after 20 are premium-locked
+      if (ep.episode_number > 20) {
+        if (!isAuthenticated) {
+          // Not logged in → locked
+          setIsLocked(true);
+          setShowAds(false);
+        } else {
+          // Logged in → check subscription
+          const { data: status } = await apiService.get('/payments/subscription/status');
+          if (cancelled) return;
+
+          if (status.is_premium) {
+            setIsLocked(false);
+            setShowAds(false); // premium → no ads, no lock
+          } else {
+            setIsLocked(true);
+            setShowAds(false); // locked → don't show ads either
+          }
+        }
+      } else {
+        // Free episode (1-20)
+        if (!isAuthenticated) {
+          setShowAds(true);  // guest → show ads
+        } else {
+          // Check if premium
+          const { data: status } = await apiService.get('/payments/subscription/status');
+          if (cancelled) return;
+          setShowAds(!status.is_premium); // premium → no ads, free → ads
+        }
       }
+
+    } catch (err) {
+      console.error('EpisodePlayer fetch error:', err);
+    } finally {
+      if (!cancelled) setLoading(false);
     }
-  }, [episode, isLocked]);
+  };
+
+  fetchEpisode();
+  return () => { cancelled = true; };
+}, [id, isAuthenticated]);
+
+useEffect(() => {
+  if (episode && !isLocked) {
+    playEpisode(episode);
+  }
+}, [episode, isLocked, playEpisode]); // ✅ add playEpisode
 
   if (loading) return <SkeletonLoader type="banner" />;
   if (!episode) return <p>Episode not found</p>;
