@@ -13,7 +13,7 @@ import './styles/global.css';
 import './styles/animations.css';
 import './styles/responsive.css';
 import './App.css';
-import DatabaseUsers from './pages/admin/DatabaseUsers';
+const DatabaseUsers = lazy(() => import('./pages/admin/DatabaseUsers'));
 
 // ------------- Existing page imports -------------
 const Home = lazy(() => import('./pages/Home'));
