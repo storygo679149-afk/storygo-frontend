@@ -36,10 +36,11 @@ export const AudioProvider = ({ children }) => {
    return () => clearInterval(saveIntervalRef.current);
  }, [isPlaying, currentEpisode, isAuthenticated]);
  
- const saveProgress = useCallback(async () => {
+const saveProgress = useCallback(async () => {
    if (!currentEpisode || !isAuthenticated || !audioRef.current) return;
-   ...
- }, [currentEpisode, isAuthenticated, playbackSpeed]);
+   console.log("Saving progress:", currentEpisode.id, audioRef.current.currentTime);
+   // TODO: episodeService.saveProgress call karna baad mein
+}, [currentEpisode, isAuthenticated, playbackSpeed]);
 
 
   // Play an episode
