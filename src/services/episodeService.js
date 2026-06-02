@@ -12,7 +12,6 @@ createComment: (episodeId, data) => api.post(`/episodes/${episodeId}/comments`, 
 deleteComment: (commentId) => api.delete(`/episodes/comments/${commentId}`),
 saveChapters: (episodeId, data) => api.post(`/episodes/${episodeId}/chapters`, data),
 getChapters: (episodeId) => api.get(`/episodes/${episodeId}/chapters`),
-saveChapters: (episodeId, data) => api.post(`/episodes/${episodeId}/chapters`, data),
 
   createEpisode: (episodeData) => {
     if (episodeData.audio_file) {
