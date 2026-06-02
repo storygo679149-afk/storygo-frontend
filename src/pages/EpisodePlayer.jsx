@@ -11,7 +11,7 @@ import './EpisodePlayer.css';
 const EpisodePlayer = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { playEpisode, currentEpisode, isPlaying, togglePlayPause, setAudioUrl } = useAudioContext();
+ const { playEpisode, currentEpisode, isPlaying, togglePlayPause } = useAudioContext();
   const { isAuthenticated } = useAuth();
   const [episode, setEpisode] = useState(null);
   const [isLocked, setIsLocked] = useState(false);
