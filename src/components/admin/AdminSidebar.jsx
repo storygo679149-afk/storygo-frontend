@@ -4,7 +4,7 @@ import {
   FiHome, FiUsers, FiBook, FiHeadphones, FiDollarSign, FiCreditCard,
   FiBell, FiTarget, FiUserCheck, FiCalendar,
   FiStar, FiCloud, FiShield, FiHardDrive,
-  FiGlobe, FiUserPlus, FiMapPin, FiDatabase   // ← ADDED FiDatabase here
+  FiGlobe, FiUserPlus, FiMapPin, FiDatabase, FiX
 } from 'react-icons/fi';
 import './Admin.css';
 
@@ -25,12 +25,15 @@ const links = [
   { to: '/admin/audit', icon: <FiShield />, label: 'Audit Log' },
   { to: '/admin/storage', icon: <FiHardDrive />, label: 'Storage' },
   { to: '/admin/onboarding', icon: <FiUserPlus />, label: 'Onboarding' },
-  { to: '/admin/database', icon: <FiDatabase />, label: 'Database Users' },  // ← NEW ENTRY
+  { to: '/admin/database', icon: <FiDatabase />, label: 'Database Users' },
 ];
 
-const AdminSidebar = () => (
-  <aside className="admin-sidebar">
+const AdminSidebar = ({ isOpen, onClose }) => (
+  <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
     <div className="admin-logo">StoryGo Admin</div>
+    <button className="sidebar-close-btn" onClick={onClose} aria-label="Close sidebar">
+      <FiX size={24} />
+    </button>
     <nav>
       {links.map(link => (
         <NavLink
@@ -38,6 +41,7 @@ const AdminSidebar = () => (
           to={link.to}
           end={link.end}
           className={({ isActive }) => (isActive ? 'active' : '')}
+          onClick={onClose} // close sidebar on link click (mobile)
         >
           {link.icon} <span>{link.label}</span>
         </NavLink>
