@@ -41,7 +41,7 @@ const AdminSidebar = ({ isOpen, onClose }) => (
           to={link.to}
           end={link.end}
           className={({ isActive }) => (isActive ? 'active' : '')}
-          onClick={onClose} // close sidebar on link click (mobile)
+          onClick={onClose} // close sidebar on mobile after navigation
         >
           {link.icon} <span>{link.label}</span>
         </NavLink>
