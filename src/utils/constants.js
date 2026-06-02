@@ -3,12 +3,12 @@
  */
 
 // App info
-export const APP_NAME = 'Pocket FM';
+export const APP_NAME = 'Story Go';
 export const APP_DESCRIPTION = 'Advanced Audio Storytelling Platform';
 export const APP_VERSION = '1.0.0';
 
 // API Configuration
-export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+export const API_BASE_URL = process.env.REACT_APP_API_URL;
 export const API_TIMEOUT = parseInt(process.env.REACT_APP_API_TIMEOUT) || 30000;
 
 // Cloudinary Configuration
