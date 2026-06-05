@@ -10,18 +10,24 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // ── On mount: check if user is already logged in ──────────────────────────
   useEffect(() => {
     const initAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
       try {
         const response = await authService.getCurrentUser();
-        if (response && response.data) {
-          const userData = response.data.user || response.data.data?.user;
-          if (userData) {
-            setUser(userData);
-            setIsAuthenticated(true);
-          }
+        const userData = response?.data?.user;
+        if (userData) {
+          setUser(userData);
+          setIsAuthenticated(true);
         }
       } catch (error) {
+        // Token invalid or expired — clear it
+        localStorage.removeItem('token');
         console.log('Not authenticated');
       } finally {
         setIsLoading(false);
@@ -30,33 +36,82 @@ export const AuthProvider = ({ children }) => {
     initAuth();
   }, []);
 
+  // ── Step 1: Login → sends OTP, returns tempToken ──────────────────────────
+  // Returns { success: true, tempToken, maskedEmail } on success
+  // The Login page should store tempToken and redirect to OTP screen
   const login = useCallback(async (email, password) => {
     try {
       const response = await authService.login(email, password);
-      if (response.data && response.data.status === 'success') {
-        const userData = response.data.data.user;
-        setUser(userData);
-        setIsAuthenticated(true);
-        return { success: true, user: userData };
+      const data = response?.data;
+
+      if (data?.success) {
+        // Store tempToken for OTP verification step
+        localStorage.setItem('tempToken', data.tempToken);
+        return {
+          success: true,
+          tempToken: data.tempToken,
+          maskedEmail: data.maskedEmail,
+          message: data.message,
+        };
       }
-      return { success: false, message: response.data?.message || 'Login failed' };
+
+      const msg = data?.message || 'Login failed. Dobara try karo.';
+      toast.error(msg);
+      return { success: false, message: msg };
     } catch (error) {
-      const message = error.response?.data?.message || 'Login failed';
+      const message = error.response?.data?.message || 'Login failed. Dobara try karo.';
       toast.error(message);
       return { success: false, message };
     }
   }, []);
 
+  // ── Step 2: Verify OTP → returns final token + user ───────────────────────
+  const verifyOTP = useCallback(async (otp) => {
+    try {
+      const tempToken = localStorage.getItem('tempToken');
+      if (!tempToken) {
+        toast.error('Session expire ho gayi. Dobara login karo.');
+        return { success: false, message: 'No temp token found' };
+      }
+
+      const response = await authService.verifyOTP(otp, tempToken);
+      const data = response?.data;
+
+      if (data?.success) {
+        // Save final token, clear temp token
+        localStorage.setItem('token', data.token);
+        localStorage.removeItem('tempToken');
+
+        setUser(data.user);
+        setIsAuthenticated(true);
+        toast.success('Login successful! Welcome back 🎉');
+        return { success: true, user: data.user };
+      }
+
+      const msg = data?.message || 'OTP verification failed';
+      toast.error(msg);
+      return { success: false, message: msg };
+    } catch (error) {
+      const message = error.response?.data?.message || 'OTP verification failed';
+      toast.error(message);
+      return { success: false, message };
+    }
+  }, []);
+
+  // ── Signup ─────────────────────────────────────────────────────────────────
   const signup = useCallback(async (userData) => {
     try {
       const response = await authService.signup(userData);
-      if (response.data && response.data.status === 'success') {
-        const userInfo = response.data.data.user;
-        setUser(userInfo);
-        setIsAuthenticated(true);
-        return { success: true, user: userInfo };
+      const data = response?.data;
+
+      if (data?.success) {
+        toast.success('Account bana diya! Ab login karo.');
+        return { success: true, user: data.user };
       }
-      return { success: false, message: response.data?.message || 'Signup failed' };
+
+      const msg = data?.message || 'Signup failed';
+      toast.error(msg);
+      return { success: false, message: msg };
     } catch (error) {
       const message = error.response?.data?.message || 'Signup failed';
       toast.error(message);
@@ -64,28 +119,36 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  // ── Logout ─────────────────────────────────────────────────────────────────
   const logout = useCallback(async () => {
     try {
       await authService.logout();
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('tempToken');
       setUser(null);
       setIsAuthenticated(false);
       toast.success('Logged out');
     }
   }, []);
 
+  // ── Update Profile ─────────────────────────────────────────────────────────
   const updateProfile = useCallback(async (profileData) => {
     try {
       const response = await userService.updateProfile(profileData);
-      if (response.data && response.data.status === 'success') {
-        const updatedUser = response.data.data.user;
+      const data = response?.data;
+
+      if (data?.success) {
+        const updatedUser = data.user || data.data?.user;
         setUser(prev => ({ ...prev, ...updatedUser }));
         toast.success('Profile updated');
         return { success: true, user: updatedUser };
       }
-      return { success: false, message: response.data?.message || 'Update failed' };
+
+      const msg = data?.message || 'Update failed';
+      return { success: false, message: msg };
     } catch (error) {
       const message = error.response?.data?.message || 'Update failed';
       toast.error(message);
@@ -93,14 +156,19 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  // ── Change Password ────────────────────────────────────────────────────────
   const changePassword = useCallback(async (currentPassword, newPassword) => {
     try {
-      const response = await userService.changePassword(currentPassword, newPassword);
-      if (response.data && response.data.status === 'success') {
+      const response = await authService.changePassword(currentPassword, newPassword);
+      const data = response?.data;
+
+      if (data?.success) {
         toast.success('Password changed');
         return { success: true };
       }
-      return { success: false, message: response.data?.message || 'Password change failed' };
+
+      const msg = data?.message || 'Password change failed';
+      return { success: false, message: msg };
     } catch (error) {
       const message = error.response?.data?.message || 'Password change failed';
       toast.error(message);
@@ -108,19 +176,22 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ Become Creator
+  // ── Become Creator ─────────────────────────────────────────────────────────
   const becomeCreator = useCallback(async () => {
     try {
       const response = await userService.becomeCreator();
-      if (response.data && response.data.status === 'success') {
-        const updatedUser = response.data.data.user;
+      const data = response?.data;
+
+      if (data?.success) {
+        const updatedUser = data.user || data.data?.user;
         setUser(prev => ({ ...prev, ...updatedUser }));
         toast.success('You are now a creator!');
         return { success: true, user: updatedUser };
       }
-      return { success: false, message: response.data?.message || 'Failed to become creator' };
+
+      const msg = data?.message || 'Failed to become creator';
+      return { success: false, message: msg };
     } catch (error) {
-      console.error('Become creator error:', error);
       const message = error.response?.data?.message || 'Failed to become creator';
       toast.error(message);
       return { success: false, message };
@@ -132,6 +203,7 @@ export const AuthProvider = ({ children }) => {
     isLoading,
     isAuthenticated,
     login,
+    verifyOTP,
     signup,
     logout,
     updateProfile,
