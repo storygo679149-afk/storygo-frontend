@@ -1,0 +1,189 @@
+/* VerifyOTP.css — LoginForm.css ke saath same folder mein daalo */
+
+/* ── Container ─────────────────────────────────────────────── */
+.otp-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.otp-header {
+  text-align: center;
+  margin-bottom: 28px;
+  width: 100%;
+}
+
+.otp-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background: rgba(229, 9, 20, 0.1);
+  border: 1px solid rgba(229, 9, 20, 0.25);
+  border-radius: 50%;
+  margin: 0 auto 16px;
+}
+
+.otp-shield-icon {
+  font-size: 28px;
+  color: #e50914;
+}
+
+/* Reuse existing login-title / login-subtitle styles */
+.otp-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px;
+}
+
+.otp-subtitle {
+  font-size: 0.9rem;
+  color: #999;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.otp-email {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ── OTP Input Row ──────────────────────────────────────────── */
+.otp-inputs-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 28px;
+  width: 100%;
+}
+
+.otp-input {
+  width: 52px;
+  height: 58px;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  background: #1e1e1e;
+  border: 2px solid #2a2a2a;
+  border-radius: 10px;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  caret-color: #e50914;
+}
+
+.otp-input:focus {
+  border-color: #e50914;
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15);
+}
+
+.otp-input--filled {
+  background: rgba(229, 9, 20, 0.08);
+  border-color: #e50914;
+}
+
+.otp-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Verify Button — reuses .login-btn from LoginForm.css ───── */
+.otp-verify-btn {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.login-btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+}
+
+/* ── Resend Row ─────────────────────────────────────────────── */
+.otp-resend-row {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.otp-resend-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #e50914;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+  font-family: inherit;
+}
+
+.otp-resend-btn:hover {
+  background: rgba(229, 9, 20, 0.08);
+}
+
+.otp-resend-icon {
+  font-size: 14px;
+}
+
+.otp-timer-text {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+}
+
+.otp-timer-count {
+  color: #e50914;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+}
+
+/* ── Expiry Note ────────────────────────────────────────────── */
+.otp-expiry {
+  font-size: 0.75rem;
+  color: #444;
+  text-align: center;
+  margin: 8px 0 20px;
+}
+
+/* ── Back Button ────────────────────────────────────────────── */
+.otp-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 6px 0;
+  transition: color 0.2s;
+  font-family: inherit;
+}
+
+.otp-back-btn:hover {
+  color: #aaa;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 420px) {
+  .otp-input {
+    width: 44px;
+    height: 52px;
+    font-size: 1.4rem;
+  }
+
+  .otp-inputs-row {
+    gap: 8px;
+  }
+}
