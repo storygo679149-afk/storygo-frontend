@@ -19,6 +19,21 @@
     "start": "react-scripts start",
     "build": "react-scripts build"
   },
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^4.6.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "plugins": [
+      "react-hooks"
+    ],
+    "rules": {
+      "react-hooks/exhaustive-deps": "warn"
+    }
+  },
   "browserslist": {
     "production": [
       ">0.2%",
