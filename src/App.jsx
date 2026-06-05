@@ -14,6 +14,7 @@ import './styles/animations.css';
 import './styles/responsive.css';
 import './App.css';
 import DatabaseUsers from './pages/admin/DatabaseUsers';
+import VerifyOTP from './components/auth/VerifyOTP'; // ✅ Already imported — kuch change nahi
 
 // ------------- Existing page imports -------------
 const Home = lazy(() => import('./pages/Home'));
@@ -96,6 +97,9 @@ function App() {
                   <Routes>
                     {/* Auth page (no layout) */}
                     <Route path="/auth" element={<Auth />} />
+
+                    {/* ✅ SIRF YEH EK LINE ADD KI HAI — Auth ke neeche, MainLayout ke BAHAR */}
+                    <Route path="/verify-otp" element={<VerifyOTP />} />
 
                     {/* Main layout routes */}
                     <Route element={<MainLayout />}>
