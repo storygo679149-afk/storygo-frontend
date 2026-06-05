@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { FiRefreshCw, FiArrowLeft, FiShield } from 'react-icons/fi';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import './VerifyOTP.css';
+import './VerifyOtp.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 const OTP_LENGTH = 6;
