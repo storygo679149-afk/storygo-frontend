@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { adminService } from '../../services/adminService';
-import { authService } from '../../services/authService';
+import authService from '../../services/authService';
 import SkeletonLoader from '../../components/common/SkeletonLoader';
 import { FiSearch, FiUserPlus, FiEdit3, FiTrash2, FiToggleLeft, FiToggleRight } from 'react-icons/fi';
 import toast from 'react-hot-toast';
