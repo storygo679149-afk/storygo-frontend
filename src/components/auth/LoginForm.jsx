@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import authService from '../services/authService'; // adjust path if needed
+import authService from '../../services/authService';
 
 // ─── Keyframes & hover styles ────────────────────────────────
 const CSS_KEYFRAMES = `
