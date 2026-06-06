@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import toast from 'react-hot-toast';
+import authService from '../services/authService'; // adjust path if needed
 
-// ──────────────────────────────────────────────────────────────
-// Inline CSS — yeh apne existing Login CSS ke saath merge karo
-// Ya isko completely replace karo agar fresh start chahte ho
-// ──────────────────────────────────────────────────────────────
+// ─── Keyframes & hover styles ────────────────────────────────
 const CSS_KEYFRAMES = `
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
@@ -202,15 +199,13 @@ const styles = {
   }),
 };
 
-// ──────────────────────────────────────────────────────────────
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-
+// ─── Component ───────────────────────────────────────────────
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail]               = useState('');
+  const [password, setPassword]         = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [loading, setLoading]           = useState(false);
+  const [errorMsg, setErrorMsg]         = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -229,22 +224,19 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post(
-        `${API_URL}/api/auth/login`,
-        { email: email.trim().toLowerCase(), password },
-        { timeout: 15000 }
-      );
+      // ✅ Uses authService → hits /auth/login via the shared axios instance
+      // Base URL is already set in api.js — no double /api issue
+      const res = await authService.login(email.trim().toLowerCase(), password);
 
       if (res.data.success) {
         toast.success('OTP bhej diya! Email check karo 📧');
 
-        // OTP page pe navigate karo — state mein tempToken pass karo
         navigate('/verify-otp', {
           state: {
-            tempToken: res.data.tempToken,
+            tempToken:   res.data.tempToken,
             maskedEmail: res.data.maskedEmail,
           },
-          replace: false, // user back press kar sakta hai
+          replace: false,
         });
       }
     } catch (err) {
