@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiMail, FiArrowLeft } from 'react-icons/fi';
 import toast from 'react-hot-toast';
-import useAuth from '../../hooks/useAuth';
+import { useAuthContext } from '../../context/AuthContext';
 
 const OTPVerification = ({ email, onBack }) => {
+  const { verifyOTP, resendOTP } = useAuthContext();
+  const navigate = useNavigate();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
+  const [timeLeft, setTimeLeft] = useState(600);
   const [canResend, setCanResend] = useState(false);
-  const { verifyOTP, resendOTP } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -22,116 +22,58 @@ const OTPVerification = ({ email, onBack }) => {
     return () => clearTimeout(timer);
   }, [timeLeft]);
 
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  const formatTime = (secs) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
   };
 
-  const handleChange = (index, value) => {
-    if (value.length > 1) return;
+  const handleChange = (idx, val) => {
+    if (val.length > 1) return;
     const newOtp = [...otp];
-    newOtp[index] = value;
+    newOtp[idx] = val;
     setOtp(newOtp);
-
-    if (value && index < 5) {
-      const nextInput = document.getElementById(`otp-input-${index + 1}`);
-      nextInput?.focus();
-    }
+    if (val && idx < 5) document.getElementById(`otp-input-${idx+1}`)?.focus();
   };
 
-  const handleKeyDown = (index, e) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      const prevInput = document.getElementById(`otp-input-${index - 1}`);
-      prevInput?.focus();
+  const handleKeyDown = (idx, e) => {
+    if (e.key === 'Backspace' && !otp[idx] && idx > 0) {
+      document.getElementById(`otp-input-${idx-1}`)?.focus();
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const otpCode = otp.join('');
-    if (otpCode.length !== 6) {
-      toast.error('Please enter the 6-digit verification code');
+    const code = otp.join('');
+    if (code.length !== 6) {
+      toast.error('Enter 6-digit code');
       return;
     }
-
     setIsLoading(true);
-    const result = await verifyOTP(email, otpCode);
+    const result = await verifyOTP(email, code);
     setIsLoading(false);
-
-    if (result.success) {
-      toast.success('Account verified! Redirecting...');
-      navigate('/');
-    } else {
-      toast.error(result.message);
-    }
+    if (result.success) navigate('/');
   };
 
   const handleResend = async () => {
     setIsLoading(true);
     const result = await resendOTP(email);
     setIsLoading(false);
-
     if (result.success) {
-      toast.success('New verification code sent to your email');
       setTimeLeft(600);
       setCanResend(false);
       setOtp(['', '', '', '', '', '']);
-    } else {
-      toast.error(result.message);
     }
   };
 
   return (
-    <motion.div
-      className="otp-container"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-    >
-      <button className="back-button" onClick={onBack}>
-        <FiArrowLeft /> Back
-      </button>
-
-      <div className="otp-header">
-        <div className="otp-icon">
-          <FiMail />
-        </div>
-        <h2>Verify Your Email</h2>
-        <p>We've sent a 6-digit verification code to</p>
-        <strong>{email}</strong>
-      </div>
-
+    <motion.div className="otp-container" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+      <button className="back-button" onClick={onBack}><FiArrowLeft /> Back</button>
+      <div className="otp-header"><div className="otp-icon"><FiMail /></div><h2>Verify Your Email</h2><p>We've sent a 6‑digit code to</p><strong>{email}</strong></div>
       <form onSubmit={handleSubmit} className="otp-form">
-        <div className="otp-inputs">
-          {otp.map((digit, index) => (
-            <input
-              key={index}
-              id={`otp-input-${index}`}
-              type="text"
-              maxLength="1"
-              value={digit}
-              onChange={(e) => handleChange(index, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(index, e)}
-              className="otp-input"
-              autoFocus={index === 0}
-            />
-          ))}
-        </div>
-
-        <button type="submit" className="verify-button" disabled={isLoading}>
-          {isLoading ? 'Verifying...' : 'Verify Account'}
-        </button>
-
-        <div className="resend-section">
-          {canResend ? (
-            <button type="button" onClick={handleResend} className="resend-button">
-              Resend verification code
-            </button>
-          ) : (
-            <p className="timer">Code expires in {formatTime(timeLeft)}</p>
-          )}
-        </div>
+        <div className="otp-inputs">{otp.map((d,i) => (<input key={i} id={`otp-input-${i}`} type="text" maxLength="1" value={d} onChange={(e) => handleChange(i, e.target.value)} onKeyDown={(e) => handleKeyDown(i, e)} className="otp-input" autoFocus={i===0} />))}</div>
+        <button type="submit" className="verify-button" disabled={isLoading}>{isLoading ? 'Verifying...' : 'Verify Account'}</button>
+        <div className="resend-section">{canResend ? (<button type="button" onClick={handleResend} className="resend-button">Resend code</button>) : (<p className="timer">Expires in {formatTime(timeLeft)}</p>)}</div>
       </form>
     </motion.div>
   );
