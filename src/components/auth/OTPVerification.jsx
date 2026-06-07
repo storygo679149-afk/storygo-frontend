@@ -1,16 +1,14 @@
-// src/components/auth/OTPVerification.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiMail, FiArrowLeft } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import useAuth from '../../hooks/useAuth';
-import './OTPVerification.css';
 
 const OTPVerification = ({ email, onBack }) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const [canResend, setCanResend] = useState(false);
   const { verifyOTP, resendOTP } = useAuth();
   const navigate = useNavigate();
@@ -36,7 +34,6 @@ const OTPVerification = ({ email, onBack }) => {
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Auto-focus next input
     if (value && index < 5) {
       const nextInput = document.getElementById(`otp-input-${index + 1}`);
       nextInput?.focus();
