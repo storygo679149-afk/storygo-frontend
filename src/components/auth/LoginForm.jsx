@@ -109,7 +109,7 @@ const LoginForm = () => {
       </form>
 
       <p className="signup-link">
-        Don't have an account? <Link to="/signin">Sign Up</Link>
+        Don't have an account? <Link to="/signupform">Sign Up</Link>
       </p>
     </motion.div>
   );
