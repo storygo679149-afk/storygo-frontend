@@ -1,39 +1,41 @@
 {
-  "name": "pocket-fm-client",
+  "name": "storygo-frontend",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@stripe/react-stripe-js": "^6.3.0",
-    "@stripe/stripe-js": "^9.4.0",
-    "ajv": "^8.12.0",
     "axios": "^1.6.2",
-    "framer-motion": "^10.16.0",
+    "framer-motion": "^10.16.16",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^4.12.0",
-    "react-router-dom": "^6.21.0",
-    "react-scripts": "5.0.1"
+    "react-router-dom": "^6.20.1",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
-  },
-  "devDependencies": {
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": ["react-app", "react-app/jest"],
-    "plugins": ["react-hooks"],
-    "rules": {
-      "react-hooks/exhaustive-deps": "warn",
-      "no-unused-vars": "warn",
-      "unicode-bom": "warn",
-      "default-case": "warn"
-    }
+    "extends": [
+      "react-app"
+    ]
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
-    "development": ["last 1 chrome version"]
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "react-scripts": "5.0.1"
   }
 }
