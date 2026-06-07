@@ -1,4 +1,3 @@
-// src/components/auth/SignupForm.jsx
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -6,7 +5,6 @@ import { FiMail, FiLock, FiUser, FiUserPlus, FiEye, FiEyeOff } from 'react-icons
 import toast from 'react-hot-toast';
 import useAuth from '../../hooks/useAuth';
 import OTPVerification from './OTPVerification';
-import './SignupForm.css';
 
 const SignupForm = () => {
   const { signup } = useAuth();
@@ -170,7 +168,7 @@ const SignupForm = () => {
       </form>
 
       <p className="signin-link">
-        Already have an account? <Link to="/login">Sign In</Link>
+        Already have an account? <Link to="/LoginForm">Sign In</Link>
       </p>
     </motion.div>
   );
