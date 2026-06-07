@@ -1,13 +1,22 @@
+// src/components/auth/LoginForm.jsx
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import authService from '../../services/authService'; // adjust path
+import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FiMail, FiLock, FiLogIn, FiEye, FiEyeOff } from 'react-icons/fi';
+import toast from 'react-hot-toast';
+import useAuth from '../../hooks/useAuth';
+import OTPVerification from './OTPVerification';
+import './LoginForm.css';
 
 const LoginForm = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [verificationEmail, setVerificationEmail] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,59 +25,93 @@ const LoginForm = () => {
       return;
     }
 
-    setLoading(true);
-    try {
-      const response = await authService.login(email, password);
-      if (response.data.success) {
-        // Store final token and user data
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+    setIsLoading(true);
+    const result = await login(email, password);
+    setIsLoading(false);
 
-        toast.success('Login successful! Redirecting...');
-        navigate('/'); // or '/dashboard' or any protected page
-      } else {
-        toast.error(response.data.message || 'Login failed');
-      }
-    } catch (error) {
-      const msg = error.response?.data?.message || 'Invalid email or password';
-      toast.error(msg);
-    } finally {
-      setLoading(false);
+    if (result.success) {
+      toast.success('Login successful! Redirecting...');
+      navigate('/');
+    } else if (result.requiresVerification) {
+      setVerificationEmail(email);
+      setNeedsVerification(true);
+      toast.info('Please verify your email address first');
+    } else {
+      toast.error(result.message);
     }
   };
 
+  const handleBackToLogin = () => {
+    setNeedsVerification(false);
+    setVerificationEmail('');
+  };
+
+  if (needsVerification) {
+    return <OTPVerification email={verificationEmail} onBack={handleBackToLogin} />;
+  }
+
   return (
-    <div className="login-container">
+    <motion.div
+      className="login-container"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+    >
+      <div className="login-header">
+        <div className="login-icon">
+          <FiLogIn />
+        </div>
+        <h2>Welcome Back</h2>
+        <p>Log in to continue your storytelling journey</p>
+      </div>
+
       <form onSubmit={handleSubmit} className="login-form">
-        <h2>Login to StoryGo</h2>
         <div className="form-group">
-          <label>Email</label>
+          <label htmlFor="email">
+            <FiMail /> Email Address
+          </label>
           <input
             type="email"
+            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="your@email.com"
+            placeholder="hello@storygo.com"
             required
           />
         </div>
+
         <div className="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            required
-          />
+          <label htmlFor="password">
+            <FiLock /> Password
+          </label>
+          <div className="password-input-wrapper">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FiEyeOff /> : <FiEye />}
+            </button>
+          </div>
         </div>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+
+        <button type="submit" className="login-button" disabled={isLoading}>
+          {isLoading ? 'Logging in...' : 'Login'}
         </button>
-        <p className="register-link">
-          Don't have an account? <Link to="/register">Register</Link>
-        </p>
       </form>
-    </div>
+
+      <p className="signup-link">
+        Don't have an account? <Link to="/signup">Sign Up</Link>
+      </p>
+    </motion.div>
   );
 };
 
