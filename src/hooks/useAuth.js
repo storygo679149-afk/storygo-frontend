@@ -1,4 +1,3 @@
-// src/hooks/useAuth.js
 import { useState, useEffect } from 'react';
 import authService from '../services/authService';
 
@@ -16,7 +15,12 @@ const useAuth = () => {
     try {
       const response = await authService.register(formData);
       if (response.data.success) {
-        return { success: true, message: response.data.message, user: response.data.user };
+        // Do NOT set token or user here – they must verify OTP first
+        return { 
+          success: true, 
+          message: response.data.message, 
+          user: response.data.user 
+        };
       }
       return { success: false, message: response.data.message };
     } catch (error) {
@@ -64,15 +68,22 @@ const useAuth = () => {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
         setUser(response.data.user);
-        return { success: true, message: response.data.message, user: response.data.user };
+        return { success: true, message: response.data.message };
       }
       return { success: false, message: response.data.message };
     } catch (error) {
+      // Check if the error is due to unverified account
+      if (error.response?.status === 403 && error.response?.data?.requiresVerification) {
+        return {
+          success: false,
+          message: error.response.data.message,
+          requiresVerification: true,
+          email: error.response.data.email,
+        };
+      }
       return {
         success: false,
         message: error.response?.data?.message || 'Login failed',
-        requiresVerification: error.response?.data?.requiresVerification || false,
-        email: error.response?.data?.email,
       };
     }
   };
