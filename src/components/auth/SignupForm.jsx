@@ -2,20 +2,14 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FiMail, FiLock, FiUser, FiUserPlus, FiEye, FiEyeOff } from 'react-icons/fi';
-import toast from 'react-hot-toast';
-import useAuth from '../../hooks/useAuth';
+import { useAuthContext } from '../../context/AuthContext';
 import OTPVerification from './OTPVerification';
 
 const SignupForm = () => {
-  const { signup } = useAuth();
-  const [step, setStep] = useState('register'); // 'register' or 'verify'
+  const { signup } = useAuthContext();
+  const [step, setStep] = useState('register');
   const [registeredEmail, setRegisteredEmail] = useState('');
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    full_name: '',
-  });
+  const [formData, setFormData] = useState({ username: '', email: '', password: '', full_name: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -23,20 +17,14 @@ const SignupForm = () => {
   const validateForm = () => {
     const newErrors = {};
     const { username, email, password, full_name } = formData;
-
-    if (!username.trim()) newErrors.username = 'Username is required';
-    else if (username.length < 3) newErrors.username = 'Username must be at least 3 characters';
-    else if (!/^[a-zA-Z0-9_]+$/.test(username)) newErrors.username = 'Username can only contain letters, numbers, and underscores';
-
-    if (!email.trim()) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Email is invalid';
-
-    if (!password) newErrors.password = 'Password is required';
-    else if (password.length < 6) newErrors.password = 'Password must be at least 6 characters';
-
-    if (!full_name.trim()) newErrors.full_name = 'Full name is required';
-    else if (full_name.length < 2) newErrors.full_name = 'Full name must be at least 2 characters';
-
+    if (!username.trim()) newErrors.username = 'Username required';
+    else if (username.length < 3) newErrors.username = 'Min 3 characters';
+    else if (!/^[a-zA-Z0-9_]+$/.test(username)) newErrors.username = 'Only letters, numbers, underscore';
+    if (!email.trim()) newErrors.email = 'Email required';
+    else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Invalid email';
+    if (!password) newErrors.password = 'Password required';
+    else if (password.length < 6) newErrors.password = 'Min 6 characters';
+    if (!full_name.trim()) newErrors.full_name = 'Full name required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -50,17 +38,12 @@ const SignupForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     setIsLoading(true);
     const result = await signup(formData);
     setIsLoading(false);
-
     if (result.success) {
-      toast.success(result.message);
       setRegisteredEmail(formData.email);
       setStep('verify');
-    } else {
-      toast.error(result.message);
     }
   };
 
@@ -69,107 +52,19 @@ const SignupForm = () => {
     setRegisteredEmail('');
   };
 
-  if (step === 'verify') {
-    return <OTPVerification email={registeredEmail} onBack={handleBackToRegister} />;
-  }
+  if (step === 'verify') return <OTPVerification email={registeredEmail} onBack={handleBackToRegister} />;
 
   return (
-    <motion.div
-      className="signup-container"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-    >
-      <div className="signup-header">
-        <div className="signup-icon">
-          <FiUserPlus />
-        </div>
-        <h2>Create Account</h2>
-        <p>Join the audio storytelling community</p>
-      </div>
-
+    <motion.div className="signup-container" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+      <div className="signup-header"><div className="signup-icon"><FiUserPlus /></div><h2>Create Account</h2><p>Join the audio storytelling community</p></div>
       <form onSubmit={handleSubmit} className="signup-form">
-        <div className="form-group">
-          <label htmlFor="full_name">
-            <FiUser /> Full Name
-          </label>
-          <input
-            type="text"
-            id="full_name"
-            name="full_name"
-            value={formData.full_name}
-            onChange={handleChange}
-            placeholder="John Doe"
-            className={errors.full_name ? 'error' : ''}
-          />
-          {errors.full_name && <span className="error-message">{errors.full_name}</span>}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="username">
-            <FiUser /> Username
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            placeholder="john_doe"
-            className={errors.username ? 'error' : ''}
-          />
-          {errors.username && <span className="error-message">{errors.username}</span>}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="email">
-            <FiMail /> Email Address
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="hello@storygo.com"
-            className={errors.email ? 'error' : ''}
-          />
-          {errors.email && <span className="error-message">{errors.email}</span>}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="password">
-            <FiLock /> Password
-          </label>
-          <div className="password-input-wrapper">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              className={errors.password ? 'error' : ''}
-            />
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <FiEyeOff /> : <FiEye />}
-            </button>
-          </div>
-          {errors.password && <span className="error-message">{errors.password}</span>}
-        </div>
-
-        <button type="submit" className="signup-button" disabled={isLoading}>
-          {isLoading ? 'Creating Account...' : 'Create Account'}
-        </button>
+        <div className="form-group"><label><FiUser /> Full Name</label><input name="full_name" value={formData.full_name} onChange={handleChange} placeholder="John Doe" className={errors.full_name ? 'error' : ''} />{errors.full_name && <span className="error-message">{errors.full_name}</span>}</div>
+        <div className="form-group"><label><FiUser /> Username</label><input name="username" value={formData.username} onChange={handleChange} placeholder="john_doe" className={errors.username ? 'error' : ''} />{errors.username && <span className="error-message">{errors.username}</span>}</div>
+        <div className="form-group"><label><FiMail /> Email</label><input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="hello@storygo.com" className={errors.email ? 'error' : ''} />{errors.email && <span className="error-message">{errors.email}</span>}</div>
+        <div className="form-group"><label><FiLock /> Password</label><div className="password-input-wrapper"><input type={showPassword ? 'text' : 'password'} name="password" value={formData.password} onChange={handleChange} placeholder="••••••••" className={errors.password ? 'error' : ''} /><button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)}>{showPassword ? <FiEyeOff /> : <FiEye />}</button></div>{errors.password && <span className="error-message">{errors.password}</span>}</div>
+        <button type="submit" className="signup-button" disabled={isLoading}>{isLoading ? 'Creating Account...' : 'Create Account'}</button>
       </form>
-
-      <p className="signin-link">
-        Already have an account? <Link to="/LoginForm">Sign In</Link>
-      </p>
+      <p className="signin-link">Already have an account? <Link to="/LoginForm">Sign In</Link></p>
     </motion.div>
   );
 };
