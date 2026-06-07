@@ -15,7 +15,11 @@ import './styles/responsive.css';
 import './App.css';
 import DatabaseUsers from './pages/admin/DatabaseUsers';
 
-// ------------- Existing page imports -------------
+// ---------- NEW AUTH PAGES ----------
+import LoginForm from './components/auth/LoginForm';
+import SignupForm from './components/auth/SignupForm';
+
+// ---------- Existing page imports ----------
 const Home = lazy(() => import('./pages/Home'));
 const SeriesDetail = lazy(() => import('./pages/SeriesDetail'));
 const EpisodePlayer = lazy(() => import('./pages/EpisodePlayer'));
@@ -23,7 +27,8 @@ const Library = lazy(() => import('./pages/Library'));
 const Trending = lazy(() => import('./pages/Trending'));
 const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
 const Profile = lazy(() => import('./pages/Profile'));
-const Auth = lazy(() => import('./pages/Auth'));
+// Remove the generic Auth import (no longer needed)
+// const Auth = lazy(() => import('./pages/Auth'));
 const SearchResults = lazy(() => import('./components/search/SearchResults'));
 const Categories = lazy(() => import('./pages/Categories'));
 const CategoryDetail = lazy(() => import('./pages/CategoryDetail'));
@@ -31,12 +36,12 @@ const TopRated = lazy(() => import('./pages/TopRated'));
 const NewReleases = lazy(() => import('./pages/NewReleases'));
 const Subscription = lazy(() => import('./pages/Subscription'));
 
-// ------------- Novel pages (new feature) -------------
+// Novel pages
 const NovelsPage = lazy(() => import('./pages/NovelsPage'));
 const NovelDetail = lazy(() => import('./pages/NovelDetail'));
 const ChapterReader = lazy(() => import('./pages/ChapterReader'));
 
-// ------------- Admin imports -------------
+// Admin imports
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
 const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
@@ -58,7 +63,7 @@ const StorageMedia = lazy(() => import('./pages/admin/StorageMedia'));
 const OnboardingFlow = lazy(() => import('./pages/admin/OnboardingFlow'));
 const ListenerGeography = lazy(() => import('./pages/admin/ListenerGeography'));
 
-// ------------- Creator novel management components -------------
+// Creator novel management components
 const CreatorNovels = lazy(() => import('./components/creator/CreatorNovels'));
 const UploadNovel = lazy(() => import('./components/creator/UploadNovel'));
 const AddChapter = lazy(() => import('./components/creator/AddChapter'));
@@ -86,7 +91,7 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider>
-        <AuthProvider>
+        <AuthProvider>   {/* This must now support the new localStorage auth (see update below) */}
           <AudioProvider>
             <Router>
               <div className="app">
@@ -94,10 +99,12 @@ function App() {
 
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
-                    {/* Auth page (no layout) */}
-                    <Route path="/auth" element={<Auth />} />
+                    {/* NEW AUTH ROUTES – No layout */}
+                    <Route path="/login" element={<LoginForm />} />
+                    <Route path="/signup" element={<SignupForm />} />
 
-
+                    {/* Redirect old /auth to /login (optional) */}
+                    <Route path="/auth" element={<LoginForm />} />
 
                     {/* Main layout routes */}
                     <Route element={<MainLayout />}>
