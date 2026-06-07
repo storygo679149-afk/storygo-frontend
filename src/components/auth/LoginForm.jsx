@@ -1,4 +1,3 @@
-// src/components/auth/LoginForm.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -6,7 +5,6 @@ import { FiMail, FiLock, FiLogIn, FiEye, FiEyeOff } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import useAuth from '../../hooks/useAuth';
 import OTPVerification from './OTPVerification';
-import './LoginForm.css';
 
 const LoginForm = () => {
   const { login } = useAuth();
@@ -33,7 +31,7 @@ const LoginForm = () => {
       toast.success('Login successful! Redirecting...');
       navigate('/');
     } else if (result.requiresVerification) {
-      setVerificationEmail(email);
+      setVerificationEmail(result.email || email);
       setNeedsVerification(true);
       toast.info('Please verify your email address first');
     } else {
@@ -109,7 +107,7 @@ const LoginForm = () => {
       </form>
 
       <p className="signup-link">
-        Don't have an account? <Link to="/signupform">Sign Up</Link>
+        Don't have an account? <Link to="/signupForm">Sign Up</Link>
       </p>
     </motion.div>
   );
