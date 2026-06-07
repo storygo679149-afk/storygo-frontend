@@ -7,7 +7,6 @@ const ProtectedRoute = ({ children, requireCreator = false }) => {
   const { isAuthenticated, isLoading, user } = useAuth();
   const location = useLocation();
 
-  // Show loading skeleton while checking auth
   if (isLoading) {
     return (
       <div style={{ padding: '40px 24px', maxWidth: '1400px', margin: '0 auto' }}>
@@ -16,12 +15,10 @@ const ProtectedRoute = ({ children, requireCreator = false }) => {
     );
   }
 
-  // Redirect to login if not authenticated
   if (!isAuthenticated) {
-    return <Navigate to="/auth?mode=login" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Check creator requirement
   if (requireCreator && !user?.is_creator) {
     return <Navigate to="/become-creator" state={{ from: location }} replace />;
   }
