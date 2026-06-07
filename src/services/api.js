@@ -2,96 +2,115 @@ import axios from 'axios';
 
 // ---------- PERMANENT BASE URL DETECTION ----------
 const getBaseURL = () => {
-  // 1. If the environment variable is explicitly set (highest priority)
+  // 1. Environment variable (set in Vercel / .env)
   if (process.env.REACT_APP_API_URL) {
     return process.env.REACT_APP_API_URL;
   }
 
-  // 2. Running on localhost (development)
+  // 2. Localhost development
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     return 'http://localhost:5001/api';
   }
 
-  // 3. Production – your live backend URL (Netlify, Vercel, etc.)
-  //    Replace with your actual Render backend URL
-  return 'https://storygo-backend-79u9.onrender.com/api';
+  // 3. Production – hardcoded fallback (should be overridden by env var)
+  return 'https://storygo-backend-jabl.onrender.com/api';
 };
 
 const baseURL = getBaseURL();
-console.log('🔌 API Base URL:', baseURL); // optional – helps debug
+console.log('🔌 API Base URL:', baseURL);
 
+// Create axios instance
 const api = axios.create({
-  baseURL: baseURL,
+  baseURL,
   timeout: 120000,
-  withCredentials: true,
+  withCredentials: true, // sends cookies if needed
 });
 
-// Request interceptor (unchanged)
+// ---------- Request Interceptor (adds auth token) ----------
 api.interceptors.request.use(
   (config) => {
+    // Get token from localStorage (or wherever you store it)
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    // Handle FormData (remove Content-Type so browser sets it with boundary)
     if (config.data instanceof FormData) {
       delete config.headers['Content-Type'];
     } else if (!config.headers['Content-Type']) {
       config.headers['Content-Type'] = 'application/json';
     }
+
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Response interceptor (unchanged)
+// ---------- Response Interceptor (global error handling) ----------
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Handle cancelled requests
     if (axios.isCancel(error)) {
       console.log('Request cancelled:', error.message);
       return Promise.reject(error);
     }
 
-    if (error.response) {
-      const { status, data } = error.response;
-      const message = data?.message || data?.error || 'Request failed';
-
-      switch (status) {
-        case 400:
-          console.error(`Bad Request (400): ${message}`);
-          break;
-       case 401:
-  break;
-        case 403:
-          console.error('Access forbidden:', message);
-          break;
-        case 404:
-          console.error('Resource not found:', message);
-          break;
-        case 422:
-          console.error('Validation error:', data.errors || message);
-          break;
-        case 429:
-          console.error('Rate limit exceeded:', message);
-          break;
-        case 500:
-          console.error('Server error:', message);
-          break;
-        default:
-          console.error(`Error ${status}:`, message);
-      }
-    } else if (error.request) {
-      console.error('Network error: No response received');
-    } else {
-      console.error('Request setup error:', error.message);
+    // No response from server (network error)
+    if (!error.response) {
+      console.error('🌐 Network error: No response received. Check your connection or backend URL.');
+      return Promise.reject(new Error('Network error – unable to reach the server.'));
     }
+
+    const { status, data } = error.response;
+    const message = data?.message || data?.error || 'Request failed';
+
+    // Log based on status code
+    switch (status) {
+      case 400:
+        console.error(`Bad Request (400): ${message}`);
+        break;
+      case 401:
+        // Unauthorized – maybe token expired
+        console.warn('Unauthorized (401) – redirecting to login...');
+        // Optional: clear localStorage and redirect
+        // localStorage.removeItem('token');
+        // window.location.href = '/login';
+        break;
+      case 403:
+        console.error(`Forbidden (403): ${message}`);
+        break;
+      case 404:
+        console.error(`Not Found (404): ${message}`);
+        break;
+      case 422:
+        console.error(`Validation Error (422):`, data.errors || message);
+        break;
+      case 429:
+        console.error(`Rate Limit (429): ${message}`);
+        break;
+      case 500:
+        console.error(`Server Error (500): ${message}`);
+        break;
+      default:
+        console.error(`Error ${status}: ${message}`);
+    }
+
     return Promise.reject(error);
   }
 );
 
+// ---------- API Service Methods ----------
 const apiService = {
+  // Standard HTTP methods
   get: (url, params = {}, config = {}) => api.get(url, { params, ...config }),
   post: (url, data = {}, config = {}) => api.post(url, data, config),
   put: (url, data = {}, config = {}) => api.put(url, data, config),
   patch: (url, data = {}, config = {}) => api.patch(url, data, config),
   delete: (url, config = {}) => api.delete(url, config),
 
+  // File upload with progress
   upload: (url, formData, onProgress) => {
     return api.post(url, formData, {
       onUploadProgress: (progressEvent) => {
@@ -103,6 +122,7 @@ const apiService = {
     });
   },
 
+  // Cancel token helper
   createCancelToken: () => axios.CancelToken.source(),
 };
 
