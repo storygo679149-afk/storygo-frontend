@@ -142,7 +142,9 @@ const Sidebar = () => {
     { path: '/following', icon: <FiUserPlus />, label: 'Following', requiresAuth: true },
   ];
 
-  const creatorLinks = user?.is_creator
+  // ✅ Enhanced creator detection: check both is_creator and role
+  const isCreator = user?.is_creator || user?.role === 'creator';
+  const creatorLinks = isCreator
     ? [
         { path: '/creator/dashboard', icon: <FiBarChart2 />, label: 'Dashboard' },
         { path: '/creator/series', icon: <FiBookOpen />, label: 'My Series' },
@@ -370,7 +372,7 @@ const Sidebar = () => {
             </div>
           )}
 
-          {/* Creator Section (if creator) */}
+          {/* ✅ Creator Section (if user is creator) */}
           {creatorLinks.length > 0 && (
             <div className="nav-section">
               <div className="nav-section-header">
