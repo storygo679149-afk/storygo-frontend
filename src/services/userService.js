@@ -1,116 +1,54 @@
-import api from './api';
+// src/services/userService.js
+import api from './api'; // your axios instance with baseURL and interceptors
 
 const userService = {
-  // Get user profile
-  getProfile: () => {
-    return api.get('/users/profile');
-  },
-    getCreatorAnalytics: () => api.get('/users/creator-analytics'),
+  // ========== Public routes ==========
+  getGlobalStats: () => api.get('/users/stats/global'),
+  getTopCreators: () => api.get('/users/top-creators'),
 
-  // Update user profile
-  updateProfile: (profileData) => {
-    return api.put('/users/profile', profileData);
-  },
+  // ========== Authenticated user routes ==========
+  getProfile: () => api.get('/users/profile'),
+  updateProfile: (profileData) => api.put('/users/profile', profileData),
 
-  // Become a creator
- becomeCreator: () => api.put('/users/become-creator'),
+  becomeCreator: () => api.put('/users/become-creator'),
 
-  // Get personal user stats
-  getStats: () => {
-    return api.get('/users/stats');
-  },
-
-  // Get global platform stats (no auth needed)
-  getGlobalStats: () => {
-    return api.get('/users/stats/global');
-  },
-
-  // Get listening history
-  getListeningHistory: (params = {}) => {
-    return api.get('/users/listening-history', params);
-  },
-
-  // Get bookmarks
-  getBookmarks: (params = {}) => {
-    return api.get('/users/bookmarks', params);
-  },
-
-  // Get liked series
-  getLikedSeries: (params = {}) => {
-    return api.get('/activity/recent', {
-      ...params,
-      activity_type: 'like'
-    });
-  },
-
-  // Get following creators
-  getFollowing: () => {
-    return api.get('/users/following');
-  },
-
-  // Follow a creator
-  followCreator: (creatorId) => {
-    return api.post(`/users/follow/${creatorId}`);
-  },
-
-  // Unfollow a creator
-  unfollowCreator: (creatorId) => {
-    return api.delete(`/users/unfollow/${creatorId}`);
-  },
-
-  // Get user activity
-  getActivity: (params = {}) => {
-    return api.get('/activity/recent', params);
-  },
-
-  // Get activity stats
-  getActivityStats: () => {
-    return api.get('/activity/stats');
-  },
-
-  // Log user activity
-  logActivity: (activityData) => {
-    return api.post('/activity/log', activityData);
-  },
-
-  // Search users
-  searchUsers: (query, params = {}) => {
-    return api.get('/search', { q: query, type: 'users', ...params });
-  },
-
-  // Upload profile picture
-  uploadProfilePicture: (file) => {
-    const formData = new FormData();
-    formData.append('profile_picture', file);
-    return api.upload('/users/profile/picture', formData);
-  },
-
-  // Delete account
-  deleteAccount: () => {
-    return api.delete('/users/profile');
-  },
-
-  // Update language preference
-  updateLanguage: (language) => {
-    return api.put('/users/profile', { preferred_language: language });
-  },
-
-  // Get recommended series for user
-  getRecommendations: (params = {}) => {
-    return api.get('/series/recommended', params);
-  },
+  getListeningHistory: (params = {}) => api.get('/users/listening-history', { params }),
+  getBookmarks: (params = {}) => api.get('/users/bookmarks', { params }),
+  getBookmarkedSeries: () => api.get('/users/bookmarked-series'),
+  getFollowing: () => api.get('/users/following'),
+  followCreator: (creatorId) => api.post(`/users/follow/${creatorId}`),
+  unfollowCreator: (creatorId) => api.delete(`/users/unfollow/${creatorId}`),
+  getUserStats: () => api.get('/users/stats'),
+  getFollowers: () => api.get('/users/followers'),
+  getCreatorAnalytics: () => api.get('/users/creator-analytics'),
   getCreatorStats: () => api.get('/users/creator-stats'),
-  // In src/services/userService.js
-getBookmarkedSeries: () => {
-  return api.get('/users/bookmarked-series');
-},
 
-  // ⭐ NEW: Top creators for homepage
-  getTopCreators: () => {
-    return api.get('/users/top-creators');
-  },
+  // Avatar endpoints
+  uploadAvatar: (formData) => api.post('/users/avatar', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  removeAvatar: () => api.delete('/users/avatar'),
 
-    getFollowers: () => api.get('/users/followers'),
+  // Password change
+  changePassword: (passwordData) => api.post('/users/change-password', passwordData),
+
+  // Delete account (if you have it)
+  deleteAccount: () => api.delete('/users/profile'),
+
+  // Additional convenience methods (from your earlier code)
+  getLikedSeries: (params = {}) =>
+    api.get('/activity/recent', {
+      params: { activity_type: 'like', ...params }
+    }),
+  getActivity: (params = {}) => api.get('/activity/recent', { params }),
+  getActivityStats: () => api.get('/activity/stats'),
+  logActivity: (activityData) => api.post('/activity/log', activityData),
+
+  // Recommendation and search
+  getRecommendations: (params = {}) => api.get('/series/recommended', { params }),
+  searchUsers: (query, params = {}) =>
+    api.get('/search', { params: { q: query, type: 'users', ...params } }),
+  updateLanguage: (language) => api.put('/users/profile', { preferred_language: language }),
 };
 
 export default userService;
