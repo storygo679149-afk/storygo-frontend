@@ -25,6 +25,18 @@
   100% { background-position: 0% 50%; }
 }
 
+/* Make input text dark */
+.form-group input {
+  color: #1F2937;
+}
+
+.form-group input::placeholder {
+  color: #9CA3AF;
+}
+
+.form-group input:focus {
+  color: #111827;
+}
 /* Glassmorphic card */
 .signup-container {
   max-width: 520px;
