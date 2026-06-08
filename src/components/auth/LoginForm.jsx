@@ -15,29 +15,37 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [needsVerification, setNeedsVerification] = useState(false);
   const [verificationEmail, setVerificationEmail] = useState('');
-  const [unverifiedMessage, setUnverifiedMessage] = useState(''); // inline message
+  const [errorMessage, setErrorMessage] = useState(''); // For invalid credentials or unverified
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!email || !password) {
+      setErrorMessage('Please enter both email and password');
+      return;
+    }
     setIsLoading(true);
-    setUnverifiedMessage(''); // clear previous message
+    setErrorMessage('');
     const result = await login(email, password);
     setIsLoading(false);
+
     if (result.success) {
       navigate('/');
     } else if (result.requiresVerification) {
       setVerificationEmail(result.email || email);
       setNeedsVerification(true);
-      setUnverifiedMessage('Account not verified. Please verify your email to log in.');
-      // toast already shown by context, but we add extra inline message
+      setErrorMessage(result.message || 'Account not verified. Please verify your email.');
+    } else if (result.message) {
+      // This handles 401 and any other non-verification errors
+      setErrorMessage(result.message);
+    } else {
+      setErrorMessage('Login failed. Please try again.');
     }
   };
 
   const handleBackToLogin = () => {
     setNeedsVerification(false);
     setVerificationEmail('');
-    setUnverifiedMessage('');
+    setErrorMessage('');
   };
 
   if (needsVerification) {
@@ -58,11 +66,11 @@ const LoginForm = () => {
           <p>Log in to continue your journey</p>
         </div>
 
-        {/* Inline unverified account message */}
-        {unverifiedMessage && (
+        {/* Inline error message (for invalid credentials or unverified) */}
+        {errorMessage && (
           <div className="alert-message error">
             <FiAlertCircle />
-            <span>{unverifiedMessage}</span>
+            <span>{errorMessage}</span>
           </div>
         )}
 
