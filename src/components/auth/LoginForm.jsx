@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { FiMail, FiLock, FiLogIn, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuthContext } from '../../context/AuthContext';
 import OTPVerification from './OTPVerification';
+import './LoginForm.css';
 
 const LoginForm = () => {
   const { login } = useAuthContext();
