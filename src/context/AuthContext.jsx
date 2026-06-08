@@ -1,3 +1,4 @@
+// src/context/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import authService from '../services/authService';
 import userService from '../services/userService';
@@ -10,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // Load user from localStorage on mount
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -33,7 +35,9 @@ export const AuthProvider = ({ children }) => {
     is_creator: userData.role === 'creator' || userData.role === 'admin',
   });
 
+  // ─────────────────────────────────────────────
   // SIGNUP
+  // ─────────────────────────────────────────────
   const signup = useCallback(async (formData) => {
     try {
       const response = await authService.register(formData);
@@ -50,7 +54,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // VERIFY OTP (signup)
+  // ─────────────────────────────────────────────
+  // VERIFY OTP (for signup)
+  // ─────────────────────────────────────────────
   const verifyOTP = useCallback(async (email, otp) => {
     try {
       const response = await authService.verifyOTP(email, otp);
@@ -72,7 +78,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // RESEND OTP
+  // ─────────────────────────────────────────────
+  // RESEND OTP (for signup)
+  // ─────────────────────────────────────────────
   const resendOTP = useCallback(async (email) => {
     try {
       const response = await authService.resendOTP(email);
@@ -89,7 +97,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // LOGIN (sends OTP)
+  // ─────────────────────────────────────────────
+  // LOGIN (sends OTP, returns tempToken)
+  // ─────────────────────────────────────────────
   const login = useCallback(async (email, password) => {
     try {
       const response = await authService.login(email, password);
@@ -119,7 +129,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // VERIFY LOGIN OTP
+  // ─────────────────────────────────────────────
+  // VERIFY LOGIN OTP (final step)
+  // ─────────────────────────────────────────────
   const verifyLoginOTP = useCallback(async (email, otp, tempToken) => {
     try {
       const response = await authService.verifyLoginOTP(email, otp, tempToken);
@@ -141,26 +153,59 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // LOGOUT
-  const logout = useCallback(async () => {
+  // ─────────────────────────────────────────────
+  // UPDATE PROFILE (real implementation)
+  // ─────────────────────────────────────────────
+  const updateProfile = useCallback(async (profileData) => {
     try {
-      await authService.logout();
+      const response = await userService.updateProfile(profileData);
+      if (response.data.status === 'success') {
+        // Optionally fetch fresh profile
+        const profileRes = await userService.getProfile();
+        if (profileRes.data.status === 'success' && profileRes.data.data?.user) {
+          const updatedUser = enrichUser(profileRes.data.data.user);
+          setUser(updatedUser);
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+        }
+        toast.success('Profile updated successfully');
+        return { success: true };
+      } else {
+        toast.error(response.data.message || 'Update failed');
+        return { success: false, message: response.data.message };
+      }
     } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      setUser(null);
-      setIsAuthenticated(false);
-      toast.success('Logged out');
+      const msg = error.response?.data?.message || 'Failed to update profile';
+      toast.error(msg);
+      return { success: false, message: msg };
     }
   }, []);
 
-  // ✅ BECOME CREATOR – real implementation
+  // ─────────────────────────────────────────────
+  // CHANGE PASSWORD (real implementation)
+  // ─────────────────────────────────────────────
+  const changePassword = useCallback(async (currentPassword, newPassword) => {
+    try {
+      const response = await userService.changePassword({ currentPassword, newPassword });
+      if (response.data.status === 'success') {
+        toast.success('Password changed successfully');
+        return { success: true };
+      } else {
+        toast.error(response.data.message || 'Password change failed');
+        return { success: false, message: response.data.message };
+      }
+    } catch (error) {
+      const msg = error.response?.data?.message || 'Failed to change password';
+      toast.error(msg);
+      return { success: false, message: msg };
+    }
+  }, []);
+
+  // ─────────────────────────────────────────────
+  // BECOME CREATOR (real implementation)
+  // ─────────────────────────────────────────────
   const becomeCreator = useCallback(async () => {
     try {
       const response = await userService.becomeCreator();
-      // Our backend returns { status: 'success', data: { user } }
       if (response.data.status === 'success') {
         const updatedUser = response.data.data.user;
         const enriched = enrichUser(updatedUser);
@@ -181,14 +226,21 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Placeholders
-  const updateProfile = useCallback(async () => {
-    toast.info('Update profile not yet implemented');
-    return { success: false };
-  }, []);
-  const changePassword = useCallback(async () => {
-    toast.info('Change password not yet implemented');
-    return { success: false };
+  // ─────────────────────────────────────────────
+  // LOGOUT
+  // ─────────────────────────────────────────────
+  const logout = useCallback(async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setUser(null);
+      setIsAuthenticated(false);
+      toast.success('Logged out');
+    }
   }, []);
 
   const value = {
