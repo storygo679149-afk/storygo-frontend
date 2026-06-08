@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Load user from localStorage on mount
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -33,7 +32,9 @@ export const AuthProvider = ({ children }) => {
     is_creator: userData.role === 'creator' || userData.role === 'admin',
   });
 
-  // ✅ SIGNUP
+  // ─────────────────────────────────────────────
+  // SIGNUP
+  // ─────────────────────────────────────────────
   const signup = useCallback(async (formData) => {
     try {
       const response = await authService.register(formData);
@@ -50,7 +51,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ VERIFY OTP
+  // ─────────────────────────────────────────────
+  // VERIFY OTP (for signup)
+  // ─────────────────────────────────────────────
   const verifyOTP = useCallback(async (email, otp) => {
     try {
       const response = await authService.verifyOTP(email, otp);
@@ -72,7 +75,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ RESEND OTP
+  // ─────────────────────────────────────────────
+  // RESEND OTP (for signup)
+  // ─────────────────────────────────────────────
   const resendOTP = useCallback(async (email) => {
     try {
       const response = await authService.resendOTP(email);
@@ -89,22 +94,25 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ LOGIN (handles 401 and 403 properly)
+  // ─────────────────────────────────────────────
+  // LOGIN (sends OTP, returns tempToken)
+  // ─────────────────────────────────────────────
   const login = useCallback(async (email, password) => {
     try {
       const response = await authService.login(email, password);
-      if (response.data.success) {
-        const loggedInUser = enrichUser(response.data.user);
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(loggedInUser));
-        setUser(loggedInUser);
-        setIsAuthenticated(true);
-        toast.success('Login successful!');
-        return { success: true };
+      if (response.data.success && response.data.tempToken) {
+        toast.success(response.data.message);
+        return {
+          success: true,
+          tempToken: response.data.tempToken,
+          email: response.data.email,
+          requiresVerification: true,
+        };
       }
-      return { success: false, message: 'Login failed' };
+      // should not happen – fallback
+      return { success: false, message: response.data.message || 'Login failed' };
     } catch (error) {
-      // Handle 403 (unverified account)
+      // 403: unverified account
       if (error.response?.status === 403 && error.response?.data?.requiresVerification) {
         toast.error(error.response.data.message);
         return {
@@ -114,14 +122,40 @@ export const AuthProvider = ({ children }) => {
           message: error.response.data.message,
         };
       }
-      // Handle 401 (invalid credentials) and any other errors
+      // 401 or other errors
       const errorMessage = error.response?.data?.message || 'Invalid email or password';
       toast.error(errorMessage);
       return { success: false, message: errorMessage };
     }
   }, []);
 
-  // ✅ LOGOUT
+  // ─────────────────────────────────────────────
+  // VERIFY LOGIN OTP (final step)
+  // ─────────────────────────────────────────────
+  const verifyLoginOTP = useCallback(async (email, otp, tempToken) => {
+    try {
+      const response = await authService.verifyLoginOTP(email, otp, tempToken);
+      if (response.data.success) {
+        const loggedInUser = enrichUser(response.data.user);
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(loggedInUser));
+        setUser(loggedInUser);
+        setIsAuthenticated(true);
+        toast.success('Login successful!');
+        return { success: true };
+      }
+      toast.error(response.data.message);
+      return { success: false };
+    } catch (error) {
+      const msg = error.response?.data?.message || 'OTP verification failed';
+      toast.error(msg);
+      return { success: false };
+    }
+  }, []);
+
+  // ─────────────────────────────────────────────
+  // LOGOUT
+  // ─────────────────────────────────────────────
   const logout = useCallback(async () => {
     try {
       await authService.logout();
@@ -157,6 +191,7 @@ export const AuthProvider = ({ children }) => {
     login,
     signup,
     verifyOTP,
+    verifyLoginOTP,
     resendOTP,
     logout,
     updateProfile,
