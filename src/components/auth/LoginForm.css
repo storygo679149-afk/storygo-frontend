@@ -1,33 +1,18 @@
-/* LoginForm.css – full page with animated gradient + glass card */
+/* LoginForm.css – with wrapper gradient background */
 
-/* ----- Global background (can be moved to index.css) ----- */
-body {
-  margin: 0;
+.login-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  background-attachment: fixed;
-  position: relative;
-  overflow-x: hidden;
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 20% 40%, rgba(255,255,255,0.15) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* ----- Login Card (glassmorphic) ----- */
+/* Login Card (glassmorphic) */
 .login-container {
   max-width: 480px;
-  width: 90%;
-  margin: 3rem auto;
+  width: 100%;
   padding: 2rem 1.8rem;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
@@ -43,7 +28,7 @@ body::before {
   box-shadow: 0 35px 55px rgba(0, 0, 0, 0.25);
 }
 
-/* Decorative glowing border (optional) */
+/* Decorative border */
 .login-container::before {
   content: '';
   position: absolute;
@@ -64,7 +49,7 @@ body::before {
   opacity: 0.9;
 }
 
-/* ----- Header ----- */
+/* Header */
 .login-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -107,7 +92,7 @@ body::before {
   letter-spacing: -0.2px;
 }
 
-/* ----- Form Groups ----- */
+/* Form Groups */
 .form-group {
   margin-bottom: 1.4rem;
   position: relative;
@@ -175,7 +160,7 @@ body::before {
   color: #F59E0B;
 }
 
-/* ----- Submit Button ----- */
+/* Submit Button */
 .login-button {
   width: 100%;
   padding: 0.9rem;
@@ -245,7 +230,7 @@ body::before {
   to { transform: rotate(360deg); }
 }
 
-/* ----- Footer Link ----- */
+/* Footer Link */
 .signup-link {
   text-align: center;
   margin-top: 1.8rem;
@@ -282,11 +267,9 @@ body::before {
   width: 100%;
 }
 
-/* ----- Responsive ----- */
+/* Responsive */
 @media (max-width: 640px) {
   .login-container {
-    width: 92%;
-    margin: 2rem auto;
     padding: 1.5rem 1rem;
     border-radius: 1.5rem;
   }
@@ -306,7 +289,7 @@ body::before {
   }
 }
 
-/* ----- Gentle fade‑in animation ----- */
+/* Animation */
 @keyframes gentleAppear {
   from {
     opacity: 0;
