@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import './BecomeCreatorButton.css'; // optional
 
 const BecomeCreatorButton = () => {
   const { user, becomeCreator } = useAuthContext();
