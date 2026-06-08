@@ -1,12 +1,12 @@
-/* LoginForm.css – Animated moving gradient background + glass card */
+/* LoginForm.css – animated moving gradient (foolproof) */
 
-/* ----- GLOBAL ANIMATED BACKGROUND (covers full scroll) ----- */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
 }
 
+/* Force gradient on html so it covers everything */
 html {
   background: linear-gradient(270deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe);
   background-size: 400% 400%;
@@ -21,22 +21,21 @@ html {
 }
 
 body {
-  background: transparent;
+  background: transparent;  /* no white background */
   min-height: 100%;
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* ----- Wrapper that centers the card ----- */
 .login-page {
   min-height: 100vh;
-  background: transparent;
+  background: transparent;  /* let html gradient show */
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
 }
 
-/* ----- Glassmorphic Login Card (keeps the same) ----- */
+/* Glass card (same as before) */
 .login-container {
   max-width: 480px;
   width: 100%;
@@ -55,7 +54,6 @@ body {
   box-shadow: 0 35px 55px rgba(0, 0, 0, 0.25);
 }
 
-/* Decorative glowing border (same) */
 .login-container::before {
   content: '';
   position: absolute;
@@ -76,7 +74,6 @@ body {
   opacity: 0.9;
 }
 
-/* ----- Header (same) ----- */
 .login-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -119,7 +116,6 @@ body {
   letter-spacing: -0.2px;
 }
 
-/* ----- Form Groups (same) ----- */
 .form-group {
   margin-bottom: 1.4rem;
   position: relative;
@@ -160,7 +156,6 @@ body {
   background: white;
 }
 
-/* Password toggle (same) */
 .password-input-wrapper {
   position: relative;
   width: 100%;
@@ -187,7 +182,6 @@ body {
   color: #F59E0B;
 }
 
-/* ----- Submit Button (same) ----- */
 .login-button {
   width: 100%;
   padding: 0.9rem;
@@ -240,7 +234,6 @@ body {
   transform: none;
 }
 
-/* Loading spinner */
 .login-button:disabled::after {
   content: '';
   width: 1.2rem;
@@ -257,7 +250,6 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* ----- Footer Link (same) ----- */
 .signup-link {
   text-align: center;
   margin-top: 1.8rem;
@@ -294,7 +286,6 @@ body {
   width: 100%;
 }
 
-/* ----- Responsive (same) ----- */
 @media (max-width: 640px) {
   .login-container {
     padding: 1.5rem 1rem;
@@ -316,7 +307,6 @@ body {
   }
 }
 
-/* ----- Card appear animation (same) ----- */
 @keyframes gentleAppear {
   from {
     opacity: 0;
