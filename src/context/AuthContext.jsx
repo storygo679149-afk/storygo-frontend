@@ -10,51 +10,56 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Load user from localStorage on mount
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setIsLoading(false);
-      return;
-    }
-    const storedUser = authService.getCurrentUser();
-    if (storedUser) {
-      const enrichedUser = {
-        ...storedUser,
-        is_creator: storedUser.role === 'creator' || storedUser.role === 'admin',
-      };
-      setUser(enrichedUser);
-      setIsAuthenticated(true);
-    }
-    setIsLoading(false);
-  }, []);
-
   const enrichUser = (userData) => ({
     ...userData,
     is_creator: userData.role === 'creator' || userData.role === 'admin',
   });
 
-  // ─────────────────────────────────────────────
-  // Refresh user from backend
-  // ─────────────────────────────────────────────
+  // Refresh user from API
   const refreshUser = useCallback(async () => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) return null;
       const response = await userService.getProfile();
       if (response.data.status === 'success' && response.data.data?.user) {
         const freshUser = enrichUser(response.data.data.user);
         setUser(freshUser);
         localStorage.setItem('user', JSON.stringify(freshUser));
+        setIsAuthenticated(true);
         return freshUser;
       }
     } catch (error) {
       console.error('Refresh user error:', error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+        setIsAuthenticated(false);
+      }
     }
     return null;
   }, []);
 
-  // ─────────────────────────────────────────────
-  // SIGNUP (unchanged)
-  // ─────────────────────────────────────────────
+  // Load initial user
+  useEffect(() => {
+    const initAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+      const storedUser = authService.getCurrentUser();
+      if (storedUser) {
+        setUser(enrichUser(storedUser));
+        setIsAuthenticated(true);
+      }
+      await refreshUser();
+      setIsLoading(false);
+    };
+    initAuth();
+  }, [refreshUser]);
+
+  // ---------- Authentication Methods ----------
   const signup = useCallback(async (formData) => {
     try {
       const response = await authService.register(formData);
@@ -71,7 +76,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // VERIFY OTP (for signup)
   const verifyOTP = useCallback(async (email, otp) => {
     try {
       const response = await authService.verifyOTP(email, otp);
@@ -93,7 +97,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // RESEND OTP
   const resendOTP = useCallback(async (email) => {
     try {
       const response = await authService.resendOTP(email);
@@ -110,7 +113,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // LOGIN (sends OTP)
   const login = useCallback(async (email, password) => {
     try {
       const response = await authService.login(email, password);
@@ -140,7 +142,6 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // VERIFY LOGIN OTP
   const verifyLoginOTP = useCallback(async (email, otp, tempToken) => {
     try {
       const response = await authService.verifyLoginOTP(email, otp, tempToken);
@@ -162,84 +163,64 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // UPDATE PROFILE
   const updateProfile = useCallback(async (profileData) => {
     try {
       const response = await userService.updateProfile(profileData);
       if (response.data.status === 'success') {
         await refreshUser();
-        toast.success('Profile updated successfully');
+        toast.success('Profile updated');
         return { success: true };
-      } else {
-        toast.error(response.data.message || 'Update failed');
-        return { success: false, message: response.data.message };
       }
+      toast.error(response.data.message || 'Update failed');
+      return { success: false };
     } catch (error) {
-      const msg = error.response?.data?.message || 'Failed to update profile';
+      const msg = error.response?.data?.message || 'Update failed';
       toast.error(msg);
-      return { success: false, message: msg };
+      return { success: false };
     }
   }, [refreshUser]);
 
-  // CHANGE PASSWORD
   const changePassword = useCallback(async (currentPassword, newPassword) => {
     try {
       const response = await userService.changePassword({ currentPassword, newPassword });
       if (response.data.status === 'success') {
-        toast.success('Password changed successfully');
+        toast.success('Password changed');
         return { success: true };
-      } else {
-        toast.error(response.data.message || 'Password change failed');
-        return { success: false, message: response.data.message };
       }
+      toast.error(response.data.message || 'Change failed');
+      return { success: false };
     } catch (error) {
-      const msg = error.response?.data?.message || 'Failed to change password';
+      const msg = error.response?.data?.message || 'Change failed';
       toast.error(msg);
-      return { success: false, message: msg };
+      return { success: false };
     }
   }, []);
 
-  // ✅ BECOME CREATOR – refresh user after success
   const becomeCreator = useCallback(async () => {
     try {
       const response = await userService.becomeCreator();
       if (response.data.status === 'success') {
-        // Refresh user data from backend to get the updated role
         const freshUser = await refreshUser();
         if (freshUser) {
           toast.success(response.data.message || 'You are now a creator!');
           return { success: true, user: freshUser };
-        } else {
-          // Fallback: use the data from the response
-          const updatedUser = response.data.data.user;
-          const enriched = enrichUser(updatedUser);
-          setUser(enriched);
-          localStorage.setItem('user', JSON.stringify(enriched));
-          toast.success(response.data.message || 'You are now a creator!');
-          return { success: true, user: enriched };
         }
-      } else {
-        const msg = response.data.message || 'Failed to become creator';
-        toast.error(msg);
-        return { success: false, message: msg };
       }
+      return { success: false, message: response.data.message };
     } catch (error) {
-      // If error is "already a creator", still try to refresh user
       if (error.response?.status === 400 && error.response?.data?.message?.includes('already a creator')) {
-        toast.info('You are already a creator. Refreshing your status...');
         const freshUser = await refreshUser();
         if (freshUser && (freshUser.is_creator || freshUser.role === 'creator')) {
+          toast.info('You are already a creator.');
           return { success: true, user: freshUser };
         }
       }
-      const msg = error.response?.data?.message || 'Something went wrong. Please try again.';
+      const msg = error.response?.data?.message || 'Something went wrong';
       toast.error(msg);
-      console.error('Become creator error:', error);
       return { success: false, message: msg };
     }
   }, [refreshUser]);
 
-  // LOGOUT
   const logout = useCallback(async () => {
     try {
       await authService.logout();
@@ -267,7 +248,7 @@ export const AuthProvider = ({ children }) => {
     updateProfile,
     changePassword,
     becomeCreator,
-    refreshUser, // expose this too
+    refreshUser,
     setUser,
   };
 
