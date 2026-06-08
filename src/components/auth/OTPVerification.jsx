@@ -5,8 +5,8 @@ import { FiMail, FiArrowLeft } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { useAuthContext } from '../../context/AuthContext';
 
-const OTPVerification = ({ email, onBack }) => {
-  const { verifyOTP, resendOTP } = useAuthContext();
+const OTPVerification = ({ email, onBack, tempToken = null, isLoginFlow = false }) => {
+  const { verifyOTP, verifyLoginOTP, resendOTP } = useAuthContext();
   const navigate = useNavigate();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,12 +33,12 @@ const OTPVerification = ({ email, onBack }) => {
     const newOtp = [...otp];
     newOtp[idx] = val;
     setOtp(newOtp);
-    if (val && idx < 5) document.getElementById(`otp-input-${idx+1}`)?.focus();
+    if (val && idx < 5) document.getElementById(`otp-input-${idx + 1}`)?.focus();
   };
 
   const handleKeyDown = (idx, e) => {
     if (e.key === 'Backspace' && !otp[idx] && idx > 0) {
-      document.getElementById(`otp-input-${idx-1}`)?.focus();
+      document.getElementById(`otp-input-${idx - 1}`)?.focus();
     }
   };
 
@@ -50,9 +50,18 @@ const OTPVerification = ({ email, onBack }) => {
       return;
     }
     setIsLoading(true);
-    const result = await verifyOTP(email, code);
+    let result;
+    if (isLoginFlow && tempToken) {
+      result = await verifyLoginOTP(email, code, tempToken);
+    } else {
+      result = await verifyOTP(email, code);
+    }
     setIsLoading(false);
-    if (result.success) navigate('/');
+    if (result.success) {
+      navigate('/');
+    } else {
+      toast.error(result.message);
+    }
   };
 
   const handleResend = async () => {
@@ -67,15 +76,53 @@ const OTPVerification = ({ email, onBack }) => {
   };
 
   return (
-    <motion.div className="otp-container" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-      <button className="back-button" onClick={onBack}><FiArrowLeft /> Back</button>
-      <div className="otp-header"><div className="otp-icon"><FiMail /></div><h2>Verify Your Email</h2><p>We've sent a 6‑digit code to</p><strong>{email}</strong></div>
-      <form onSubmit={handleSubmit} className="otp-form">
-        <div className="otp-inputs">{otp.map((d,i) => (<input key={i} id={`otp-input-${i}`} type="text" maxLength="1" value={d} onChange={(e) => handleChange(i, e.target.value)} onKeyDown={(e) => handleKeyDown(i, e)} className="otp-input" autoFocus={i===0} />))}</div>
-        <button type="submit" className="verify-button" disabled={isLoading}>{isLoading ? 'Verifying...' : 'Verify Account'}</button>
-        <div className="resend-section">{canResend ? (<button type="button" onClick={handleResend} className="resend-button">Resend code</button>) : (<p className="timer">Expires in {formatTime(timeLeft)}</p>)}</div>
-      </form>
-    </motion.div>
+    <div className="otp-page">
+      <motion.div
+        className="otp-container"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+      >
+        <button className="back-button" onClick={onBack}>
+          <FiArrowLeft /> Back
+        </button>
+        <div className="otp-header">
+          <div className="otp-icon"><FiMail /></div>
+          <h2>{isLoginFlow ? 'Login Verification' : 'Verify Your Email'}</h2>
+          <p>We've sent a 6‑digit code to</p>
+          <strong>{email}</strong>
+        </div>
+        <form onSubmit={handleSubmit} className="otp-form">
+          <div className="otp-inputs">
+            {otp.map((d, i) => (
+              <input
+                key={i}
+                id={`otp-input-${i}`}
+                type="text"
+                maxLength="1"
+                value={d}
+                onChange={(e) => handleChange(i, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(i, e)}
+                className="otp-input"
+                autoFocus={i === 0}
+              />
+            ))}
+          </div>
+          <button type="submit" className="verify-button" disabled={isLoading}>
+            {isLoading ? 'Verifying...' : 'Verify Code'}
+          </button>
+          <div className="resend-section">
+            {canResend ? (
+              <button type="button" onClick={handleResend} className="resend-button">
+                Resend code
+              </button>
+            ) : (
+              <p className="timer">Expires in {formatTime(timeLeft)}</p>
+            )}
+          </div>
+        </form>
+      </motion.div>
+    </div>
   );
 };
 
