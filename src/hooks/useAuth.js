@@ -1,28 +1,26 @@
-// src/hooks/useAuth.js
 import { useAuthContext } from '../context/AuthContext';
 
-/**
- * Custom hook to access auth context easily.
- * Returns the same values as AuthContext, plus convenience.
- */
 const useAuth = () => {
   const auth = useAuthContext();
+
+  // Safe fallbacks for all methods to avoid runtime errors
+  const safeFn = (fn) => (fn && typeof fn === 'function' ? fn : () => Promise.resolve({ success: false }));
+
   return {
-    // State
     user: auth.user,
     isAuthenticated: auth.isAuthenticated,
     isLoading: auth.isLoading,
-    // Methods
-    login: auth.login,
-    signup: auth.signup,
-    verifyOTP: auth.verifyOTP,
-    verifyLoginOTP: auth.verifyLoginOTP,
-    resendOTP: auth.resendOTP,
-    logout: auth.logout,
-    updateProfile: auth.updateProfile,
-    changePassword: auth.changePassword,
-    becomeCreator: auth.becomeCreator,
-    setUser: auth.setUser,
+    login: safeFn(auth.login),
+    signup: safeFn(auth.signup),
+    verifyOTP: safeFn(auth.verifyOTP),
+    verifyLoginOTP: safeFn(auth.verifyLoginOTP),
+    resendOTP: safeFn(auth.resendOTP),
+    logout: safeFn(auth.logout),
+    updateProfile: safeFn(auth.updateProfile),
+    changePassword: safeFn(auth.changePassword),
+    becomeCreator: safeFn(auth.becomeCreator),
+    refreshUser: (auth.refreshUser && typeof auth.refreshUser === 'function') ? auth.refreshUser : () => Promise.resolve(null),
+    setUser: auth.setUser || (() => {}),
   };
 };
 
