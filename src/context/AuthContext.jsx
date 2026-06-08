@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import authService from '../services/authService';
+import userService from '../services/userService'; // ✅ import userService
 import toast from 'react-hot-toast';
 
 export const AuthContext = createContext(null);
@@ -32,9 +33,7 @@ export const AuthProvider = ({ children }) => {
     is_creator: userData.role === 'creator' || userData.role === 'admin',
   });
 
-  // ─────────────────────────────────────────────
   // SIGNUP
-  // ─────────────────────────────────────────────
   const signup = useCallback(async (formData) => {
     try {
       const response = await authService.register(formData);
@@ -51,9 +50,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ─────────────────────────────────────────────
   // VERIFY OTP (for signup)
-  // ─────────────────────────────────────────────
   const verifyOTP = useCallback(async (email, otp) => {
     try {
       const response = await authService.verifyOTP(email, otp);
@@ -75,9 +72,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ─────────────────────────────────────────────
-  // RESEND OTP (for signup)
-  // ─────────────────────────────────────────────
+  // RESEND OTP
   const resendOTP = useCallback(async (email) => {
     try {
       const response = await authService.resendOTP(email);
@@ -94,9 +89,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ─────────────────────────────────────────────
   // LOGIN (sends OTP, returns tempToken)
-  // ─────────────────────────────────────────────
   const login = useCallback(async (email, password) => {
     try {
       const response = await authService.login(email, password);
@@ -109,10 +102,8 @@ export const AuthProvider = ({ children }) => {
           requiresVerification: true,
         };
       }
-      // should not happen – fallback
       return { success: false, message: response.data.message || 'Login failed' };
     } catch (error) {
-      // 403: unverified account
       if (error.response?.status === 403 && error.response?.data?.requiresVerification) {
         toast.error(error.response.data.message);
         return {
@@ -122,16 +113,13 @@ export const AuthProvider = ({ children }) => {
           message: error.response.data.message,
         };
       }
-      // 401 or other errors
       const errorMessage = error.response?.data?.message || 'Invalid email or password';
       toast.error(errorMessage);
       return { success: false, message: errorMessage };
     }
   }, []);
 
-  // ─────────────────────────────────────────────
-  // VERIFY LOGIN OTP (final step)
-  // ─────────────────────────────────────────────
+  // VERIFY LOGIN OTP
   const verifyLoginOTP = useCallback(async (email, otp, tempToken) => {
     try {
       const response = await authService.verifyLoginOTP(email, otp, tempToken);
@@ -153,9 +141,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ─────────────────────────────────────────────
   // LOGOUT
-  // ─────────────────────────────────────────────
   const logout = useCallback(async () => {
     try {
       await authService.logout();
@@ -170,17 +156,52 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Placeholder methods
+  // ✅ BECOME CREATOR – real implementation
+  const becomeCreator = useCallback(async () => {
+    try {
+      const response = await userService.becomeCreator();
+      // Backend returns { status: 'success', data: { user } }
+      // Also handle if backend returns { success: true, user }
+      const isSuccess = response.data.status === 'success' || response.data.success === true;
+      if (isSuccess) {
+        const updatedUser = response.data.data?.user || response.data.user;
+        if (updatedUser) {
+          const enriched = enrichUser(updatedUser);
+          setUser(prev => ({ ...prev, ...enriched }));
+          localStorage.setItem('user', JSON.stringify(enriched));
+          toast.success(response.data.message || 'You are now a creator!');
+          return { success: true, user: enriched };
+        } else {
+          // Fallback: refresh profile
+          const profileRes = await userService.getProfile();
+          if (profileRes.data.status === 'success' && profileRes.data.data?.user) {
+            const refreshed = enrichUser(profileRes.data.data.user);
+            setUser(refreshed);
+            localStorage.setItem('user', JSON.stringify(refreshed));
+            toast.success('You are now a creator!');
+            return { success: true, user: refreshed };
+          }
+        }
+      } else {
+        const msg = response.data.message || 'Failed to become creator';
+        toast.error(msg);
+        return { success: false, message: msg };
+      }
+    } catch (error) {
+      const msg = error.response?.data?.message || 'Something went wrong. Please try again.';
+      toast.error(msg);
+      console.error('Become creator error:', error);
+      return { success: false, message: msg };
+    }
+  }, []);
+
+  // Placeholders
   const updateProfile = useCallback(async () => {
     toast.info('Update profile not yet implemented');
     return { success: false };
   }, []);
   const changePassword = useCallback(async () => {
     toast.info('Change password not yet implemented');
-    return { success: false };
-  }, []);
-  const becomeCreator = useCallback(async () => {
-    toast.info('Become creator not yet implemented');
     return { success: false };
   }, []);
 
