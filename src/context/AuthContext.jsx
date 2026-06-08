@@ -34,7 +34,27 @@ export const AuthProvider = ({ children }) => {
     is_creator: userData.role === 'creator' || userData.role === 'admin',
   });
 
-  // SIGNUP
+  // ─────────────────────────────────────────────
+  // Refresh user from backend
+  // ─────────────────────────────────────────────
+  const refreshUser = useCallback(async () => {
+    try {
+      const response = await userService.getProfile();
+      if (response.data.status === 'success' && response.data.data?.user) {
+        const freshUser = enrichUser(response.data.data.user);
+        setUser(freshUser);
+        localStorage.setItem('user', JSON.stringify(freshUser));
+        return freshUser;
+      }
+    } catch (error) {
+      console.error('Refresh user error:', error);
+    }
+    return null;
+  }, []);
+
+  // ─────────────────────────────────────────────
+  // SIGNUP (unchanged)
+  // ─────────────────────────────────────────────
   const signup = useCallback(async (formData) => {
     try {
       const response = await authService.register(formData);
@@ -90,7 +110,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // LOGIN (sends OTP, returns tempToken)
+  // LOGIN (sends OTP)
   const login = useCallback(async (email, password) => {
     try {
       const response = await authService.login(email, password);
@@ -147,12 +167,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await userService.updateProfile(profileData);
       if (response.data.status === 'success') {
-        const profileRes = await userService.getProfile();
-        if (profileRes.data.status === 'success' && profileRes.data.data?.user) {
-          const updatedUser = enrichUser(profileRes.data.data.user);
-          setUser(updatedUser);
-          localStorage.setItem('user', JSON.stringify(updatedUser));
-        }
+        await refreshUser();
         toast.success('Profile updated successfully');
         return { success: true };
       } else {
@@ -164,7 +179,7 @@ export const AuthProvider = ({ children }) => {
       toast.error(msg);
       return { success: false, message: msg };
     }
-  }, []);
+  }, [refreshUser]);
 
   // CHANGE PASSWORD
   const changePassword = useCallback(async (currentPassword, newPassword) => {
@@ -184,29 +199,45 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ✅ BECOME CREATOR – fully updates user object
+  // ✅ BECOME CREATOR – refresh user after success
   const becomeCreator = useCallback(async () => {
     try {
       const response = await userService.becomeCreator();
       if (response.data.status === 'success') {
-        const updatedUser = response.data.data.user;
-        const enriched = enrichUser(updatedUser);
-        setUser(enriched);
-        localStorage.setItem('user', JSON.stringify(enriched));
-        toast.success(response.data.message || 'You are now a creator!');
-        return { success: true, user: enriched };
+        // Refresh user data from backend to get the updated role
+        const freshUser = await refreshUser();
+        if (freshUser) {
+          toast.success(response.data.message || 'You are now a creator!');
+          return { success: true, user: freshUser };
+        } else {
+          // Fallback: use the data from the response
+          const updatedUser = response.data.data.user;
+          const enriched = enrichUser(updatedUser);
+          setUser(enriched);
+          localStorage.setItem('user', JSON.stringify(enriched));
+          toast.success(response.data.message || 'You are now a creator!');
+          return { success: true, user: enriched };
+        }
       } else {
         const msg = response.data.message || 'Failed to become creator';
         toast.error(msg);
         return { success: false, message: msg };
       }
     } catch (error) {
+      // If error is "already a creator", still try to refresh user
+      if (error.response?.status === 400 && error.response?.data?.message?.includes('already a creator')) {
+        toast.info('You are already a creator. Refreshing your status...');
+        const freshUser = await refreshUser();
+        if (freshUser && (freshUser.is_creator || freshUser.role === 'creator')) {
+          return { success: true, user: freshUser };
+        }
+      }
       const msg = error.response?.data?.message || 'Something went wrong. Please try again.';
       toast.error(msg);
       console.error('Become creator error:', error);
       return { success: false, message: msg };
     }
-  }, []);
+  }, [refreshUser]);
 
   // LOGOUT
   const logout = useCallback(async () => {
@@ -236,6 +267,7 @@ export const AuthProvider = ({ children }) => {
     updateProfile,
     changePassword,
     becomeCreator,
+    refreshUser, // expose this too
     setUser,
   };
 
