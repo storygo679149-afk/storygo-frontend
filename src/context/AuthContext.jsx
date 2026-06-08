@@ -28,13 +28,12 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  // Helper to enrich user object
   const enrichUser = (userData) => ({
     ...userData,
     is_creator: userData.role === 'creator' || userData.role === 'admin',
   });
 
-  // ✅ SIGNUP – with proper error extraction
+  // ✅ SIGNUP
   const signup = useCallback(async (formData) => {
     try {
       const response = await authService.register(formData);
@@ -42,18 +41,16 @@ export const AuthProvider = ({ children }) => {
         toast.success(response.data.message);
         return { success: true, email: formData.email, user: response.data.user };
       }
-      // In case backend returns success: false (shouldn't happen with 201, but handle)
       toast.error(response.data.message);
       return { success: false, message: response.data.message };
     } catch (error) {
-      // Extract the exact error message from backend response
       const errorMessage = error.response?.data?.message || 'Signup failed. Please try again.';
       toast.error(errorMessage);
       return { success: false, message: errorMessage };
     }
   }, []);
 
-  // Verify OTP after signup
+  // ✅ VERIFY OTP
   const verifyOTP = useCallback(async (email, otp) => {
     try {
       const response = await authService.verifyOTP(email, otp);
@@ -75,7 +72,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Resend OTP
+  // ✅ RESEND OTP
   const resendOTP = useCallback(async (email) => {
     try {
       const response = await authService.resendOTP(email);
@@ -92,7 +89,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Login
+  // ✅ LOGIN (handles 401 and 403 properly)
   const login = useCallback(async (email, password) => {
     try {
       const response = await authService.login(email, password);
@@ -105,8 +102,9 @@ export const AuthProvider = ({ children }) => {
         toast.success('Login successful!');
         return { success: true };
       }
-      return { success: false };
+      return { success: false, message: 'Login failed' };
     } catch (error) {
+      // Handle 403 (unverified account)
       if (error.response?.status === 403 && error.response?.data?.requiresVerification) {
         toast.error(error.response.data.message);
         return {
@@ -116,13 +114,14 @@ export const AuthProvider = ({ children }) => {
           message: error.response.data.message,
         };
       }
-      const msg = error.response?.data?.message || 'Login failed';
-      toast.error(msg);
-      return { success: false };
+      // Handle 401 (invalid credentials) and any other errors
+      const errorMessage = error.response?.data?.message || 'Invalid email or password';
+      toast.error(errorMessage);
+      return { success: false, message: errorMessage };
     }
   }, []);
 
-  // Logout
+  // ✅ LOGOUT
   const logout = useCallback(async () => {
     try {
       await authService.logout();
