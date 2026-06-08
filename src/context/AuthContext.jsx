@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }) => {
     }
     const storedUser = authService.getCurrentUser();
     if (storedUser) {
-      // Ensure is_creator is derived from role
       const enrichedUser = {
         ...storedUser,
         is_creator: storedUser.role === 'creator' || storedUser.role === 'admin',
@@ -29,34 +28,32 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  // Helper to enrich user object with is_creator
+  // Helper to enrich user object
   const enrichUser = (userData) => ({
     ...userData,
     is_creator: userData.role === 'creator' || userData.role === 'admin',
   });
 
-  // Signup – does NOT log the user in; returns success and email for OTP
+  // ✅ SIGNUP – with proper error extraction
   const signup = useCallback(async (formData) => {
     try {
       const response = await authService.register(formData);
       if (response.data.success) {
         toast.success(response.data.message);
-        return {
-          success: true,
-          email: formData.email,
-          user: response.data.user,
-        };
+        return { success: true, email: formData.email, user: response.data.user };
       }
+      // In case backend returns success: false (shouldn't happen with 201, but handle)
       toast.error(response.data.message);
-      return { success: false };
+      return { success: false, message: response.data.message };
     } catch (error) {
-      const msg = error.response?.data?.message || 'Signup failed';
-      toast.error(msg);
-      return { success: false };
+      // Extract the exact error message from backend response
+      const errorMessage = error.response?.data?.message || 'Signup failed. Please try again.';
+      toast.error(errorMessage);
+      return { success: false, message: errorMessage };
     }
   }, []);
 
-  // Verify OTP after signup (or after unverified login attempt)
+  // Verify OTP after signup
   const verifyOTP = useCallback(async (email, otp) => {
     try {
       const response = await authService.verifyOTP(email, otp);
@@ -95,7 +92,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Login – only for verified users; returns requiresVerification flag if unverified
+  // Login
   const login = useCallback(async (email, password) => {
     try {
       const response = await authService.login(email, password);
@@ -140,27 +137,17 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // Update profile – placeholder (you can implement later)
-  const updateProfile = useCallback(async (profileData) => {
-    // TODO: call your userService.updateProfile(profileData)
+  // Placeholder methods
+  const updateProfile = useCallback(async () => {
     toast.info('Update profile not yet implemented');
     return { success: false };
   }, []);
-
-  // Change password – placeholder
-  const changePassword = useCallback(async (currentPassword, newPassword) => {
+  const changePassword = useCallback(async () => {
     toast.info('Change password not yet implemented');
     return { success: false };
   }, []);
-
-  // Become creator – should update user role
   const becomeCreator = useCallback(async () => {
-    // TODO: call API to upgrade user to creator
     toast.info('Become creator not yet implemented');
-    // If successful, update local user:
-    // const updatedUser = { ...user, role: 'creator', is_creator: true };
-    // setUser(updatedUser);
-    // localStorage.setItem('user', JSON.stringify(updatedUser));
     return { success: false };
   }, []);
 
@@ -176,7 +163,7 @@ export const AuthProvider = ({ children }) => {
     updateProfile,
     changePassword,
     becomeCreator,
-    setUser, // exposed if needed
+    setUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -184,9 +171,7 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuthContext = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuthContext must be used within AuthProvider');
-  }
+  if (!context) throw new Error('useAuthContext must be used within AuthProvider');
   return context;
 };
 
