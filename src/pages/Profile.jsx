@@ -161,15 +161,34 @@ const Profile = () => {
     }
   };
 
+  // ✅ UPDATED: Manual user update after becoming creator
   const handleBecomeCreator = async () => {
+    if (isBecomingCreator) return;
     setIsBecomingCreator(true);
     try {
-      const result = await becomeCreator();
-      if (result.success) {
+      const result = await becomeCreator(); // backend call
+      if (result.success && result.user) {
+        // Manually update user in context and localStorage
+        const updatedUser = {
+          ...result.user,
+          is_creator: true,
+          role: 'creator'
+        };
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
         toast.success('You are now a creator!');
+        // Optional: force sidebar refresh (it will re-render because user changed)
+        // Small delay to let everything settle
+        setTimeout(() => {
+          // Maybe navigate to creator dashboard
+          navigate('/creator/dashboard');
+        }, 1000);
+      } else if (result.success === false) {
+        toast.error(result.message || 'Something went wrong');
       }
     } catch (error) {
-      toast.error('Something went wrong');
+      toast.error('Failed to become creator');
+      console.error(error);
     } finally {
       setIsBecomingCreator(false);
     }
@@ -270,7 +289,7 @@ const Profile = () => {
                     <textarea name="bio" rows="3" value={formData.bio} onChange={handleInputChange} />
                   </motion.div>
 
-                  {!user?.is_creator && (
+                  {!user?.is_creator && !(user?.role === 'creator') && (
                     <motion.div className="become-creator-section" variants={itemVariants}>
                       <button
                         type="button"
@@ -284,7 +303,7 @@ const Profile = () => {
                     </motion.div>
                   )}
 
-                  {user?.is_creator && (
+                  {(user?.is_creator || user?.role === 'creator') && (
                     <motion.div className="creator-badge" variants={itemVariants}>
                       <FiCheckCircle /> You are a verified creator
                     </motion.div>
