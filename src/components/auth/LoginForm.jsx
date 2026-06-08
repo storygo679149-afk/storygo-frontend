@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { FiMail, FiLock, FiLogIn, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuthContext } from '../../context/AuthContext';
 import OTPVerification from './OTPVerification';
-import './LoginForm.css';
+import './LoginForm.css';   // ✅ make sure this import exists
 
 const LoginForm = () => {
   const { login } = useAuthContext();
@@ -38,7 +38,7 @@ const LoginForm = () => {
   if (needsVerification) return <OTPVerification email={verificationEmail} onBack={handleBackToLogin} />;
 
   return (
-    <div className="login-page">
+    <div className="login-page">   {/* ✅ wrapper with class login-page */}
       <motion.div
         className="login-container"
         initial={{ opacity: 0, y: 20 }}
