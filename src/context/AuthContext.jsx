@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import authService from '../services/authService';
-import userService from '../services/userService'; // ✅ import userService
+import userService from '../services/userService';
 import toast from 'react-hot-toast';
 
 export const AuthContext = createContext(null);
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // VERIFY OTP (for signup)
+  // VERIFY OTP (signup)
   const verifyOTP = useCallback(async (email, otp) => {
     try {
       const response = await authService.verifyOTP(email, otp);
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // LOGIN (sends OTP, returns tempToken)
+  // LOGIN (sends OTP)
   const login = useCallback(async (email, password) => {
     try {
       const response = await authService.login(email, password);
@@ -160,28 +160,14 @@ export const AuthProvider = ({ children }) => {
   const becomeCreator = useCallback(async () => {
     try {
       const response = await userService.becomeCreator();
-      // Backend returns { status: 'success', data: { user } }
-      // Also handle if backend returns { success: true, user }
-      const isSuccess = response.data.status === 'success' || response.data.success === true;
-      if (isSuccess) {
-        const updatedUser = response.data.data?.user || response.data.user;
-        if (updatedUser) {
-          const enriched = enrichUser(updatedUser);
-          setUser(prev => ({ ...prev, ...enriched }));
-          localStorage.setItem('user', JSON.stringify(enriched));
-          toast.success(response.data.message || 'You are now a creator!');
-          return { success: true, user: enriched };
-        } else {
-          // Fallback: refresh profile
-          const profileRes = await userService.getProfile();
-          if (profileRes.data.status === 'success' && profileRes.data.data?.user) {
-            const refreshed = enrichUser(profileRes.data.data.user);
-            setUser(refreshed);
-            localStorage.setItem('user', JSON.stringify(refreshed));
-            toast.success('You are now a creator!');
-            return { success: true, user: refreshed };
-          }
-        }
+      // Our backend returns { status: 'success', data: { user } }
+      if (response.data.status === 'success') {
+        const updatedUser = response.data.data.user;
+        const enriched = enrichUser(updatedUser);
+        setUser(prev => ({ ...prev, ...enriched }));
+        localStorage.setItem('user', JSON.stringify(enriched));
+        toast.success(response.data.message || 'You are now a creator!');
+        return { success: true, user: enriched };
       } else {
         const msg = response.data.message || 'Failed to become creator';
         toast.error(msg);
