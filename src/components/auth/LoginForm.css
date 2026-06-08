@@ -1,6 +1,6 @@
-/* LoginForm.css – Full page with fixed gradient background (no white gaps when scrolling) */
+/* LoginForm.css – Animated moving gradient background + glass card */
 
-/* ----- GLOBAL BACKGROUND – covers whole scrollable area ----- */
+/* ----- GLOBAL ANIMATED BACKGROUND (covers full scroll) ----- */
 html, body {
   margin: 0;
   padding: 0;
@@ -8,13 +8,20 @@ html, body {
 }
 
 html {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  background-attachment: fixed;   /* keeps gradient fixed while scrolling */
-  background-size: cover;
+  background: linear-gradient(270deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe);
+  background-size: 400% 400%;
+  animation: gradientFlow 12s ease infinite;
+  background-attachment: fixed;
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 body {
-  background: transparent;        /* remove any white background */
+  background: transparent;
   min-height: 100%;
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
@@ -22,14 +29,14 @@ body {
 /* ----- Wrapper that centers the card ----- */
 .login-page {
   min-height: 100vh;
-  background: transparent;        /* let html gradient show through */
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
 }
 
-/* ----- Glassmorphic Login Card ----- */
+/* ----- Glassmorphic Login Card (keeps the same) ----- */
 .login-container {
   max-width: 480px;
   width: 100%;
@@ -48,7 +55,7 @@ body {
   box-shadow: 0 35px 55px rgba(0, 0, 0, 0.25);
 }
 
-/* Decorative glowing border */
+/* Decorative glowing border (same) */
 .login-container::before {
   content: '';
   position: absolute;
@@ -69,7 +76,7 @@ body {
   opacity: 0.9;
 }
 
-/* ----- Header ----- */
+/* ----- Header (same) ----- */
 .login-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -112,7 +119,7 @@ body {
   letter-spacing: -0.2px;
 }
 
-/* ----- Form Groups ----- */
+/* ----- Form Groups (same) ----- */
 .form-group {
   margin-bottom: 1.4rem;
   position: relative;
@@ -153,7 +160,7 @@ body {
   background: white;
 }
 
-/* Password toggle */
+/* Password toggle (same) */
 .password-input-wrapper {
   position: relative;
   width: 100%;
@@ -180,7 +187,7 @@ body {
   color: #F59E0B;
 }
 
-/* ----- Submit Button ----- */
+/* ----- Submit Button (same) ----- */
 .login-button {
   width: 100%;
   padding: 0.9rem;
@@ -250,7 +257,7 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* ----- Footer Link ----- */
+/* ----- Footer Link (same) ----- */
 .signup-link {
   text-align: center;
   margin-top: 1.8rem;
@@ -287,7 +294,7 @@ body {
   width: 100%;
 }
 
-/* ----- Responsive ----- */
+/* ----- Responsive (same) ----- */
 @media (max-width: 640px) {
   .login-container {
     padding: 1.5rem 1rem;
@@ -309,7 +316,7 @@ body {
   }
 }
 
-/* ----- Animation for card appearing ----- */
+/* ----- Card appear animation (same) ----- */
 @keyframes gentleAppear {
   from {
     opacity: 0;
