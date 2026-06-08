@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { FiMail, FiLock, FiUser, FiUserPlus, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuthContext } from '../../context/AuthContext';
 import OTPVerification from './OTPVerification';
+import './SignupForm.css'; 
 
 const SignupForm = () => {
   const { signup } = useAuthContext();
