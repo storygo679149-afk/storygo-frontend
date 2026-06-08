@@ -1,17 +1,22 @@
-/* LoginForm.css – animated moving gradient (foolproof) */
+/* LoginForm.css – Full‑screen animated gradient, overrides any global background */
 
-html, body {
-  margin: 0;
-  padding: 0;
+/* Make the login page take over the whole screen */
+.login-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
   height: 100%;
-}
-
-/* Force gradient on html so it covers everything */
-html {
   background: linear-gradient(270deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe);
   background-size: 400% 400%;
   animation: gradientFlow 12s ease infinite;
-  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  z-index: 9999;
 }
 
 @keyframes gradientFlow {
@@ -20,25 +25,10 @@ html {
   100% { background-position: 0% 50%; }
 }
 
-body {
-  background: transparent;  /* no white background */
-  min-height: 100%;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-}
-
-.login-page {
-  min-height: 100vh;
-  background: transparent;  /* let html gradient show */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-
-/* Glass card (same as before) */
+/* Glass card (unchanged) */
 .login-container {
   max-width: 480px;
-  width: 100%;
+  width: 90%;
   padding: 2rem 1.8rem;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
@@ -54,6 +44,7 @@ body {
   box-shadow: 0 35px 55px rgba(0, 0, 0, 0.25);
 }
 
+/* Decorative border (optional) */
 .login-container::before {
   content: '';
   position: absolute;
@@ -74,6 +65,7 @@ body {
   opacity: 0.9;
 }
 
+/* Header, form, etc. – keep your existing styles below */
 .login-header {
   text-align: center;
   margin-bottom: 2rem;
