@@ -1,4 +1,4 @@
-// Sidebar.jsx - Ultra-smooth animations with Framer Motion + mobile toggle
+// Sidebar.jsx - Ultra-smooth animations + mobile toggle
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
@@ -14,19 +14,14 @@ import {
 import toast from 'react-hot-toast';
 import './Sidebar.css';
 
-// Determine if the sidebar should start collapsed on desktop
 const getInitialCollapsed = () =>
   typeof window !== 'undefined' && window.innerWidth < 1200;
 
-// Stagger children animation
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-      delayChildren: 0.1,
-    },
+    transition: { staggerChildren: 0.05, delayChildren: 0.1 },
   },
 };
 
@@ -54,7 +49,7 @@ const sectionVariants = {
 };
 
 const Sidebar = () => {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, refreshUser } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -66,6 +61,13 @@ const Sidebar = () => {
   const [tooltip, setTooltip] = useState({ visible: false, text: '', x: 0, y: 0 });
   const tooltipTimeout = useRef(null);
 
+  // Force refresh user data when authentication state changes (e.g., after becoming creator)
+  useEffect(() => {
+    if (isAuthenticated) {
+      refreshUser();
+    }
+  }, [isAuthenticated, refreshUser]);
+
   // Close mobile sidebar on route change
   useEffect(() => {
     setIsMobileOpen(false);
@@ -75,14 +77,13 @@ const Sidebar = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1200) {
-        setIsCollapsed(false); // always show full width on mobile
+        setIsCollapsed(false);
       }
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Logout handler
   const handleLogout = async () => {
     if (isLoggingOut) return;
     setIsLoggingOut(true);
@@ -97,7 +98,6 @@ const Sidebar = () => {
     }
   };
 
-  // Tooltip for collapsed desktop mode
   const showTooltip = useCallback(
     (label, e) => {
       if (!isCollapsed || window.innerWidth < 1200) return;
@@ -122,7 +122,6 @@ const Sidebar = () => {
 
   useEffect(() => () => tooltipTimeout.current && clearTimeout(tooltipTimeout.current), []);
 
-  // Navigation links
   const mainLinks = [
     { path: '/', icon: <FiHome />, label: 'Home' },
     { path: '/trending', icon: <FiTrendingUp />, label: 'Trending' },
@@ -142,7 +141,6 @@ const Sidebar = () => {
     { path: '/following', icon: <FiUserPlus />, label: 'Following', requiresAuth: true },
   ];
 
-  // ✅ Enhanced creator detection: check both is_creator and role
   const isCreator = user?.is_creator || user?.role === 'creator';
   const creatorLinks = isCreator
     ? [
@@ -154,16 +152,9 @@ const Sidebar = () => {
       ]
     : [];
 
-  // Sidebar variants
   const sidebarVariants = {
-    expanded: {
-      width: 260,
-      transition: { type: 'spring', stiffness: 350, damping: 30 },
-    },
-    collapsed: {
-      width: 80,
-      transition: { type: 'spring', stiffness: 350, damping: 30 },
-    },
+    expanded: { width: 260, transition: { type: 'spring', stiffness: 350, damping: 30 } },
+    collapsed: { width: 80, transition: { type: 'spring', stiffness: 350, damping: 30 } },
   };
 
   const sidebarClasses = `sidebar ${
@@ -172,7 +163,6 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* Overlay for mobile */}
       <AnimatePresence>
         {isMobileOpen && (
           <motion.div
@@ -186,7 +176,6 @@ const Sidebar = () => {
         )}
       </AnimatePresence>
 
-      {/* Mobile toggle button (hamburger) */}
       <motion.button
         className="sidebar-mobile-toggle"
         whileHover={{ scale: 1.05, x: 4 }}
@@ -197,15 +186,11 @@ const Sidebar = () => {
         <FiMenu />
       </motion.button>
 
-      {/* Sidebar */}
       <motion.aside
         className={sidebarClasses}
         variants={sidebarVariants}
-        animate={
-          isCollapsed && window.innerWidth >= 1200 ? 'collapsed' : 'expanded'
-        }
+        animate={isCollapsed && window.innerWidth >= 1200 ? 'collapsed' : 'expanded'}
       >
-        {/* Desktop collapse toggle */}
         {window.innerWidth >= 1200 && (
           <motion.button
             className="sidebar-collapse-btn"
@@ -259,7 +244,6 @@ const Sidebar = () => {
           </motion.div>
         )}
 
-        {/* Navigation */}
         <nav className="sidebar-nav">
           {/* Browse Section */}
           <div className="nav-section">
@@ -297,9 +281,7 @@ const Sidebar = () => {
                         <NavLink
                           to={link.path}
                           end={link.path === '/'}
-                          className={({ isActive }) =>
-                            `nav-item ${isActive ? 'active' : ''}`
-                          }
+                          className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                           onMouseEnter={(e) => showTooltip(link.label, e)}
                           onMouseLeave={hideTooltip}
                         >
@@ -316,7 +298,7 @@ const Sidebar = () => {
             </AnimatePresence>
           </div>
 
-          {/* Library Section (authenticated) */}
+          {/* Library Section */}
           {isAuthenticated && (
             <div className="nav-section">
               <motion.button
@@ -352,9 +334,7 @@ const Sidebar = () => {
                         <motion.div key={link.path} variants={itemVariants}>
                           <NavLink
                             to={link.path}
-                            className={({ isActive }) =>
-                              `nav-item ${isActive ? 'active' : ''}`
-                            }
+                            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                             onMouseEnter={(e) => showTooltip(link.label, e)}
                             onMouseLeave={hideTooltip}
                           >
@@ -372,7 +352,7 @@ const Sidebar = () => {
             </div>
           )}
 
-          {/* ✅ Creator Section (if user is creator) */}
+          {/* Creator Section */}
           {creatorLinks.length > 0 && (
             <div className="nav-section">
               <div className="nav-section-header">
@@ -380,18 +360,12 @@ const Sidebar = () => {
                   <span className="nav-section-title">Creator</span>
                 )}
               </div>
-              <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-              >
+              <motion.div variants={containerVariants} initial="hidden" animate="visible">
                 {creatorLinks.map((link) => (
                   <motion.div key={link.path} variants={itemVariants}>
                     <NavLink
                       to={link.path}
-                      className={({ isActive }) =>
-                        `nav-item ${isActive ? 'active' : ''}`
-                      }
+                      className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
                       onMouseEnter={(e) => showTooltip(link.label, e)}
                       onMouseLeave={hideTooltip}
                     >
@@ -417,10 +391,7 @@ const Sidebar = () => {
           {isAuthenticated ? (
             <motion.button
               className={`sidebar-logout-btn ${isLoggingOut ? 'loading' : ''}`}
-              whileHover={{
-                scale: 1.02,
-                backgroundColor: 'rgba(255,71,87,0.18)',
-              }}
+              whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,71,87,0.18)' }}
               whileTap={{ scale: 0.98 }}
               onClick={handleLogout}
               disabled={isLoggingOut}
@@ -438,10 +409,7 @@ const Sidebar = () => {
               <p>Discover premium features</p>
               <motion.button
                 className="sidebar-signin-btn"
-                whileHover={{
-                  scale: 1.02,
-                  boxShadow: '0 6px 16px rgba(255,107,107,0.4)',
-                }}
+                whileHover={{ scale: 1.02, boxShadow: '0 6px 16px rgba(255,107,107,0.4)' }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => navigate('/subscription')}
               >
@@ -452,7 +420,6 @@ const Sidebar = () => {
         </motion.div>
       </motion.aside>
 
-      {/* Floating tooltip (collapsed desktop only) */}
       <AnimatePresence>
         {tooltip.visible && (
           <motion.div
@@ -461,11 +428,7 @@ const Sidebar = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -4 }}
             transition={{ duration: 0.15 }}
-            style={{
-              left: tooltip.x,
-              top: tooltip.y,
-              transform: 'translateY(-50%)',
-            }}
+            style={{ left: tooltip.x, top: tooltip.y, transform: 'translateY(-50%)' }}
           >
             {tooltip.text}
           </motion.div>
