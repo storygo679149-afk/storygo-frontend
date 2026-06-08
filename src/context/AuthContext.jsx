@@ -1,4 +1,3 @@
-// src/context/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import authService from '../services/authService';
 import userService from '../services/userService';
@@ -35,9 +34,7 @@ export const AuthProvider = ({ children }) => {
     is_creator: userData.role === 'creator' || userData.role === 'admin',
   });
 
-  // ─────────────────────────────────────────────
   // SIGNUP
-  // ─────────────────────────────────────────────
   const signup = useCallback(async (formData) => {
     try {
       const response = await authService.register(formData);
@@ -54,9 +51,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ─────────────────────────────────────────────
   // VERIFY OTP (for signup)
-  // ─────────────────────────────────────────────
   const verifyOTP = useCallback(async (email, otp) => {
     try {
       const response = await authService.verifyOTP(email, otp);
@@ -78,9 +73,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ─────────────────────────────────────────────
-  // RESEND OTP (for signup)
-  // ─────────────────────────────────────────────
+  // RESEND OTP
   const resendOTP = useCallback(async (email) => {
     try {
       const response = await authService.resendOTP(email);
@@ -97,9 +90,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ─────────────────────────────────────────────
   // LOGIN (sends OTP, returns tempToken)
-  // ─────────────────────────────────────────────
   const login = useCallback(async (email, password) => {
     try {
       const response = await authService.login(email, password);
@@ -129,9 +120,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ─────────────────────────────────────────────
-  // VERIFY LOGIN OTP (final step)
-  // ─────────────────────────────────────────────
+  // VERIFY LOGIN OTP
   const verifyLoginOTP = useCallback(async (email, otp, tempToken) => {
     try {
       const response = await authService.verifyLoginOTP(email, otp, tempToken);
@@ -153,14 +142,11 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ─────────────────────────────────────────────
-  // UPDATE PROFILE (real implementation)
-  // ─────────────────────────────────────────────
+  // UPDATE PROFILE
   const updateProfile = useCallback(async (profileData) => {
     try {
       const response = await userService.updateProfile(profileData);
       if (response.data.status === 'success') {
-        // Optionally fetch fresh profile
         const profileRes = await userService.getProfile();
         if (profileRes.data.status === 'success' && profileRes.data.data?.user) {
           const updatedUser = enrichUser(profileRes.data.data.user);
@@ -180,9 +166,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ─────────────────────────────────────────────
-  // CHANGE PASSWORD (real implementation)
-  // ─────────────────────────────────────────────
+  // CHANGE PASSWORD
   const changePassword = useCallback(async (currentPassword, newPassword) => {
     try {
       const response = await userService.changePassword({ currentPassword, newPassword });
@@ -200,16 +184,14 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ─────────────────────────────────────────────
-  // BECOME CREATOR (real implementation)
-  // ─────────────────────────────────────────────
+  // ✅ BECOME CREATOR – fully updates user object
   const becomeCreator = useCallback(async () => {
     try {
       const response = await userService.becomeCreator();
       if (response.data.status === 'success') {
         const updatedUser = response.data.data.user;
         const enriched = enrichUser(updatedUser);
-        setUser(prev => ({ ...prev, ...enriched }));
+        setUser(enriched);
         localStorage.setItem('user', JSON.stringify(enriched));
         toast.success(response.data.message || 'You are now a creator!');
         return { success: true, user: enriched };
@@ -226,9 +208,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // ─────────────────────────────────────────────
   // LOGOUT
-  // ─────────────────────────────────────────────
   const logout = useCallback(async () => {
     try {
       await authService.logout();
