@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiMail, FiLock, FiLogIn, FiEye, FiEyeOff } from 'react-icons/fi';
+import { FiMail, FiLock, FiLogIn, FiEye, FiEyeOff, FiAlertCircle } from 'react-icons/fi';
 import { useAuthContext } from '../../context/AuthContext';
 import OTPVerification from './OTPVerification';
-import './LoginForm.css';   // ✅ make sure this import exists
+import './LoginForm.css';
 
 const LoginForm = () => {
   const { login } = useAuthContext();
@@ -15,11 +15,13 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [needsVerification, setNeedsVerification] = useState(false);
   const [verificationEmail, setVerificationEmail] = useState('');
+  const [unverifiedMessage, setUnverifiedMessage] = useState(''); // inline message
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) return;
     setIsLoading(true);
+    setUnverifiedMessage(''); // clear previous message
     const result = await login(email, password);
     setIsLoading(false);
     if (result.success) {
@@ -27,18 +29,23 @@ const LoginForm = () => {
     } else if (result.requiresVerification) {
       setVerificationEmail(result.email || email);
       setNeedsVerification(true);
+      setUnverifiedMessage('Account not verified. Please verify your email to log in.');
+      // toast already shown by context, but we add extra inline message
     }
   };
 
   const handleBackToLogin = () => {
     setNeedsVerification(false);
     setVerificationEmail('');
+    setUnverifiedMessage('');
   };
 
-  if (needsVerification) return <OTPVerification email={verificationEmail} onBack={handleBackToLogin} />;
+  if (needsVerification) {
+    return <OTPVerification email={verificationEmail} onBack={handleBackToLogin} />;
+  }
 
   return (
-    <div className="login-page">   {/* ✅ wrapper with class login-page */}
+    <div className="login-page">
       <motion.div
         className="login-container"
         initial={{ opacity: 0, y: 20 }}
@@ -50,16 +57,41 @@ const LoginForm = () => {
           <h2>Welcome Back</h2>
           <p>Log in to continue your journey</p>
         </div>
+
+        {/* Inline unverified account message */}
+        {unverifiedMessage && (
+          <div className="alert-message error">
+            <FiAlertCircle />
+            <span>{unverifiedMessage}</span>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <label><FiMail /> Email</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="hello@storygo.com" required />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="hello@storygo.com"
+              required
+            />
           </div>
           <div className="form-group">
             <label><FiLock /> Password</label>
             <div className="password-input-wrapper">
-              <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" required />
-              <button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
                 {showPassword ? <FiEyeOff /> : <FiEye />}
               </button>
             </div>
@@ -68,6 +100,7 @@ const LoginForm = () => {
             {isLoading ? 'Logging in...' : 'Login'}
           </button>
         </form>
+
         <p className="signup-link">
           Don't have an account? <Link to="/signup">Sign Up</Link>
         </p>
