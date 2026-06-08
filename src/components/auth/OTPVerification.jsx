@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { FiMail, FiArrowLeft } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { useAuthContext } from '../../context/AuthContext';
+import './OTPVerification.css';
 
 const OTPVerification = ({ email, onBack, tempToken = null, isLoginFlow = false }) => {
   const { verifyOTP, verifyLoginOTP, resendOTP } = useAuthContext();
