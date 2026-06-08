@@ -1,5 +1,3 @@
-// Sidebar.jsx - Ultra-smooth animations + mobile toggle
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -61,10 +59,10 @@ const Sidebar = () => {
   const [tooltip, setTooltip] = useState({ visible: false, text: '', x: 0, y: 0 });
   const tooltipTimeout = useRef(null);
 
-  // Force refresh user data when authentication state changes (e.g., after becoming creator)
+  // Refresh user data when authenticated – safe call
   useEffect(() => {
-    if (isAuthenticated) {
-      refreshUser();
+    if (isAuthenticated && refreshUser && typeof refreshUser === 'function') {
+      refreshUser().catch(err => console.warn('Refresh user failed:', err));
     }
   }, [isAuthenticated, refreshUser]);
 
@@ -203,7 +201,6 @@ const Sidebar = () => {
           </motion.button>
         )}
 
-        {/* User Profile */}
         {isAuthenticated && (
           <motion.div
             className="sidebar-user-section"
@@ -381,7 +378,6 @@ const Sidebar = () => {
           )}
         </nav>
 
-        {/* Bottom section */}
         <motion.div
           className="sidebar-bottom"
           initial={{ opacity: 0 }}
