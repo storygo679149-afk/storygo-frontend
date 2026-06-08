@@ -19,6 +19,7 @@ const SignupForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [emailError, setEmailError] = useState(''); // specific for duplicate email
 
   const validateForm = () => {
     const newErrors = {};
@@ -37,6 +38,8 @@ const SignupForm = () => {
     if (!full_name.trim()) newErrors.full_name = 'Full name required';
 
     setErrors(newErrors);
+    // Clear emailError when revalidating
+    setEmailError('');
     return Object.keys(newErrors).length === 0;
   };
 
@@ -44,23 +47,36 @@ const SignupForm = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+    if (name === 'email') setEmailError(''); // clear email error when user types
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
+
     setIsLoading(true);
     const result = await signup(formData);
     setIsLoading(false);
+
     if (result.success) {
       setRegisteredEmail(formData.email);
       setStep('verify');
+    } else {
+      // Check if error message indicates duplicate email
+      if (result.message && result.message.toLowerCase().includes('email already')) {
+        setEmailError(result.message);
+        // Also add error to the email field highlight
+        setErrors(prev => ({ ...prev, email: result.message }));
+      }
+      // toast is already shown by the context, so no need to duplicate
     }
   };
 
   const handleBackToRegister = () => {
     setStep('register');
     setRegisteredEmail('');
+    setEmailError('');
+    setErrors({});
   };
 
   if (step === 'verify') {
@@ -118,7 +134,9 @@ const SignupForm = () => {
               placeholder="hello@storygo.com"
               className={errors.email ? 'error' : ''}
             />
-            {errors.email && <span className="error-message">{errors.email}</span>}
+            {/* Show inline error for duplicate email */}
+            {emailError && <span className="error-message">{emailError}</span>}
+            {errors.email && !emailError && <span className="error-message">{errors.email}</span>}
           </div>
 
           <div className="form-group">
