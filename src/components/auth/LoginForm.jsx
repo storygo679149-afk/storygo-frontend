@@ -14,8 +14,9 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [needsVerification, setNeedsVerification] = useState(false);
+  const [tempToken, setTempToken] = useState('');
   const [verificationEmail, setVerificationEmail] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // For invalid credentials or unverified
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,28 +29,35 @@ const LoginForm = () => {
     const result = await login(email, password);
     setIsLoading(false);
 
-    if (result.success) {
-      navigate('/');
-    } else if (result.requiresVerification) {
-      setVerificationEmail(result.email || email);
+    if (result.success && result.requiresVerification) {
+      setTempToken(result.tempToken);
+      setVerificationEmail(result.email);
       setNeedsVerification(true);
-      setErrorMessage(result.message || 'Account not verified. Please verify your email.');
-    } else if (result.message) {
-      // This handles 401 and any other non-verification errors
-      setErrorMessage(result.message);
+    } else if (result.requiresVerification) {
+      // Should not happen for login, but handle gracefully
+      setVerificationEmail(result.email);
+      setNeedsVerification(true);
     } else {
-      setErrorMessage('Login failed. Please try again.');
+      setErrorMessage(result.message || 'Login failed. Please try again.');
     }
   };
 
   const handleBackToLogin = () => {
     setNeedsVerification(false);
+    setTempToken('');
     setVerificationEmail('');
     setErrorMessage('');
   };
 
   if (needsVerification) {
-    return <OTPVerification email={verificationEmail} onBack={handleBackToLogin} />;
+    return (
+      <OTPVerification
+        email={verificationEmail}
+        tempToken={tempToken}
+        isLoginFlow={true}
+        onBack={handleBackToLogin}
+      />
+    );
   }
 
   return (
@@ -66,7 +74,6 @@ const LoginForm = () => {
           <p>Log in to continue your journey</p>
         </div>
 
-        {/* Inline error message (for invalid credentials or unverified) */}
         {errorMessage && (
           <div className="alert-message error">
             <FiAlertCircle />
@@ -105,7 +112,7 @@ const LoginForm = () => {
             </div>
           </div>
           <button type="submit" className="login-button" disabled={isLoading}>
-            {isLoading ? 'Logging in...' : 'Login'}
+            {isLoading ? 'Sending OTP...' : 'Login'}
           </button>
         </form>
 
