@@ -4,18 +4,7 @@
 
 @import './styles/variables.css';
 /* index.css – global styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-
-
-/* Optional smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
 /* App Container */
 .app {
   min-height: 100vh;
