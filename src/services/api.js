@@ -17,25 +17,23 @@ const getBaseURL = () => {
 };
 
 const baseURL = getBaseURL();
-console.log('🔌 API Base URL:', baseURL);
+console.log('API Base URL:', baseURL);
 
 // Create axios instance
 const api = axios.create({
   baseURL,
   timeout: 120000,
-  withCredentials: true, // sends cookies if needed
+  withCredentials: true,
 });
 
 // ---------- Request Interceptor (adds auth token) ----------
 api.interceptors.request.use(
   (config) => {
-    // Get token from localStorage (or wherever you store it)
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    // Handle FormData (remove Content-Type so browser sets it with boundary)
     if (config.data instanceof FormData) {
       delete config.headers['Content-Type'];
     } else if (!config.headers['Content-Type']) {
@@ -51,32 +49,28 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Handle cancelled requests
     if (axios.isCancel(error)) {
       console.log('Request cancelled:', error.message);
       return Promise.reject(error);
     }
 
-    // No response from server (network error)
     if (!error.response) {
-      console.error('🌐 Network error: No response received. Check your connection or backend URL.');
+      console.error('Network error: No response received. Check your connection or backend URL.');
       return Promise.reject(new Error('Network error – unable to reach the server.'));
     }
 
     const { status, data } = error.response;
     const message = data?.message || data?.error || 'Request failed';
 
-    // Log based on status code
     switch (status) {
       case 400:
         console.error(`Bad Request (400): ${message}`);
         break;
       case 401:
-        // Unauthorized – maybe token expired
-        console.warn('Unauthorized (401) – redirecting to login...');
-        // Optional: clear localStorage and redirect
-        // localStorage.removeItem('token');
-        // window.location.href = '/login';
+        console.warn('Unauthorized (401) – clearing session and redirecting to login...');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
         break;
       case 403:
         console.error(`Forbidden (403): ${message}`);
@@ -103,14 +97,12 @@ api.interceptors.response.use(
 
 // ---------- API Service Methods ----------
 const apiService = {
-  // Standard HTTP methods
   get: (url, params = {}, config = {}) => api.get(url, { params, ...config }),
   post: (url, data = {}, config = {}) => api.post(url, data, config),
   put: (url, data = {}, config = {}) => api.put(url, data, config),
   patch: (url, data = {}, config = {}) => api.patch(url, data, config),
   delete: (url, config = {}) => api.delete(url, config),
 
-  // File upload with progress
   upload: (url, formData, onProgress) => {
     return api.post(url, formData, {
       onUploadProgress: (progressEvent) => {
@@ -122,7 +114,6 @@ const apiService = {
     });
   },
 
-  // Cancel token helper
   createCancelToken: () => axios.CancelToken.source(),
 };
 
