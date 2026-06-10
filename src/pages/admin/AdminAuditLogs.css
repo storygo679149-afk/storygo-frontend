@@ -1,7 +1,76 @@
-.admin-auditlogs { padding: 20px; }
-.audit-filters { display: flex; gap: 12px; margin-bottom: 20px; }
-.audit-filters input { padding: 8px; border-radius: 6px; border: 1px solid #ccc; flex: 1; }
-.log-details { font-size: 0.7rem; white-space: pre-wrap; max-width: 200px; }
-.pagination { display: flex; justify-content: center; gap: 20px; margin-top: 20px; align-items: center; }
-.pagination button { padding: 6px 12px; border: none; background: #3b82f6; color: white; border-radius: 6px; cursor: pointer; }
-.pagination button:disabled { background: #ccc; cursor: not-allowed; }
+/* AdminAuditLogs.css */
+.admin-auditlogs {
+  animation: fadeIn 0.3s ease;
+}
+
+.admin-auditlogs h1 {
+  font-size: 1.8rem;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #fff, #a5b4fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.audit-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.audit-filters input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 40px;
+  padding: 10px 16px;
+  color: white;
+  min-width: 200px;
+}
+
+.audit-filters input:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+.log-details {
+  font-size: 0.7rem;
+  white-space: pre-wrap;
+  max-width: 250px;
+  background: #0f172a;
+  padding: 6px;
+  border-radius: 8px;
+  margin: 0;
+  color: #94a3b8;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.pagination button {
+  background: rgba(99, 102, 241, 0.2);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 40px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #6366f1;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  color: #94a3b8;
+}
