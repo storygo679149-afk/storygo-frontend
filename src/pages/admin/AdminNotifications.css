@@ -1,0 +1,4 @@
+.admin-notifications { padding: 20px; max-width: 600px; }
+.notify-form { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+.notify-form input, .notify-form textarea, .notify-form select { padding: 10px; border-radius: 8px; border: 1px solid #ccc; }
+.notify-form button { background: #3b82f6; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; }
