@@ -1,12 +1,189 @@
-.admin-users { padding: 20px; }
-.search-input { width: 300px; padding: 8px 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; }
-.admin-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
-.admin-table th, .admin-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-.btn-sm { padding: 4px 8px; margin: 0 4px; border-radius: 6px; border: none; cursor: pointer; }
-.btn-sm.warn { background: #f59e0b; color: white; }
-.btn-sm.suspend { background: #f97316; color: white; }
-.btn-sm.ban { background: #ef4444; color: white; }
-.drawer-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); display:flex; justify-content: flex-end; z-index:1000; }
-.drawer { width: 500px; background: white; height: 100%; padding: 20px; overflow-y: auto; }
-.onboarding-queue { display: flex; flex-wrap: wrap; gap: 20px; }
-.onboarding-card { background: white; padding: 16px; border-radius: 12px; width: 300px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+/* AdminUsers.css – polished user management */
+.admin-users {
+  animation: fadeIn 0.3s ease;
+}
+
+.admin-users h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #fff, #a5b4fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
+}
+
+.admin-tabs button {
+  background: transparent;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 40px;
+  color: #94a3b8;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.admin-tabs button.active {
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+}
+
+.admin-tabs button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+}
+
+.search-input {
+  width: 320px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 40px;
+  color: #fff;
+  margin-bottom: 24px;
+  transition: all 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(4px);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.admin-table th {
+  text-align: left;
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.8);
+  color: #cbd5e1;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+}
+
+.admin-table tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  margin: 0 4px;
+  border-radius: 40px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-sm.warn {
+  background: #f59e0b;
+  color: #1e293b;
+}
+.btn-sm.suspend {
+  background: #f97316;
+  color: white;
+}
+.btn-sm.ban {
+  background: #ef4444;
+  color: white;
+}
+.btn-sm:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+.drawer {
+  width: 500px;
+  background: #0f172a;
+  height: 100%;
+  padding: 24px;
+  overflow-y: auto;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
+  color: #e2e8f0;
+}
+
+.drawer h2 {
+  margin-bottom: 16px;
+}
+
+.drawer ul {
+  list-style: none;
+  padding: 0;
+}
+.drawer li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.onboarding-queue {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.onboarding-card {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(4px);
+  border-radius: 16px;
+  padding: 16px;
+  width: 300px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.2s;
+}
+
+.onboarding-card:hover {
+  transform: translateY(-4px);
+}
+
+.onboarding-card input {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px;
+  color: white;
+  width: 120px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
