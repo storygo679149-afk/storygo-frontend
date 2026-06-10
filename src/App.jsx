@@ -13,13 +13,12 @@ import './styles/global.css';
 import './styles/animations.css';
 import './styles/responsive.css';
 import './App.css';
-import DatabaseUsers from './pages/admin/DatabaseUsers';
 
-// ---------- NEW AUTH PAGES ----------
+// Auth pages
 import LoginForm from './components/auth/LoginForm';
 import SignupForm from './components/auth/SignupForm';
 
-// ---------- Existing page imports ----------
+// Existing page imports
 const Home = lazy(() => import('./pages/Home'));
 const SeriesDetail = lazy(() => import('./pages/SeriesDetail'));
 const EpisodePlayer = lazy(() => import('./pages/EpisodePlayer'));
@@ -27,8 +26,6 @@ const Library = lazy(() => import('./pages/Library'));
 const Trending = lazy(() => import('./pages/Trending'));
 const CreatorDashboard = lazy(() => import('./pages/CreatorDashboard'));
 const Profile = lazy(() => import('./pages/Profile'));
-// Remove the generic Auth import (no longer needed)
-// const Auth = lazy(() => import('./pages/Auth'));
 const SearchResults = lazy(() => import('./components/search/SearchResults'));
 const Categories = lazy(() => import('./pages/Categories'));
 const CategoryDetail = lazy(() => import('./pages/CategoryDetail'));
@@ -40,28 +37,6 @@ const Subscription = lazy(() => import('./pages/Subscription'));
 const NovelsPage = lazy(() => import('./pages/NovelsPage'));
 const NovelDetail = lazy(() => import('./pages/NovelDetail'));
 const ChapterReader = lazy(() => import('./pages/ChapterReader'));
-
-// Admin imports
-const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
-const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
-const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
-const AdminUsers = lazy(() => import('./pages/admin/Users'));
-const AdminSeries = lazy(() => import('./pages/admin/SeriesManager'));
-const AdminEpisodes = lazy(() => import('./pages/admin/Episodes'));
-const AdminPayments = lazy(() => import('./pages/admin/Payments'));
-const AdminSubscriptions = lazy(() => import('./pages/admin/Subscriptions'));
-
-// Admin feature imports
-const NotificationsPage = lazy(() => import('./pages/admin/NotificationsAnnouncements'));
-const CreatorManagement = lazy(() => import('./pages/admin/CreatorManagement'));
-const SubscriptionPlans = lazy(() => import('./pages/admin/SubscriptionPlans'));
-const ContentScheduling = lazy(() => import('./pages/admin/ContentScheduling'));
-const FeedbackRatings = lazy(() => import('./pages/admin/FeedbackRatings'));
-const ApiIntegrations = lazy(() => import('./pages/admin/ApiIntegrations'));
-const AuditLogs = lazy(() => import('./pages/admin/AuditLogs'));
-const StorageMedia = lazy(() => import('./pages/admin/StorageMedia'));
-const OnboardingFlow = lazy(() => import('./pages/admin/OnboardingFlow'));
-const ListenerGeography = lazy(() => import('./pages/admin/ListenerGeography'));
 
 // Creator novel management components
 const CreatorNovels = lazy(() => import('./components/creator/CreatorNovels'));
@@ -91,7 +66,7 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider>
-        <AuthProvider>   {/* This must now support the new localStorage auth (see update below) */}
+        <AuthProvider>
           <AudioProvider>
             <Router>
               <div className="app">
@@ -99,11 +74,9 @@ function App() {
 
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
-                    {/* NEW AUTH ROUTES – No layout */}
+                    {/* Auth routes */}
                     <Route path="/login" element={<LoginForm />} />
                     <Route path="/signup" element={<SignupForm />} />
-
-                    {/* Redirect old /auth to /login (optional) */}
                     <Route path="/auth" element={<LoginForm />} />
 
                     {/* Main layout routes */}
@@ -117,6 +90,8 @@ function App() {
                       <Route path="/categories/:slug" element={<CategoryDetail />} />
                       <Route path="/new-releases" element={<NewReleases />} />
                       <Route path="/top-rated" element={<TopRated />} />
+
+                      {/* Protected routes */}
                       <Route path="/library" element={<ProtectedRoute><Library /></ProtectedRoute>} />
                       <Route path="/history" element={<ProtectedRoute><Library /></ProtectedRoute>} />
                       <Route path="/bookmarks" element={<ProtectedRoute><Library /></ProtectedRoute>} />
@@ -147,28 +122,6 @@ function App() {
                       <Route path="/creator/novels/new" element={<ProtectedRoute requireCreator><UploadNovel /></ProtectedRoute>} />
                       <Route path="/creator/novels/:novelId/chapters" element={<ProtectedRoute requireCreator><CreatorNovels /></ProtectedRoute>} />
                       <Route path="/creator/novels/:novelId/chapters/new" element={<ProtectedRoute requireCreator><AddChapter /></ProtectedRoute>} />
-
-                      {/* Admin routes */}
-                      <Route path="/admin/login" element={<AdminLogin />} />
-                      <Route path="/admin" element={<ProtectedRoute requireAdmin><AdminLayout /></ProtectedRoute>}>
-                        <Route index element={<AdminDashboard />} />
-                        <Route path="users" element={<AdminUsers />} />
-                        <Route path="series" element={<AdminSeries />} />
-                        <Route path="episodes" element={<AdminEpisodes />} />
-                        <Route path="payments" element={<AdminPayments />} />
-                        <Route path="subscriptions" element={<AdminSubscriptions />} />
-                        <Route path="notifications" element={<NotificationsPage />} />
-                        <Route path="creators" element={<CreatorManagement />} />
-                        <Route path="plans" element={<SubscriptionPlans />} />
-                        <Route path="schedule" element={<ContentScheduling />} />
-                        <Route path="database" element={<DatabaseUsers />} />
-                        <Route path="feedback" element={<FeedbackRatings />} />
-                        <Route path="integrations" element={<ApiIntegrations />} />
-                        <Route path="audit" element={<AuditLogs />} />
-                        <Route path="storage" element={<StorageMedia />} />
-                        <Route path="listeners" element={<ListenerGeography />} />
-                        <Route path="onboarding" element={<OnboardingFlow />} />
-                      </Route>
 
                       {/* 404 catch-all */}
                       <Route path="*" element={
