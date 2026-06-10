@@ -7,7 +7,7 @@ import {
   FiBookmark, FiHeart, FiHeadphones, FiUsers, FiBarChart2,
   FiChevronLeft, FiChevronRight, FiGrid,
   FiStar, FiZap, FiUserPlus, FiChevronDown,
-  FiCreditCard, FiShield, FiLogOut, FiMenu
+  FiCreditCard, FiLogOut, FiMenu
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import './Sidebar.css';
@@ -59,7 +59,7 @@ const Sidebar = () => {
   const [tooltip, setTooltip] = useState({ visible: false, text: '', x: 0, y: 0 });
   const tooltipTimeout = useRef(null);
 
-  // Refresh user data when authenticated – safe call
+  // Refresh user data when authenticated
   useEffect(() => {
     if (isAuthenticated && refreshUser && typeof refreshUser === 'function') {
       refreshUser().catch(err => console.warn('Refresh user failed:', err));
@@ -130,7 +130,7 @@ const Sidebar = () => {
     { path: '/subscription', icon: <FiCreditCard />, label: 'Subscription' },
     { path: '/novels', icon: <FiBookOpen />, label: 'Novels' },
   ];
-  if (user?.is_admin) mainLinks.push({ path: '/admin', icon: <FiShield />, label: 'Admin Panel' });
+  // ✅ Admin link removed – no longer shown
 
   const libraryLinks = [
     { path: '/history', icon: <FiClock />, label: 'History', requiresAuth: true },
