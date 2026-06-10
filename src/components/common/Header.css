@@ -62,6 +62,11 @@
   display: block;
 }
 
+/* Adjust spacing for notification bell */
+.header-right .notification-bell {
+  margin-right: 8px;
+}
+
 /* Brand text */
 .logo-text {
   font-size: 1.6rem;
