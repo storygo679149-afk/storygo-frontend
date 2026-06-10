@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import { AudioProvider } from './context/AudioContext';
@@ -18,7 +18,17 @@ import './App.css';
 import LoginForm from './components/auth/LoginForm';
 import SignupForm from './components/auth/SignupForm';
 
-// Existing page imports
+// Admin pages
+import AdminLayout from './components/admin/AdminLayout';
+import AdminUsers from './pages/admin/Users';
+import AdminAnalytics from './pages/admin/Analytics';
+import AdminModeration from './pages/admin/Moderation';
+import AdminMonetization from './pages/admin/Monetization';
+import AdminNotifications from './pages/admin/Notifications';
+import AdminSettings from './pages/admin/Settings';
+import AdminAuditLogs from './pages/admin/AuditLogs';
+
+// Lazy loaded pages
 const Home = lazy(() => import('./pages/Home'));
 const SeriesDetail = lazy(() => import('./pages/SeriesDetail'));
 const EpisodePlayer = lazy(() => import('./pages/EpisodePlayer'));
@@ -32,13 +42,9 @@ const CategoryDetail = lazy(() => import('./pages/CategoryDetail'));
 const TopRated = lazy(() => import('./pages/TopRated'));
 const NewReleases = lazy(() => import('./pages/NewReleases'));
 const Subscription = lazy(() => import('./pages/Subscription'));
-
-// Novel pages
 const NovelsPage = lazy(() => import('./pages/NovelsPage'));
 const NovelDetail = lazy(() => import('./pages/NovelDetail'));
 const ChapterReader = lazy(() => import('./pages/ChapterReader'));
-
-// Creator novel management components
 const CreatorNovels = lazy(() => import('./components/creator/CreatorNovels'));
 const UploadNovel = lazy(() => import('./components/creator/UploadNovel'));
 const AddChapter = lazy(() => import('./components/creator/AddChapter'));
@@ -71,13 +77,31 @@ function App() {
             <Router>
               <div className="app">
                 <Toaster toastOptions={toastOptions} />
-
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     {/* Auth routes */}
                     <Route path="/login" element={<LoginForm />} />
                     <Route path="/signup" element={<SignupForm />} />
                     <Route path="/auth" element={<LoginForm />} />
+
+                    {/* Admin routes (protected) */}
+                    <Route
+                      path="/admin"
+                      element={
+                        <ProtectedRoute requireAdmin>
+                          <AdminLayout />
+                        </ProtectedRoute>
+                      }
+                    >
+                      <Route index element={<Navigate to="/admin/users" replace />} />
+                      <Route path="users" element={<AdminUsers />} />
+                      <Route path="analytics" element={<AdminAnalytics />} />
+                      <Route path="moderation" element={<AdminModeration />} />
+                      <Route path="monetization" element={<AdminMonetization />} />
+                      <Route path="notifications" element={<AdminNotifications />} />
+                      <Route path="settings" element={<AdminSettings />} />
+                      <Route path="audit-logs" element={<AdminAuditLogs />} />
+                    </Route>
 
                     {/* Main layout routes */}
                     <Route element={<MainLayout />}>
@@ -90,8 +114,6 @@ function App() {
                       <Route path="/categories/:slug" element={<CategoryDetail />} />
                       <Route path="/new-releases" element={<NewReleases />} />
                       <Route path="/top-rated" element={<TopRated />} />
-
-                      {/* Protected routes */}
                       <Route path="/library" element={<ProtectedRoute><Library /></ProtectedRoute>} />
                       <Route path="/history" element={<ProtectedRoute><Library /></ProtectedRoute>} />
                       <Route path="/bookmarks" element={<ProtectedRoute><Library /></ProtectedRoute>} />
@@ -100,13 +122,9 @@ function App() {
                       <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                       <Route path="/subscription" element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
                       <Route path="/become-creator" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-
-                      {/* Novel routes */}
                       <Route path="/novels" element={<NovelsPage />} />
                       <Route path="/novels/:id" element={<NovelDetail />} />
                       <Route path="/novels/:novelId/read/:chapterId" element={<ChapterReader />} />
-
-                      {/* Creator dashboard routes */}
                       <Route path="/creator/dashboard" element={<ProtectedRoute requireCreator><CreatorDashboard /></ProtectedRoute>} />
                       <Route path="/creator/tts" element={<ProtectedRoute requireCreator><CreatorDashboard /></ProtectedRoute>} />
                       <Route path="/creator/series" element={<ProtectedRoute requireCreator><CreatorDashboard /></ProtectedRoute>} />
@@ -116,21 +134,11 @@ function App() {
                       <Route path="/creator/episodes/upload" element={<ProtectedRoute requireCreator><CreatorDashboard /></ProtectedRoute>} />
                       <Route path="/creator/followers" element={<ProtectedRoute requireCreator><CreatorDashboard /></ProtectedRoute>} />
                       <Route path="/creator/analytics" element={<ProtectedRoute requireCreator><CreatorDashboard /></ProtectedRoute>} />
-
-                      {/* Creator novel management routes */}
                       <Route path="/creator/novels" element={<ProtectedRoute requireCreator><CreatorNovels /></ProtectedRoute>} />
                       <Route path="/creator/novels/new" element={<ProtectedRoute requireCreator><UploadNovel /></ProtectedRoute>} />
                       <Route path="/creator/novels/:novelId/chapters" element={<ProtectedRoute requireCreator><CreatorNovels /></ProtectedRoute>} />
                       <Route path="/creator/novels/:novelId/chapters/new" element={<ProtectedRoute requireCreator><AddChapter /></ProtectedRoute>} />
-
-                      {/* 404 catch-all */}
-                      <Route path="*" element={
-                        <div className="not-found-page">
-                          <h1>404</h1>
-                          <h2>Page Not Found</h2>
-                          <a href="/">Go to Home</a>
-                        </div>
-                      } />
+                      <Route path="*" element={<div className="not-found-page"><h1>404</h1><h2>Page Not Found</h2><a href="/">Go to Home</a></div>} />
                     </Route>
                   </Routes>
                 </Suspense>
