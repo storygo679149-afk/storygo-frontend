@@ -27,6 +27,11 @@ import AdminMonetization from './pages/admin/Monetization';
 import AdminNotifications from './pages/admin/Notifications';
 import AdminSettings from './pages/admin/Settings';
 import AdminAuditLogs from './pages/admin/AuditLogs';
+import AdminContests from './pages/admin/AdminContests';
+
+// Contest pages (user/creator)
+import Contests from './pages/Contests';
+import ContestDetail from './pages/ContestDetail';
 
 // Lazy loaded pages
 const Home = lazy(() => import('./pages/Home'));
@@ -84,7 +89,7 @@ function App() {
                     <Route path="/signup" element={<SignupForm />} />
                     <Route path="/auth" element={<LoginForm />} />
 
-                    {/* Admin routes – ENABLED */}
+                    {/* Admin routes */}
                     <Route
                       path="/admin"
                       element={
@@ -101,7 +106,12 @@ function App() {
                       <Route path="notifications" element={<AdminNotifications />} />
                       <Route path="settings" element={<AdminSettings />} />
                       <Route path="audit-logs" element={<AdminAuditLogs />} />
+                      <Route path="contests" element={<AdminContests />} />
                     </Route>
+
+                    {/* Contest routes (public / user) */}
+                    <Route path="/contests" element={<Contests />} />
+                    <Route path="/contests/:id" element={<ContestDetail />} />
 
                     {/* Main layout routes */}
                     <Route element={<MainLayout />}>
