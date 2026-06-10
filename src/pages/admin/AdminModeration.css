@@ -1,3 +1,22 @@
-.admin-moderation { padding: 20px; }
-.btn-sm.remove { background: #ef4444; color: white; }
-.btn-sm.escalate { background: #f59e0b; color: white; }
+/* AdminModeration.css */
+.admin-moderation {
+  animation: fadeIn 0.3s ease;
+}
+
+.admin-moderation h1 {
+  font-size: 1.8rem;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #fff, #a5b4fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-sm.remove {
+  background: #dc2626;
+  color: white;
+}
+.btn-sm.escalate {
+  background: #f59e0b;
+  color: #1e293b;
+}
