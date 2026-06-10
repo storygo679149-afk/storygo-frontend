@@ -1,0 +1,14 @@
+.admin-contests { padding: 20px; }
+.admin-contests-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.contests-list { display: flex; flex-wrap: wrap; gap: 20px; }
+.contest-card { background: rgba(30,41,59,0.7); backdrop-filter: blur(4px); border-radius: 16px; padding: 20px; width: 280px; cursor: pointer; transition: transform 0.2s; }
+.contest-card:hover { transform: translateY(-4px); }
+.status { display: inline-block; margin-top: 8px; padding: 4px 8px; border-radius: 40px; font-size: 0.7rem; }
+.status.active { background: #22c55e; }
+.status.ended { background: #64748b; }
+.contest-form-modal { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.7); display:flex; justify-content:center; align-items:center; z-index:1000; }
+.contest-form { background: #0f172a; padding: 24px; border-radius: 24px; width: 500px; max-width: 90%; }
+.submissions-panel { margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+.submissions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 16px; margin: 20px 0; }
+.submission-card { background: #1e293b; border-radius: 16px; padding: 16px; }
+.rating-area { margin-top: 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
