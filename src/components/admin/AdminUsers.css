@@ -1,0 +1,12 @@
+.admin-users { padding: 20px; }
+.search-input { width: 300px; padding: 8px 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #ccc; }
+.admin-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+.admin-table th, .admin-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+.btn-sm { padding: 4px 8px; margin: 0 4px; border-radius: 6px; border: none; cursor: pointer; }
+.btn-sm.warn { background: #f59e0b; color: white; }
+.btn-sm.suspend { background: #f97316; color: white; }
+.btn-sm.ban { background: #ef4444; color: white; }
+.drawer-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); display:flex; justify-content: flex-end; z-index:1000; }
+.drawer { width: 500px; background: white; height: 100%; padding: 20px; overflow-y: auto; }
+.onboarding-queue { display: flex; flex-wrap: wrap; gap: 20px; }
+.onboarding-card { background: white; padding: 16px; border-radius: 12px; width: 300px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
