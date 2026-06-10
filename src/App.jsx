@@ -18,15 +18,15 @@ import './App.css';
 import LoginForm from './components/auth/LoginForm';
 import SignupForm from './components/auth/SignupForm';
 
-// Admin pages – temporarily disabled (files not yet added)
-// import AdminLayout from './components/admin/AdminLayout';
-// import AdminUsers from './pages/admin/Users';
-// import AdminAnalytics from './pages/admin/Analytics';
-// import AdminModeration from './pages/admin/Moderation';
-// import AdminMonetization from './pages/admin/Monetization';
-// import AdminNotifications from './pages/admin/Notifications';
-// import AdminSettings from './pages/admin/Settings';
-// import AdminAuditLogs from './pages/admin/AuditLogs';
+// Admin pages
+import AdminLayout from './components/admin/AdminLayout';
+import AdminUsers from './pages/admin/Users';
+import AdminAnalytics from './pages/admin/Analytics';
+import AdminModeration from './pages/admin/Moderation';
+import AdminMonetization from './pages/admin/Monetization';
+import AdminNotifications from './pages/admin/Notifications';
+import AdminSettings from './pages/admin/Settings';
+import AdminAuditLogs from './pages/admin/AuditLogs';
 
 // Lazy loaded pages
 const Home = lazy(() => import('./pages/Home'));
@@ -84,8 +84,7 @@ function App() {
                     <Route path="/signup" element={<SignupForm />} />
                     <Route path="/auth" element={<LoginForm />} />
 
-                    {/* Admin routes – TEMPORARILY DISABLED (uncomment after adding admin files) */}
-                    {/* 
+                    {/* Admin routes – ENABLED */}
                     <Route
                       path="/admin"
                       element={
@@ -103,7 +102,6 @@ function App() {
                       <Route path="settings" element={<AdminSettings />} />
                       <Route path="audit-logs" element={<AdminAuditLogs />} />
                     </Route>
-                    */}
 
                     {/* Main layout routes */}
                     <Route element={<MainLayout />}>
