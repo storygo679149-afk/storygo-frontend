@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import useAuth from '../../hooks/useAuth';
 import SearchBar from '../search/SearchBar';
+import NotificationBell from './NotificationBell'; // ✅ Import the bell component
 import {
   FiMenu, FiX, FiUser, FiLogOut, FiSettings,
   FiHeadphones, FiTrendingUp, FiBookOpen, FiPlusCircle
@@ -55,7 +56,7 @@ const Header = () => {
     <>
       <header className={headerClasses}>
         <div className="header-container">
-          {/* PNG Logo */}
+          {/* Logo */}
           <Link to="/" className="logo">
             <img 
               src="/icons/icon-192x192.png" 
@@ -95,6 +96,9 @@ const Header = () => {
 
             {isAuthenticated ? (
               <div className="user-menu-container">
+                {/* ✅ Notification Bell */}
+                <NotificationBell />
+
                 <button className="user-avatar-btn" onClick={handleProfileClick}>
                   {user?.profile_picture ? (
                     <img src={user.profile_picture} alt={user.full_name} className="user-avatar" />
