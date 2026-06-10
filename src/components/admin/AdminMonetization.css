@@ -1,0 +1,4 @@
+/* AdminMonetization.css */
+.admin-monetization { padding: 20px; }
+.promo-form { display: flex; flex-direction: column; gap: 12px; max-width: 400px; margin-top: 20px; }
+.promo-form input, .promo-form select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
