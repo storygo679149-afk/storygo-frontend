@@ -7,7 +7,7 @@ import {
   FiBookmark, FiHeart, FiHeadphones, FiUsers, FiBarChart2,
   FiChevronLeft, FiChevronRight, FiGrid,
   FiStar, FiZap, FiUserPlus, FiChevronDown,
-  FiCreditCard, FiShield, FiLogOut, FiMenu
+  FiCreditCard, FiShield, FiLogOut, FiMenu, FiAward
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import './Sidebar.css';
@@ -129,9 +129,10 @@ const Sidebar = () => {
     { path: '/top-rated', icon: <FiStar />, label: 'Top Rated' },
     { path: '/subscription', icon: <FiCreditCard />, label: 'Subscription' },
     { path: '/novels', icon: <FiBookOpen />, label: 'Novels' },
+    { path: '/contests', icon: <FiAward />, label: 'Contests' },
   ];
 
-  // ✅ Add Admin Panel link if user is admin
+  // Show admin link only for admins
   if (user?.is_admin) {
     mainLinks.push({ path: '/admin', icon: <FiShield />, label: 'Admin Panel' });
   }
