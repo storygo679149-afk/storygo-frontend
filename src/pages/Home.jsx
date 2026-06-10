@@ -26,7 +26,7 @@ const Home = () => {
   const fetchHomeData = async () => {
     setIsLoading(true);
 
-    // Fetch all needed data in parallel (staff‑picks removed)
+    // Fetch all needed data in parallel
     const [trendingRes, latestRes, featuredRes, creatorsRes] = await Promise.allSettled([
       seriesService.getTrending({ limit: 5 }),
       seriesService.getAllSeries({ sort: 'latest', limit: 5 }),
@@ -48,15 +48,20 @@ const Home = () => {
       creatorsRes.status === 'fulfilled' ? extractArray(creatorsRes.value, 'creators') : []
     );
 
-    // Fetch global stats separately to avoid breaking Promise.all
+    // Fetch global stats separately
     try {
       const statsRes = await userService.getGlobalStats();
-      const payload = statsRes.data;
-      const stats = payload.data.stats;
-      setGlobalStats({
-        seriesCount: Number(stats.series_count) || 0,
-        creatorsCount: Number(stats.creators_count) || 0,
-      });
+      // Expected response structure: { status: 'success', data: { series_count, creators_count, ... } }
+      const payload = statsRes?.data;
+      if (payload?.status === 'success' && payload?.data) {
+        setGlobalStats({
+          seriesCount: Number(payload.data.series_count) || 0,
+          creatorsCount: Number(payload.data.creators_count) || 0,
+        });
+      } else {
+        // Fallback if response is not as expected
+        setGlobalStats({ seriesCount: 0, creatorsCount: 0 });
+      }
     } catch (error) {
       console.error('Global stats fetch failed:', error);
       setGlobalStats({ seriesCount: 0, creatorsCount: 0 });
