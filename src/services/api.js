@@ -17,7 +17,7 @@ const getBaseURL = () => {
 };
 
 const baseURL = getBaseURL();
-console.log('API Base URL:', baseURL);
+console.log('🔌 API Base URL:', baseURL);
 
 // Create axios instance
 const api = axios.create({
@@ -34,6 +34,7 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
+    // Handle FormData (remove Content-Type so browser sets it with boundary)
     if (config.data instanceof FormData) {
       delete config.headers['Content-Type'];
     } else if (!config.headers['Content-Type']) {
@@ -55,7 +56,7 @@ api.interceptors.response.use(
     }
 
     if (!error.response) {
-      console.error('Network error: No response received. Check your connection or backend URL.');
+      console.error('🌐 Network error: No response received. Check your connection or backend URL.');
       return Promise.reject(new Error('Network error – unable to reach the server.'));
     }
 
@@ -67,6 +68,7 @@ api.interceptors.response.use(
         console.error(`Bad Request (400): ${message}`);
         break;
       case 401:
+        // Unauthorized – clear session and redirect to login
         console.warn('Unauthorized (401) – clearing session and redirecting to login...');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -97,12 +99,14 @@ api.interceptors.response.use(
 
 // ---------- API Service Methods ----------
 const apiService = {
+  // Standard HTTP methods
   get: (url, params = {}, config = {}) => api.get(url, { params, ...config }),
   post: (url, data = {}, config = {}) => api.post(url, data, config),
   put: (url, data = {}, config = {}) => api.put(url, data, config),
   patch: (url, data = {}, config = {}) => api.patch(url, data, config),
   delete: (url, config = {}) => api.delete(url, config),
 
+  // File upload with progress
   upload: (url, formData, onProgress) => {
     return api.post(url, formData, {
       onUploadProgress: (progressEvent) => {
@@ -114,6 +118,7 @@ const apiService = {
     });
   },
 
+  // Cancel token helper
   createCancelToken: () => axios.CancelToken.source(),
 };
 
