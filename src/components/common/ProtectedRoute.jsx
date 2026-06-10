@@ -3,7 +3,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import SkeletonLoader from './SkeletonLoader';
 
-const ProtectedRoute = ({ children, requireCreator = false }) => {
+const ProtectedRoute = ({ children, requireCreator = false, requireAdmin = false }) => {
   const { isAuthenticated, isLoading, user } = useAuth();
   const location = useLocation();
 
@@ -21,6 +21,10 @@ const ProtectedRoute = ({ children, requireCreator = false }) => {
 
   if (requireCreator && !user?.is_creator) {
     return <Navigate to="/become-creator" state={{ from: location }} replace />;
+  }
+
+  if (requireAdmin && !user?.is_admin) {
+    return <Navigate to="/" replace />;
   }
 
   return children;
