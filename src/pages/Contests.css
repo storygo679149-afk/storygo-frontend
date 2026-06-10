@@ -1,0 +1,7 @@
+.contests-page { padding: 24px; max-width: 1200px; margin: 0 auto; }
+.contest-grid { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 20px; }
+.contest-card { width: 280px; height: 200px; background-size: cover; background-position: center; border-radius: 16px; overflow: hidden; position: relative; text-decoration: none; transition: transform 0.2s; }
+.contest-card:hover { transform: translateY(-4px); }
+.card-content { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 16px; color: white; }
+.contest-card.past .card-content { background: rgba(0,0,0,0.6); }
+.loading { text-align: center; padding: 40px; }
