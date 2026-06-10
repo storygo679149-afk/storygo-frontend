@@ -34,7 +34,6 @@ const Home = () => {
       userService.getTopCreators(),
     ]);
 
-    // Extract data safely
     setTrendingSeries(
       trendingRes.status === 'fulfilled' ? extractArray(trendingRes.value, 'trending') : []
     );
@@ -48,18 +47,18 @@ const Home = () => {
       creatorsRes.status === 'fulfilled' ? extractArray(creatorsRes.value, 'creators') : []
     );
 
-    // Fetch global stats separately
+    // ✅ Fetch global stats with correct extraction
     try {
-      const statsRes = await userService.getGlobalStats();
-      // Expected response structure: { status: 'success', data: { series_count, creators_count, ... } }
-      const payload = statsRes?.data;
-      if (payload?.status === 'success' && payload?.data) {
+      const response = await userService.getGlobalStats();
+      // The backend returns: { status: 'success', data: { series_count, creators_count, ... } }
+      const statsData = response?.data?.data;
+      if (statsData) {
         setGlobalStats({
-          seriesCount: Number(payload.data.series_count) || 0,
-          creatorsCount: Number(payload.data.creators_count) || 0,
+          seriesCount: Number(statsData.series_count) || 0,
+          creatorsCount: Number(statsData.creators_count) || 0,
         });
       } else {
-        // Fallback if response is not as expected
+        console.warn('Unexpected stats response structure:', response?.data);
         setGlobalStats({ seriesCount: 0, creatorsCount: 0 });
       }
     } catch (error) {
