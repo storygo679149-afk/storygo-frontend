@@ -1,111 +1,347 @@
-/* Contests.css – Modern glass grid for users */
+/* Contests.css – Modern glassmorphic Bento grid */
 .contests-page {
-  padding: 2rem;
+  padding: 2.5rem;
   max-width: 1400px;
   margin: 0 auto;
-  animation: fadeSlide 0.5s ease-out;
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+  min-height: 100vh;
 }
 
-@keyframes fadeSlide {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Header */
+.contests-header {
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
-.contests-page h1 {
-  font-size: 2.2rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #fff, #a5b4fc);
+.contests-header h1 {
+  font-size: 3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #6366f1 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  margin-bottom: 1.5rem;
+  letter-spacing: -0.5px;
+  margin-bottom: 0.5rem;
 }
 
-.contests-page h2 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin: 2rem 0 1rem;
-  color: #cbd5e1;
-  border-left: 4px solid #6366f1;
-  padding-left: 1rem;
+.contests-header p {
+  color: #94a3b8;
+  font-size: 1.1rem;
 }
 
-.contest-grid {
+/* Search & Filters */
+.search-filters {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
   flex-wrap: wrap;
-  gap: 1.8rem;
+}
+
+.search-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 60px;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s;
+}
+
+.search-bar:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.search-icon {
+  color: #94a3b8;
+  margin-right: 0.5rem;
+}
+
+.search-bar input {
+  background: transparent;
+  border: none;
+  width: 100%;
+  color: #f1f5f9;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.filter-chips {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.chip {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 1.2rem;
+  border-radius: 40px;
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chip.active {
+  background: #6366f1;
+  color: white;
+  border-color: #6366f1;
+}
+
+.chip:hover {
+  background: #334155;
+}
+
+/* Grid – Bento style */
+.contest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
 }
 
 .contest-card {
-  position: relative;
-  width: 280px;
-  height: 200px;
-  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+  border-radius: 28px;
   overflow: hidden;
-  background-size: cover;
-  background-position: center;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  text-decoration: none;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-
-.contest-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent 60%);
-  transition: background 0.3s;
+  animation: fadeIn 0.6s ease-out;
 }
 
 .contest-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+  transform: translateY(-12px) scale(1.02);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 25px 35px -12px rgba(0, 0, 0, 0.4);
 }
 
-.contest-card:hover::after {
-  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent 70%);
-}
-
-.card-content {
+.contest-card::before {
+  content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 1rem;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  transition: left 0.6s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.contest-card:hover::before {
+  left: 100%;
+}
+
+/* Card image */
+.card-image {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+.contest-card:hover .card-image img {
+  transform: scale(1.08);
+}
+
+.card-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+}
+
+/* Badge */
+.card-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  padding: 0.25rem 0.75rem;
+  border-radius: 40px;
+  font-size: 0.7rem;
+  font-weight: 600;
   color: white;
   z-index: 2;
 }
 
+.card-badge.active {
+  background: #22c55e;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+}
+
+.card-badge.ended {
+  background: #64748b;
+}
+
+/* Card content */
+.card-content {
+  padding: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
 .card-content h3 {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
+  color: #f1f5f9;
+  line-height: 1.3;
 }
 
 .card-content p {
-  font-size: 0.8rem;
-  opacity: 0.9;
-  margin-bottom: 0.3rem;
+  color: #a5b4fc;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
-.card-content small {
-  font-size: 0.7rem;
-  opacity: 0.7;
-}
-
-.contest-card.past .card-content {
-  background: rgba(0,0,0,0.6);
-}
-
-.loading {
-  text-align: center;
-  padding: 3rem;
+.card-stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.75rem;
   color: #94a3b8;
-  font-size: 1.2rem;
+}
+
+.card-stats span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 0.5rem;
+}
+
+.deadline {
+  font-size: 0.7rem;
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 40px;
+}
+
+.enter-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 40px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.enter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* Skeleton loading */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.skeleton-card {
+  background: rgba(30, 41, 59, 0.4);
+  border-radius: 28px;
+  height: 380px;
+  animation: shimmer 1.5s infinite linear;
+  background: linear-gradient(90deg, rgba(30, 41, 59, 0.4) 25%, rgba(51, 65, 85, 0.6) 50%, rgba(30, 41, 59, 0.4) 75%);
+  background-size: 1000px 100%;
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(30, 41, 59, 0.4);
+  border-radius: 40px;
+  margin: 2rem 0;
+}
+
+.empty-state svg {
+  color: #6366f1;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  color: #e2e8f0;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: #94a3b8;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .contest-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
 }
 
 @media (max-width: 768px) {
-  .contests-page { padding: 1rem; }
-  .contest-card { width: 100%; height: 160px; }
+  .contests-page {
+    padding: 1rem;
+  }
+  .contests-header h1 {
+    font-size: 2rem;
+  }
+  .search-filters {
+    flex-direction: column;
+  }
+  .search-bar {
+    width: 100%;
+  }
+  .filter-chips {
+    justify-content: center;
+  }
+  .contest-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-content h3 {
+    font-size: 1rem;
+  }
+  .card-stats {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
 }
