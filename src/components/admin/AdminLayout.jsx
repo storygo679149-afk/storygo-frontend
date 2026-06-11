@@ -16,7 +16,7 @@ const AdminLayout = () => {
     { path: '/admin/moderation', icon: <FiFlag />, label: 'Moderation' },
     { path: '/admin/monetization', icon: <FiDollarSign />, label: 'Monetization' },
     { path: '/admin/notifications', icon: <FiBell />, label: 'Notifications' },
-    { path: '/admin/contests', icon: <FiAward />, label: 'Contests' }
+    { path: '/admin/contests', icon: <FiAward />, label: 'Contests' },
     { path: '/admin/settings', icon: <FiSettings />, label: 'Settings' },
     { path: '/admin/audit-logs', icon: <FiBarChart2 />, label: 'Audit Logs' },
   ];
