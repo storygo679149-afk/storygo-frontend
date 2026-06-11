@@ -1,8 +1,6 @@
-/* ============================================
-   Sidebar – Modern Glassmorphic Design
-   ============================================ */
+/* Sidebar.css – Modern glassmorphic sidebar with desktop/mobile support */
 
-/* ---------- Base Sidebar Container ---------- */
+/* ========== Base Sidebar Container ========== */
 .sidebar {
   position: fixed;
   top: 0;
@@ -20,9 +18,9 @@
   overflow: hidden;
 }
 
-/* Desktop expanded */
+/* Desktop expanded (default) */
 .sidebar.desktop-expanded {
-  width: 280px;
+  width: 260px;
 }
 
 /* Desktop collapsed */
@@ -30,13 +28,7 @@
   width: 88px;
 }
 
-/* Mobile open (full width) */
-.sidebar.mobile-open {
-  width: 280px;
-  transform: translateX(0);
-}
-
-/* ---------- Collapse Toggle Button ---------- */
+/* ========== Collapse Toggle Button ========== */
 .sidebar-collapse-btn {
   position: absolute;
   right: -12px;
@@ -63,7 +55,7 @@
   transform: scale(1.1);
 }
 
-/* ---------- User Profile Section ---------- */
+/* ========== User Profile Section ========== */
 .sidebar-user-section {
   padding: 28px 16px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -136,7 +128,7 @@
   overflow: hidden;
 }
 
-/* ---------- Navigation ---------- */
+/* ========== Navigation ========== */
 .sidebar-nav {
   flex: 1;
   overflow-y: auto;
@@ -241,7 +233,7 @@
   display: none;
 }
 
-/* ---------- Bottom Section (Logout / Auth) ---------- */
+/* ========== Bottom Section (Logout / Auth) ========== */
 .sidebar-bottom {
   padding: 20px 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
@@ -304,7 +296,7 @@
   box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
 }
 
-/* ---------- Tooltip (for collapsed mode) ---------- */
+/* ========== Tooltip (for collapsed mode) ========== */
 .nav-tooltip {
   position: fixed;
   background: #1e293b;
@@ -322,7 +314,7 @@
   letter-spacing: 0.3px;
 }
 
-/* ---------- Mobile Overlay & Toggle ---------- */
+/* ========== Mobile Overlay & Toggle ========== */
 .sidebar-overlay {
   position: fixed;
   top: 0;
@@ -359,7 +351,7 @@
   box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
 }
 
-/* ---------- Responsive (Mobile) ---------- */
+/* ========== Responsive (Mobile) – Only hides sidebar by default on small screens ========== */
 @media (max-width: 1199px) {
   .sidebar {
     transform: translateX(-100%);
@@ -383,7 +375,7 @@
   }
 }
 
-/* ---------- Custom Scrollbar ---------- */
+/* ========== Custom Scrollbar ========== */
 .sidebar-nav::-webkit-scrollbar {
   width: 4px;
 }
@@ -402,7 +394,7 @@
   background: #f59e0b;
 }
 
-/* ---------- Animations ---------- */
+/* ========== Animations ========== */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -437,13 +429,12 @@
 .nav-section .nav-item:nth-child(5) { animation-delay: 0.10s; }
 .nav-section .nav-item:nth-child(6) { animation-delay: 0.12s; }
 
-/* ---------- Additional Polish ---------- */
+/* ========== Additional Polish ========== */
 .sidebar ::selection {
   background: #4f46e5;
   color: white;
 }
 
-/* Glass shine effect on hover for cards (optional) */
 .user-profile-card:hover .user-avatar {
   transform: scale(1.02);
   transition: transform 0.2s;
