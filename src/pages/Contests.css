@@ -1,7 +1,111 @@
-.contests-page { padding: 24px; max-width: 1200px; margin: 0 auto; }
-.contest-grid { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 20px; }
-.contest-card { width: 280px; height: 200px; background-size: cover; background-position: center; border-radius: 16px; overflow: hidden; position: relative; text-decoration: none; transition: transform 0.2s; }
-.contest-card:hover { transform: translateY(-4px); }
-.card-content { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 16px; color: white; }
-.contest-card.past .card-content { background: rgba(0,0,0,0.6); }
-.loading { text-align: center; padding: 40px; }
+/* Contests.css – Modern glass grid */
+.contests-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeSlide 0.5s ease-out;
+}
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.contests-page h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff, #a5b4fc);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 1.5rem;
+}
+
+.contests-page h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 2rem 0 1rem;
+  color: #cbd5e1;
+  border-left: 4px solid #6366f1;
+  padding-left: 1rem;
+}
+
+.contest-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.8rem;
+}
+
+.contest-card {
+  position: relative;
+  width: 280px;
+  height: 200px;
+  border-radius: 24px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.contest-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent 60%);
+  transition: background 0.3s;
+}
+
+.contest-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+}
+
+.contest-card:hover::after {
+  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent 70%);
+}
+
+.card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  color: white;
+  z-index: 2;
+}
+
+.card-content h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.card-content p {
+  font-size: 0.8rem;
+  opacity: 0.9;
+  margin-bottom: 0.3rem;
+}
+
+.card-content small {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.contest-card.past .card-content {
+  background: rgba(0,0,0,0.6);
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #94a3b8;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .contests-page { padding: 1rem; }
+  .contest-card { width: 100%; height: 160px; }
+}
