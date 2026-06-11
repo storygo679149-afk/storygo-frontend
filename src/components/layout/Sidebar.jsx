@@ -131,7 +131,7 @@ const Sidebar = () => {
     { path: '/top-rated', icon: <FiStar />, label: 'Top Rated' },
     { path: '/subscription', icon: <FiCreditCard />, label: 'Subscription' },
     { path: '/novels', icon: <FiBookOpen />, label: 'Novels' },
-    { path: '/contests', icon: <FiAward />, label: 'Contests' },  // ✅ Added contest link
+   
   ];
 
   // Admin link (only for admins)
@@ -152,8 +152,9 @@ const Sidebar = () => {
         { path: '/creator/dashboard', icon: <FiBarChart2 />, label: 'Dashboard' },
         { path: '/creator/series', icon: <FiBookOpen />, label: 'My Series' },
         { path: '/creator/episodes/upload', icon: <FiHeadphones />, label: 'Upload' },
-        { path: '/creator/followers', icon: <FiUsers />, label: 'Followers' },
+        { path: '/contests', icon: <FiAward />, label: 'Contests' },  // ✅ Added contest link
         { path: '/creator/novels', icon: <FiBookOpen />, label: 'My Novels' },
+        { path: '/creator/followers', icon: <FiUsers />, label: 'Followers' }, 
       ]
     : [];
 
