@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import {
-  FiUsers, FiBarChart2, FiFlag, FiDollarSign, FiBell, FiSettings, FiLogOut, FiMenu
+  FiUsers, FiBarChart2, FiFlag, FiDollarSign, FiBell, FiSettings, FiLogOut, FiMenu, FiAward
 } from 'react-icons/fi';
 import useAuth from '../../hooks/useAuth';
 import './AdminLayout.css';
