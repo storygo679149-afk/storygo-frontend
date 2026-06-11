@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom'; // ← added Link
 import seriesService from '../services/seriesService';
 import { useAudioContext } from '../context/AudioContext';
 import useAuth from '../hooks/useAuth';
@@ -85,9 +85,9 @@ const SeriesDetail = () => {
     return episodes.filter(ep => ep.title.toLowerCase().includes(q));
   }, [episodes, searchTerm]);
 
-  // Safe number parsing
   const totalDuration = episodes.reduce((acc, ep) => acc + (Number(ep.duration_seconds) || 0), 0);
   const author = series?.creator_name || series?.author_name || 'Unknown Creator';
+  const creatorUsername = series?.creator_username;
   const likes = Number(series?.like_count) || 0;
   const plays = Number(series?.play_count) || 0;
   const avgRating = Number(series?.average_rating) || 0;
@@ -209,7 +209,14 @@ const SeriesDetail = () => {
             <h1 className="series-title">{series.title}</h1>
             <div className="series-meta">
               <span className="series-author">
-                <FiUser /> {author}
+                <FiUser />
+                {creatorUsername ? (
+                  <Link to={`/creator/${creatorUsername}`} className="author-link">
+                    {author}
+                  </Link>
+                ) : (
+                  <span>{author}</span>
+                )}
                 {series.is_verified && <FiCheckCircle className="verified-icon" />}
               </span>
               <div className="series-stats">
