@@ -9,6 +9,8 @@ const AdminContests = () => {
   const [selectedContest, setSelectedContest] = useState(null);
   const [submissions, setSubmissions] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -17,18 +19,20 @@ const AdminContests = () => {
     end_date: '',
     background_image_url: ''
   });
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchContests();
   }, []);
 
   const fetchContests = async () => {
+    setLoading(true);
     try {
       const res = await api.get('/admin/contests');
       setContests(res.data.data);
     } catch (err) {
       toast.error('Failed to load contests');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,7 +47,7 @@ const AdminContests = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setSubmitting(true);
     try {
       await api.post('/admin/contests', formData);
       toast.success('Contest created');
@@ -60,7 +64,7 @@ const AdminContests = () => {
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to create contest');
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -75,26 +79,34 @@ const AdminContests = () => {
   };
 
   const determineWinner = async () => {
+    if (!window.confirm('Are you sure? This will mark the contest as ended and declare a winner.')) return;
     try {
       await api.post(`/admin/contests/${selectedContest.id}/determine-winner`);
       toast.success('Winner determined');
       fetchSubmissions(selectedContest.id);
+      fetchContests(); // refresh status
     } catch (err) {
-      toast.error('Failed');
+      toast.error('Failed to determine winner');
     }
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString();
   };
 
   return (
     <motion.div className="admin-contests" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
       <div className="admin-contests-header">
-        <h1>Contests</h1>
+        <h1>Contests Management</h1>
         <button className="btn-primary" onClick={() => setShowForm(true)}>+ New Contest</button>
       </div>
 
       {showForm && (
-        <div className="contest-form-modal">
-          <div className="contest-form">
-            <h2>Create Contest</h2>
+        <div className="contest-form-modal" onClick={() => setShowForm(false)}>
+          <div className="contest-form" onClick={(e) => e.stopPropagation()}>
+            <h2>Create New Contest</h2>
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
@@ -104,7 +116,7 @@ const AdminContests = () => {
                 required
               />
               <textarea
-                placeholder="Description"
+                placeholder="Description (optional)"
                 rows="3"
                 value={formData.description}
                 onChange={e => setFormData({ ...formData, description: e.target.value })}
@@ -131,12 +143,12 @@ const AdminContests = () => {
               />
               <input
                 type="url"
-                placeholder="Background image URL"
+                placeholder="Background image URL (optional)"
                 value={formData.background_image_url}
                 onChange={e => setFormData({ ...formData, background_image_url: e.target.value })}
               />
               <div className="form-actions">
-                <button type="submit" disabled={loading}>{loading ? 'Creating...' : 'Create'}</button>
+                <button type="submit" disabled={submitting}>{submitting ? 'Creating...' : 'Create'}</button>
                 <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
               </div>
             </form>
@@ -144,46 +156,59 @@ const AdminContests = () => {
         </div>
       )}
 
-      <div className="contests-list">
-        {contests.map(c => (
-          <div
-            key={c.id}
-            className="contest-card"
-            onClick={() => { setSelectedContest(c); fetchSubmissions(c.id); }}
-          >
-            <h3>{c.title}</h3>
-            <p>{c.theme}</p>
-            <small>{new Date(c.start_date).toLocaleDateString()} – {new Date(c.end_date).toLocaleDateString()}</small>
-            <span className={`status ${c.status}`}>{c.status}</span>
-          </div>
-        ))}
-      </div>
+      {loading ? (
+        <div className="loading-spinner">Loading contests...</div>
+      ) : contests.length === 0 ? (
+        <div className="empty-state">No contests yet. Click "+ New Contest" to get started.</div>
+      ) : (
+        <div className="contests-list">
+          {contests.map(c => (
+            <div
+              key={c.id}
+              className="contest-card"
+              onClick={() => { setSelectedContest(c); fetchSubmissions(c.id); }}
+            >
+              <h3>{c.title}</h3>
+              <p>{c.theme || 'No theme specified'}</p>
+              <small>{formatDate(c.start_date)} – {formatDate(c.end_date)}</small>
+              <span className={`status ${c.status}`}>{c.status}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {selectedContest && (
         <div className="submissions-panel">
-          <h2>Submissions for {selectedContest.title}</h2>
-          <button className="btn-sm" onClick={determineWinner}>Determine Winner</button>
-          <div className="submissions-grid">
-            {submissions.map(s => (
-              <div key={s.id} className="submission-card">
-                <h4>{s.title} by {s.username}</h4>
-                <p className="story-preview">{s.story.substring(0, 150)}...</p>
-                <div className="rating-area">
-                  <label>Admin Rating (0-10):</label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    max="10"
-                    defaultValue={s.admin_rating || ''}
-                    onBlur={(e) => handleRate(s.id, parseFloat(e.target.value))}
-                  />
-                  {s.admin_rating && <span>Current: {s.admin_rating}</span>}
-                </div>
-              </div>
-            ))}
+          <div className="submissions-header">
+            <h2>Submissions for "{selectedContest.title}"</h2>
+            <button className="btn-sm" onClick={determineWinner}>🏆 Determine Winner</button>
           </div>
-          <button onClick={() => setSelectedContest(null)}>Close</button>
+          {submissions.length === 0 ? (
+            <p className="empty-submissions">No submissions yet.</p>
+          ) : (
+            <div className="submissions-grid">
+              {submissions.map(s => (
+                <div key={s.id} className="submission-card">
+                  <h4>{s.title}</h4>
+                  <p className="story-preview">{s.story.substring(0, 120)}...</p>
+                  <div className="rating-area">
+                    <label>Admin Rating (0-10):</label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      max="10"
+                      defaultValue={s.admin_rating || ''}
+                      onBlur={(e) => handleRate(s.id, parseFloat(e.target.value))}
+                    />
+                    {s.admin_rating && <span className="current-rating">Current: {s.admin_rating}</span>}
+                  </div>
+                  <div className="submission-meta">by {s.username || s.full_name}</div>
+                </div>
+              ))}
+            </div>
+          )}
+          <button className="close-submissions" onClick={() => setSelectedContest(null)}>Close</button>
         </div>
       )}
     </motion.div>
