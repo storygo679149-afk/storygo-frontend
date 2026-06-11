@@ -12,8 +12,11 @@ import {
 import toast from 'react-hot-toast';
 import './Sidebar.css';
 
-const getInitialCollapsed = () =>
-  typeof window !== 'undefined' && window.innerWidth < 1200;
+// Determine if sidebar should be collapsed initially (only on mobile)
+const getInitialCollapsed = () => {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth < 1200;
+};
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -59,6 +62,16 @@ const Sidebar = () => {
   const [tooltip, setTooltip] = useState({ visible: false, text: '', x: 0, y: 0 });
   const tooltipTimeout = useRef(null);
 
+  // Force correct collapse state on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsCollapsed(window.innerWidth < 1200);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Refresh user data when authenticated
   useEffect(() => {
     if (isAuthenticated && refreshUser && typeof refreshUser === 'function') {
@@ -70,17 +83,6 @@ const Sidebar = () => {
   useEffect(() => {
     setIsMobileOpen(false);
   }, [location]);
-
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 1200) {
-        setIsCollapsed(false);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const handleLogout = async () => {
     if (isLoggingOut) return;
@@ -129,10 +131,10 @@ const Sidebar = () => {
     { path: '/top-rated', icon: <FiStar />, label: 'Top Rated' },
     { path: '/subscription', icon: <FiCreditCard />, label: 'Subscription' },
     { path: '/novels', icon: <FiBookOpen />, label: 'Novels' },
-    { path: '/contests', icon: <FiAward />, label: 'Contests' },
+    { path: '/contests', icon: <FiAward />, label: 'Contests' },  // ✅ Added contest link
   ];
 
-  // Show admin link only for admins
+  // Admin link (only for admins)
   if (user?.is_admin) {
     mainLinks.push({ path: '/admin', icon: <FiShield />, label: 'Admin Panel' });
   }
