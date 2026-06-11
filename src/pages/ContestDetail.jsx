@@ -108,4 +108,5 @@ const ContestDetail = () => {
     </motion.div>
   );
 };
+
 export default ContestDetail;
