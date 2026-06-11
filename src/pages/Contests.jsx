@@ -51,7 +51,7 @@ const Contests = () => {
         <h2>Past Contests</h2>
         <div className="contest-grid">
           {pastContests.map(c => (
-            <Link to={`/contests/${c.id}`} key={c.id} className="contest-card past">
+            <Link to={`/contests/${c.id}`} key={c.id} className="contest-card past" style={{ backgroundImage: c.background_image_url ? `url(${c.background_image_url})` : 'none' }}>
               <div className="card-content">
                 <h3>{c.title}</h3>
                 <p>{c.theme}</p>
@@ -64,4 +64,5 @@ const Contests = () => {
     </motion.div>
   );
 };
+
 export default Contests;
