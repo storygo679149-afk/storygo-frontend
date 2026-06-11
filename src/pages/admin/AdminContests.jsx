@@ -9,7 +9,14 @@ const AdminContests = () => {
   const [selectedContest, setSelectedContest] = useState(null);
   const [submissions, setSubmissions] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({ title: '', description: '', theme: '', start_date: '', end_date: '', background_image_url: '' });
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    theme: '',
+    start_date: '',
+    end_date: '',
+    background_image_url: ''
+  });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -41,10 +48,17 @@ const AdminContests = () => {
       await api.post('/admin/contests', formData);
       toast.success('Contest created');
       setShowForm(false);
-      setFormData({ title: '', description: '', theme: '', start_date: '', end_date: '', background_image_url: '' });
+      setFormData({
+        title: '',
+        description: '',
+        theme: '',
+        start_date: '',
+        end_date: '',
+        background_image_url: ''
+      });
       fetchContests();
     } catch (err) {
-      toast.error('Failed to create contest');
+      toast.error(err.response?.data?.message || 'Failed to create contest');
     } finally {
       setLoading(false);
     }
@@ -82,12 +96,45 @@ const AdminContests = () => {
           <div className="contest-form">
             <h2>Create Contest</h2>
             <form onSubmit={handleSubmit}>
-              <input type="text" placeholder="Title" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} required />
-              <textarea placeholder="Description" rows="3" value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
-              <input type="text" placeholder="Theme (e.g., Underground secret agent)" value={formData.theme} onChange={e => setFormData({...formData, theme: e.target.value})} />
-              <input type="datetime-local" placeholder="Start Date" value={formData.start_date} onChange={e => setFormData({...formData, start_date: e.target.value})} required />
-              <input type="datetime-local" placeholder="End Date" value={formData.end_date} onChange={e => setFormData({...formData, end_date: e.target.value})} required />
-              <input type="url" placeholder="Background image URL" value={formData.background_image_url} onChange={e => setFormData({...formData, background_image_url: e.target.value})} />
+              <input
+                type="text"
+                placeholder="Title"
+                value={formData.title}
+                onChange={e => setFormData({ ...formData, title: e.target.value })}
+                required
+              />
+              <textarea
+                placeholder="Description"
+                rows="3"
+                value={formData.description}
+                onChange={e => setFormData({ ...formData, description: e.target.value })}
+              />
+              <input
+                type="text"
+                placeholder="Theme (e.g., Underground secret agent)"
+                value={formData.theme}
+                onChange={e => setFormData({ ...formData, theme: e.target.value })}
+              />
+              <input
+                type="datetime-local"
+                placeholder="Start Date"
+                value={formData.start_date}
+                onChange={e => setFormData({ ...formData, start_date: e.target.value })}
+                required
+              />
+              <input
+                type="datetime-local"
+                placeholder="End Date"
+                value={formData.end_date}
+                onChange={e => setFormData({ ...formData, end_date: e.target.value })}
+                required
+              />
+              <input
+                type="url"
+                placeholder="Background image URL"
+                value={formData.background_image_url}
+                onChange={e => setFormData({ ...formData, background_image_url: e.target.value })}
+              />
               <div className="form-actions">
                 <button type="submit" disabled={loading}>{loading ? 'Creating...' : 'Create'}</button>
                 <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
@@ -99,7 +146,11 @@ const AdminContests = () => {
 
       <div className="contests-list">
         {contests.map(c => (
-          <div key={c.id} className="contest-card" onClick={() => { setSelectedContest(c); fetchSubmissions(c.id); }}>
+          <div
+            key={c.id}
+            className="contest-card"
+            onClick={() => { setSelectedContest(c); fetchSubmissions(c.id); }}
+          >
             <h3>{c.title}</h3>
             <p>{c.theme}</p>
             <small>{new Date(c.start_date).toLocaleDateString()} – {new Date(c.end_date).toLocaleDateString()}</small>
@@ -119,7 +170,14 @@ const AdminContests = () => {
                 <p className="story-preview">{s.story.substring(0, 150)}...</p>
                 <div className="rating-area">
                   <label>Admin Rating (0-10):</label>
-                  <input type="number" step="0.1" min="0" max="10" defaultValue={s.admin_rating || ''} onBlur={(e) => handleRate(s.id, parseFloat(e.target.value))} />
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="10"
+                    defaultValue={s.admin_rating || ''}
+                    onBlur={(e) => handleRate(s.id, parseFloat(e.target.value))}
+                  />
                   {s.admin_rating && <span>Current: {s.admin_rating}</span>}
                 </div>
               </div>
@@ -131,4 +189,5 @@ const AdminContests = () => {
     </motion.div>
   );
 };
+
 export default AdminContests;
