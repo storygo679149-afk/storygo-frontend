@@ -28,6 +28,7 @@ import AdminNotifications from './pages/admin/Notifications';
 import AdminSettings from './pages/admin/Settings';
 import AdminAuditLogs from './pages/admin/AuditLogs';
 import AdminContests from './pages/admin/AdminContests';
+import CreatorProfile from './pages/CreatorProfile'; 
 
 // Contest pages (user/creator)
 import Contests from './pages/Contests';
@@ -135,6 +136,7 @@ function App() {
                       <Route path="/novels" element={<NovelsPage />} />
                       <Route path="/novels/:id" element={<NovelDetail />} />
                       <Route path="/novels/:novelId/read/:chapterId" element={<ChapterReader />} />
+                      <Route path="/creator/:username" element={<CreatorProfile />} />
                       <Route path="/creator/dashboard" element={<ProtectedRoute requireCreator><CreatorDashboard /></ProtectedRoute>} />
                       <Route path="/creator/tts" element={<ProtectedRoute requireCreator><CreatorDashboard /></ProtectedRoute>} />
                       <Route path="/creator/series" element={<ProtectedRoute requireCreator><CreatorDashboard /></ProtectedRoute>} />
