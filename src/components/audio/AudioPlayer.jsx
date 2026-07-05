@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import Hls from 'hls.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAudioContext } from '../../context/AudioContext';
 import useAuth from '../../hooks/useAuth';
@@ -42,6 +43,7 @@ const AudioPlayer = () => {
 
   const { user } = useAuth();
   const audioRef = useRef(null);
+  const hlsRef = useRef(null);
   const progressInterval = useRef(null);
   const saveInterval = useRef(null);
 
@@ -68,6 +70,10 @@ const AudioPlayer = () => {
       audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
     }
     return () => {
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+        hlsRef.current = null;
+      }
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = '';
@@ -129,8 +135,41 @@ const AudioPlayer = () => {
   const loadEpisode = async () => {
     try {
       setIsBuffering(true);
-      audioRef.current.src = currentEpisode.audio_url;
-      audioRef.current.load();
+
+      // Tear down any previous hls.js instance before loading a new one.
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+        hlsRef.current = null;
+      }
+
+      const streamUrl = currentEpisode.audio_url; // now an .m3u8 HLS manifest URL
+
+      if (audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+        // Safari supports HLS natively -- no library needed.
+        audioRef.current.src = streamUrl;
+        audioRef.current.load();
+      } else if (Hls.isSupported()) {
+        // Chrome, Firefox, Edge etc. -- use hls.js to play the
+        // chunked/segmented stream.
+        const hls = new Hls();
+        hlsRef.current = hls;
+        hls.loadSource(streamUrl);
+        hls.attachMedia(audioRef.current);
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          console.error('HLS error:', data);
+          if (data.fatal) {
+            toast.error('Failed to load audio stream');
+            setIsBuffering(false);
+          }
+        });
+      } else {
+        // Fallback: browser can't do HLS at all. Nothing more we can
+        // do here without a server-side fallback format.
+        console.error('HLS is not supported in this browser');
+        toast.error('Audio streaming is not supported in this browser');
+        setIsBuffering(false);
+        return;
+      }
 
       if (user) {
         try {
