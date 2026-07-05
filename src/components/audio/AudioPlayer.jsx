@@ -141,7 +141,7 @@ const AudioPlayer = () => {
         hlsRef.current.destroy();
         hlsRef.current = null;
       }
-
+       console.log("Stream URL:", currentEpisode.audio_url);
       const streamUrl = currentEpisode.audio_url; // now an .m3u8 HLS manifest URL
 
       if (audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
