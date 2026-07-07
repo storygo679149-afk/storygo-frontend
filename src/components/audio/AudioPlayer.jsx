@@ -136,40 +136,17 @@ const AudioPlayer = () => {
     try {
       setIsBuffering(true);
 
-      // Tear down any previous hls.js instance before loading a new one.
+      // Tear down any previous hls.js instance (from earlier HLS attempt) --
+      // no longer used, but harmless to keep clearing just in case.
       if (hlsRef.current) {
         hlsRef.current.destroy();
         hlsRef.current = null;
       }
-       console.log("Stream URL:", currentEpisode.audio_url);
-      const streamUrl = currentEpisode.audio_url; // now an .m3u8 HLS manifest URL
 
-      if (audioRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-        // Safari supports HLS natively -- no library needed.
-        audioRef.current.src = streamUrl;
-        audioRef.current.load();
-      } else if (Hls.isSupported()) {
-        // Chrome, Firefox, Edge etc. -- use hls.js to play the
-        // chunked/segmented stream.
-        const hls = new Hls();
-        hlsRef.current = hls;
-        hls.loadSource(streamUrl);
-        hls.attachMedia(audioRef.current);
-        hls.on(Hls.Events.ERROR, (event, data) => {
-          console.error('HLS error:', data);
-          if (data.fatal) {
-            toast.error('Failed to load audio stream');
-            setIsBuffering(false);
-          }
-        });
-      } else {
-        // Fallback: browser can't do HLS at all. Nothing more we can
-        // do here without a server-side fallback format.
-        console.error('HLS is not supported in this browser');
-        toast.error('Audio streaming is not supported in this browser');
-        setIsBuffering(false);
-        return;
-      }
+      // audio_url is a plain, short-lived signed MP3 stream link through
+      // our own backend proxy -- no HLS/hls.js needed.
+      audioRef.current.src = currentEpisode.audio_url;
+      audioRef.current.load();
 
       if (user) {
         try {
