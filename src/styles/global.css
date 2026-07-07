@@ -21,7 +21,51 @@ html {
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
 }
+/* ─── GLOBAL TOUCH TARGET & RESPONSIVE ENHANCEMENTS ─── */
+/* Append this block to your existing index.css or global.css */
 
+/* Ensure all interactive elements have a minimum tap size */
+button,
+a,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+[role="button"],
+.clickable,
+.nav-link,
+.menu-item,
+.card-link {
+  min-height: 44px;
+  min-width: 44px;
+  /* For inline elements like <a>, use padding or line-height to expand tap area */
+}
+
+/* For links that are purely inline text, add extra padding */
+a:not([class*="no-touch"]):not(.no-touch) {
+  padding: 0.4rem 0.6rem; /* increases tap area without breaking layout */
+  display: inline-block;
+}
+
+/* Prevent zoom on input focus for iOS */
+input,
+select,
+textarea {
+  font-size: 16px !important; /* prevents iOS auto-zoom */
+}
+
+/* Better scrolling for modals and drawers */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Improve button hover states for touch devices */
+@media (hover: none) {
+  .btn:hover,
+  button:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
 body {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-base);
