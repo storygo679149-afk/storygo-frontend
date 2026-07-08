@@ -1,146 +1,38 @@
-/* NewReleasesSection.css – Full file */
-
+/* ---------- NEW RELEASES SECTION – LIQUID GLASS PREMIUM ---------- */
 .new-releases-section {
-  margin-bottom: 2.5rem;
+  margin: 64px 0;
 }
 
 .section-header {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 1.25rem;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 28px;
 }
 
 .section-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #111827;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
 }
 
-.section-link {
-  color: #3b82f6;
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
-.section-link:hover {
-  color: #2563eb;
-  text-decoration: underline;
+.section-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
 }
 
 .new-releases-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 24px;
 }
 
-.novel-card {
-  background: #ffffff;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
-  border: 1px solid #f3f4f6;
-}
-
-.novel-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-}
-
-.novel-card .cover {
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
-  background: #e5e7eb;
-}
-
-.novel-card .info {
-  padding: 0.75rem 0.75rem 1rem;
-}
-
-.novel-card .title {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #111827;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.novel-card .author {
-  font-size: 0.8rem;
-  color: #6b7280;
-  margin-top: 0.15rem;
-}
-
-.novel-card .meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 0.5rem;
-  font-size: 0.75rem;
-  color: #9ca3af;
-}
-
-.novel-card .badge {
-  background: #f3f4f6;
-  padding: 0.15rem 0.6rem;
-  border-radius: 9999px;
-  font-weight: 500;
-}
-
-/* ─── Responsive Tweaks ─── */
-
-@media (max-width: 768px) {
+/* Responsive */
+@media (max-width: 600px) {
   .new-releases-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-
-  .section-title {
-    font-size: 1.2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .new-releases-grid {
-    grid-template-columns: 1fr 1fr; /* keep 2 columns on phones, but smaller */
-    gap: 0.75rem;
-  }
-
-  .novel-card .info {
-    padding: 0.5rem 0.5rem 0.75rem;
-  }
-
-  .novel-card .title {
-    font-size: 0.8rem;
-  }
-
-  .novel-card .author {
-    font-size: 0.7rem;
-  }
-
-  .novel-card .meta {
-    font-size: 0.65rem;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-  }
-
-  .section-title {
-    font-size: 1rem;
-  }
-
-  .section-link {
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 360px) {
-  .new-releases-grid {
-    grid-template-columns: 1fr; /* single column for very tiny screens */
+    gap: 16px;
   }
 }
